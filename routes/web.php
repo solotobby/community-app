@@ -10,6 +10,7 @@ use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
+use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
 
 Route::get('/', function () {
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
 
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
+    Route::get('/rewards', Rewards::class)->name('rewards');
 });
 
 require __DIR__ . '/auth.php';

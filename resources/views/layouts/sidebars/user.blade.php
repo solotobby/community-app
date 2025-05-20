@@ -68,14 +68,14 @@
         </li> --}}
 
 
-        {{-- <!-- Game History -->
+        <!-- Rewards -->
         <li class="nav-main-item">
-            <a class="nav-main-link {{ request()->routeIs('user.games.my') ? 'active' : '' }}"
-                href="{{ route('user.games.my') }}">
+            <a class="nav-main-link {{ request()->routeIs('user.rewards') ? 'active' : '' }}"
+                href="{{ route('user.rewards') }}">
                 <i class="nav-main-link-icon fa fa-history"></i>
-                <span class="nav-main-link-name">Game History</span>
+                <span class="nav-main-link-name">Rewards</span>
             </a>
-        </li> --}}
+        </li>
 
         <!-- Settings -->
         {{-- <li class="nav-main-item">

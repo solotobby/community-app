@@ -1,4 +1,5 @@
 <div>
+    <div class="content">
     @if (session()->has('success'))
         <div
             x-data="{ show: true }"
@@ -61,5 +62,6 @@
                 {{ $levels->links() }}
             </div>
         </div>
+    </div>
     </div>
 </div>

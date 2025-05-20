@@ -25,7 +25,7 @@
     -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Dashbaord - Trivia App</title>
+    <title>Dashbaord - Community App</title>
 
     <meta name="description" content="hodcrm">
     <meta name="author" content="hodcrm">
@@ -431,7 +431,7 @@
               <a class="link-fx fw-bold tracking-wide mx-auto" href="index.html">
                 <span class="smini-hidden">
                   <i class="fa fa-fire text-primary"></i>
-                  <span class="fs-4 text-dual">Trivia</span><span class="fs-4 text-primary">App</span>
+                  <span class="fs-4 text-dual">Community </span><span class="fs-4 text-primary">App</span>
                 </span>
               </a>
             </div>
