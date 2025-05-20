@@ -21,4 +21,9 @@ class Level extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function levelItems()
+    {
+        return $this->hasMany(LevelItem::class);
+    }
 }

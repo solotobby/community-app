@@ -6,7 +6,9 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\AdminDashboard;
+use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
+use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
 use App\Livewire\User\UserDashboard;
 
@@ -19,7 +21,7 @@ Route::get('/', function () {
 //     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-        Route::get('home', [HomeController::class, 'home'])->name('home');
+    Route::get('home', [HomeController::class, 'home'])->name('home');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
@@ -28,9 +30,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     //Levels
     Route::get('level', ListLevel::class)->name('admin.list.level');
     Route::get('create-level', CreateLevel::class)->name('admin.create.level');
+    Route::get('level-item/{level}', LevelItemsManager::class)->name('admin.item.level');
+    Route::get('level/items', AllLevelItems::class)->name('admin.level.items.all');
 
-      // Users
-   //   Route::get('/users', ListUsers::class)->name('admin.users.index');
+    // Users
+    //   Route::get('/users', ListUsers::class)->name('admin.users.index');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -43,8 +47,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
 
-   Route::get('/dashboard', UserDashboard::class)->name('dashboard');
-
+    Route::get('/dashboard', UserDashboard::class)->name('dashboard');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

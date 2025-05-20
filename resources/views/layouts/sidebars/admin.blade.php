@@ -25,6 +25,11 @@
                         Add New Level
                     </a>
                 </li>
+                  <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('admin.level.items.all') }}">
+                        Level Items
+                    </a>
+                </li>
             </ul>
         </li>
 
