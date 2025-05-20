@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\PaystackController;
 use App\Livewire\Auth\ConfirmPassword;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
@@ -14,6 +15,9 @@ Route::middleware('guest')->group(function () {
     Route::get('register', Register::class)->name('register');
     Route::get('forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
+
+    Route::get('/payment/initialize/{reference}', [PaystackController::class, 'initialize'])->name('paystack.payment.init');
+    Route::get('/paystack/callback', [PaystackController::class, 'callback'])->name('paystack.payment.callback');
 });
 
 Route::middleware('auth')->group(function () {

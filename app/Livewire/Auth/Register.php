@@ -1,11 +1,15 @@
 <?php
 
+
 namespace App\Livewire\Auth;
 
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -15,34 +19,108 @@ use Spatie\Permission\Models\Role;
 class Register extends Component
 {
     public string $name = '';
-
     public string $email = '';
-
     public string $password = '';
-
     public string $password_confirmation = '';
+    public string $level = '';
 
-    /**
-     * Handle an incoming registration request.
-     */
+    /** @var \Illuminate\Database\Eloquent\Collection */
+    public $levels;
+    public $selectedLevelAmount = null;
+
+    public function mount()
+    {
+        $this->levels = \App\Models\Level::all();
+    }
+
+    public function updatedLevel($value)
+    {
+        $level = $this->levels->where('id', $value)->first();
+        $this->selectedLevelAmount = $level ? $level->registration_amount : null;
+    }
+
+    public function getSelectedLevelAmountProperty()
+    {
+        if (!$this->level) return null;
+
+        $level = $this->levels->where('id', $this->level)->first();
+        return $level ? $level->registration_amount : null;
+    }
+
     public function register(): void
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'level' => ['required', 'integer', 'exists:levels,id'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-
         $validated['password'] = Hash::make($validated['password']);
 
-        if()
-        event(new Registered(($user = User::create($validated))));
+        $user = User::where('email', $validated['email'])->first();
 
-        Auth::login($user);
-        $role = Role::where('name', 'user')->first();
-        $user->assignRole($role->id);
+        if ($user) {
+            if ($user->has_subscribed) {
+                // Already subscribed, log them in and redirect
+                Auth::login($user);
+                $this->redirect(route('home'), navigate: true);
+                return;
+            }
 
-        $this->redirect(route('home', absolute: false), navigate: true);
+            // Update details if not subscribed
+            $user->update([
+                'name' => $validated['name'],
+                'password' => $validated['password'],
+                'level' => $validated['level'],
+            ]);
+        } else {
+            // New user
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'level' => $validated['level'],
+            ]);
+
+            $role = Role::where('name', 'user')->first();
+            $user->assignRole($role?->id);
+            event(new Registered($user));
+        }
+
+        // Auth::login($user);
+
+        // Create transaction
+        $transaction = Transaction::create([
+            'reference' => 'TXN_' . Str::uuid(),
+            'user_id' => $user->id,
+            'transaction_type' => 'subscription',
+            'transaction_reason' => 'Registration Level Payment',
+            'level_id' => $validated['level'],
+            'amount' => $this->levels->find($validated['level'])->registration_amount,
+            'status' => 'pending',
+        ]);
+
+        $response = Http::withToken(config('services.paystack.secret_key'))->post(
+            'https://api.paystack.co/transaction/initialize',
+            [
+                'email' => $user->email,
+                'amount' => $transaction->amount * 100,
+                'reference' => $transaction->reference,
+                'callback_url' => route('paystack.payment.callback'),
+            ]
+        )->json();
+
+        if (!$response['status']) {
+            // handle error
+            session()->flash('error', 'Payment initialization failed, try again.');
+            return;
+        }
+
+        $this->js(<<<JS
+        window.location.href = "{$response['data']['authorization_url']}";
+    JS);
+
+        //$this->redirect(route('paystack.payment.init', ['reference' => $transaction->reference]), navigate: true);
     }
 }
