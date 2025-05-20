@@ -8,25 +8,25 @@
             </a>
         </li>
 
-        <!-- Game Categories -->
-        {{-- <li class="nav-main-item">
-            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" data-toggle="submenu" href="#">
+        <!-- Level -->
+        <li class="nav-main-item">
+            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.*') ? 'active' : '' }}" data-toggle="submenu" href="#">
                 <i class="nav-main-link-icon fa fa-list"></i>
-                <span class="nav-main-link-name">Game Categories</span>
+                <span class="nav-main-link-name">Level</span>
             </a>
             <ul class="nav-main-submenu">
                 <li class="nav-main-item">
-                    <a class="nav-main-link" href="{{ route('admin.categories.index') }}">
-                        View All
+                    <a class="nav-main-link" href="{{ route('admin.list.level') }}">
+                        All Level
                     </a>
                 </li>
                 <li class="nav-main-item">
-                    <a class="nav-main-link" href="{{ route('admin.categories.create') }}">
-                        Add New
+                    <a class="nav-main-link" href="{{ route('admin.create.level') }}">
+                        Add New Level
                     </a>
                 </li>
             </ul>
-        </li> --}}
+        </li>
 
         <!-- Manage Users -->
         {{-- <li class="nav-main-item">
