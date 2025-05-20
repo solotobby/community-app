@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 
 #[Layout('components.layouts.auth')]
 class Register extends Component
@@ -37,7 +38,9 @@ class Register extends Component
         event(new Registered(($user = User::create($validated))));
 
         Auth::login($user);
+        $role = Role::where('name', 'user')->first();
+        $user->assignRole($role->id);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('home', absolute: false), navigate: true);
     }
 }

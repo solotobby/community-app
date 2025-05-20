@@ -28,7 +28,7 @@
             <form wire:submit.prevent="register" class="px-4">
                 <div class="form-floating mb-4">
                     <input wire:model.defer="name" type="text" class="form-control" placeholder="Enter your Name">
-                    <label>Username</label>
+                    <label>Name</label>
                     @error('name') <span class="text-danger fs-sm">{{ $message }}</span> @enderror
                 </div>
 

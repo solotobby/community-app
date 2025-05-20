@@ -7,7 +7,7 @@
                     <h3 class="block-title text-white">Games Played</h3>
                 </div>
                 <div class="block-content">
-                    <p class="fs-3">{{ $totalGamesPlayed }}</p>
+                    <p class="fs-3">0</p>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                     <h3 class="block-title text-white">Wallet Balance</h3>
                 </div>
                 <div class="block-content">
-                    <p class="fs-3">#{{ number_format((int) $wallet, 2) }}</p>
+                    <p class="fs-3">#0</p>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
                     <h3 class="block-title text-white">Active Games</h3>
                 </div>
                 <div class="block-content">
-                    <p class="fs-3">{{ $activeGames }}</p>
+                    <p class="fs-3">0</p>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                     <h3 class="block-title text-white">Pending Transactions</h3>
                 </div>
                 <div class="block-content">
-                    <p class="fs-3">{{ $pendingTransactions }}</p>
+                    <p class="fs-3">0</p>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
                     <h3 class="block-title text-white">Total Transactions</h3>
                 </div>
                 <div class="block-content">
-                    <p class="fs-3">{{ $totalTransactions }}</p>
+                    <p class="fs-3">0</p>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                     <h3 class="block-title text-white">Total Winnings</h3>
                 </div>
                 <div class="block-content">
-                    <p class="fs-3">#{{ number_format($totalWinnings, 2) }}</p>
+                    <p class="fs-3">0</p>
                 </div>
             </div>
         </div>

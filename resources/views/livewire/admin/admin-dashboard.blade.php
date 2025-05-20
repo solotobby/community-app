@@ -1,4 +1,4 @@
-<div>
+<div class="content-side content-side-full">
     <div class="row">
         <div class="col-md-6 col-xl-3">
             <div class="block block-rounded text-center">
