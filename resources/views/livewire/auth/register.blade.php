@@ -19,7 +19,7 @@
             <div class="px-4 py-2 mb-4">
                 <a class="link-fx fw-bold" href="{{ url('/') }}">
                     <i class="fa fa-fire"></i>
-                    <span class="fs-4 text-body-color">code</span><span class="fs-4">base</span>
+                    <span class="fs-4 text-body-color">Community</span><span class="fs-4"> App</span>
                 </a>
                 <h1 class="h3 fw-bold mt-4 mb-2">Create New Account</h1>
                 <h2 class="h5 fw-medium text-muted mb-0">Please add your details</h2>
@@ -89,6 +89,16 @@
                 </script>
 
                 <div class="form-floating mb-4">
+                    <input wire:model.defer="referral_code" type="text" class="form-control"
+                        placeholder="Referral code (optional)">
+                    <label>Referral Code (optional)</label>
+                    @error('referral_code')
+                        <span class="text-danger fs-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+
+                <div class="form-floating mb-4">
                     <input wire:model.defer="password" type="password" class="form-control"
                         placeholder="Enter your password">
                     <label>Password</label>
@@ -139,6 +149,6 @@
     <script>
         window.levels = @json($levels->map(fn($lvl) => ['id' => $lvl->id, 'amount' => $lvl->registration_amount]));
     </script>
-    
+
 
 </div>

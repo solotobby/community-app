@@ -20,6 +20,7 @@ class Register extends Component
 {
     public string $name = '';
     public string $email = '';
+    public string $referral_code     = '';
     public string $password = '';
     public string $password_confirmation = '';
     public string $level = '';
@@ -52,6 +53,7 @@ class Register extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'level' => ['required', 'integer', 'exists:levels,id'],
+            'referral_code' => ['nullable', 'string'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -59,6 +61,16 @@ class Register extends Component
         $validated['password'] = Hash::make($validated['password']);
 
         $user = User::where('email', $validated['email'])->first();
+
+        $referralCode = $validated['referral_code'] ?? null;
+
+        $referrerId = null;
+        if ($referralCode) {
+            $referrer = User::where('referral_code', $referralCode)->first();
+            if ($referrer) {
+                $referrerId = $referrer->id;
+            }
+        }
 
         if ($user) {
             if ($user->has_subscribed) {
@@ -81,6 +93,7 @@ class Register extends Component
                 'email' => $validated['email'],
                 'password' => $validated['password'],
                 'level' => $validated['level'],
+                'referrer_id' => $referrerId,
             ]);
 
             $role = Role::where('name', 'user')->first();

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Level;
+use App\Models\Reward;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,8 +56,33 @@ class PaystackController extends Controller
 
         if ($response['status'] && $response['data']['status'] === 'success') {
             $transaction->update(['status' => 'success']);
-            $transaction->user->update(['has_subscribed' => true]);
-            Auth::login($transaction->user);
+
+            $user = $transaction->user;
+            $user->update(['has_subscribed' => true]);
+
+            $user->load('level', 'referrer');
+
+            if ($user->referrer_id && $user->level) {
+                $referrer = $user->referrer;
+
+               $levelId= $user->level;
+               $level =  Level::find($levelId);
+
+                $bonus = $level->referral_bonus;
+
+                Reward::create([
+                    'user_id' => $referrer->id,
+                    'referrer_id' => $user->id,
+                    'reward_type' => 'referral',
+                    'reward_status' => 'pending', //['pending', 'earned', 'expired']
+                    'is_claim' => false,
+                    'amount' => $bonus,
+                    'currency' => 'NGN',
+                    'status' => 'active',
+                ]);
+            }
+            Auth::login($user);
+
             return redirect()->route('home')->with('success', 'Payment successful. Welcome!');
         } else {
             $transaction->update(['status' => 'failed']);
