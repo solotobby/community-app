@@ -2,8 +2,11 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -11,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use App\Models\Level;
+
 
 #[Layout('components.layouts.auth')]
 class Login extends Component
@@ -40,10 +45,46 @@ class Login extends Component
             ]);
         }
 
-        RateLimiter::clear($this->throttleKey());
-        Session::regenerate();
+        $user = User::where('email', $this->email)->first();
+        if ($user->has_subscribed) {
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            RateLimiter::clear($this->throttleKey());
+            Session::regenerate();
+
+            $this->redirectIntended(default: route('home', absolute: false), navigate: true);
+        } else {
+            $level = Level::find($user->level);
+
+            $transaction = Transaction::create([
+                'reference' => 'TXN_' . Str::uuid(),
+                'user_id' => $user->id,
+                'transaction_type' => 'subscription',
+                'transaction_reason' => 'Registration Level Payment',
+                'level_id' => $user->level,
+                'amount' => $level?->registration_amount ?? 0,
+                'status' => 'pending',
+            ]);
+
+
+            $response = Http::withToken(config('services.paystack.secret_key'))->post(
+                'https://api.paystack.co/transaction/initialize',
+                [
+                    'email' => $user->email,
+                    'amount' => $transaction->amount * 100,
+                    'reference' => $transaction->reference,
+                    'callback_url' => route('paystack.payment.callback'),
+                ]
+            )->json();
+
+            if (!$response['status']) {
+                session()->flash('error', 'Payment initialization failed, try again.');
+                return;
+            }
+
+            $this->js(<<<JS
+        window.location.href = "{$response['data']['authorization_url']}";
+        JS);
+        }
     }
 
     /**
@@ -72,6 +113,6 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }

@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'has_subscribed',
+        'referral_code',
+        'level',
+        'referrer_id'
     ];
 
     /**
@@ -54,7 +59,36 @@ class User extends Authenticatable
     {
         return Str::of($this->name)
             ->explode(' ')
-            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    public static function booted()
+    {
+        static::creating(function ($user) {
+            do {
+                $code = Str::upper(Str::random(8));
+            } while (self::where('referral_code', $code)->exists());
+
+            $user->referral_code = $code;
+        });
+    }
+
+    // The user who referred this user
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
+    }
+
+    // The users this user has referred
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referrer_id');
+    }
+
+    // User.php
+    public function level()
+    {
+        return $this->belongsTo(Level::class, 'level');
     }
 }
