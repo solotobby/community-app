@@ -85,14 +85,14 @@
             </a>
         </li> --}}
 
-         {{-- <!-- Settings -->
+         <!-- Settings -->
          <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('user.settings') ? 'active' : '' }}"
                 href="{{ route('user.settings') }}">
                 <i class="nav-main-link-icon fa fa-user-cog"></i>
                 <span class="nav-main-link-name">Account Settings</span>
             </a>
-        </li> --}}
+        </li>
 
     </ul>
 </div>

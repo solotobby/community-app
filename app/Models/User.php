@@ -26,7 +26,8 @@ class User extends Authenticatable
         'has_subscribed',
         'referral_code',
         'level',
-        'referrer_id'
+        'referrer_id',
+        'transaction_pin'
     ];
 
     /**
@@ -86,7 +87,11 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'referrer_id');
     }
 
-    // User.php
+    public function bankInfo()
+    {
+        return $this->hasOne(BankInfo::class);
+    }
+
     public function level()
     {
         return $this->belongsTo(Level::class, 'level');

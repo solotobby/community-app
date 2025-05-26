@@ -1,8 +1,16 @@
 <div class="content">
     <div class="mt-4 mx-4">
         @if (session()->has('success'))
-            <div class="alert alert-success mb-3">{{ session('success') }}</div>
-        @endif
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 3000)"
+            x-show="show"
+            x-transition
+            class="alert alert-success"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0">Items for Level: <strong>{{ $level->name }}</strong></h3>
