@@ -14,9 +14,11 @@ class Profile extends Component
     public $hasBankInfo, $hasPin;
     public $name, $email, $level, $referred_by, $referral_code, $bank_name, $account_name, $account_number, $bank_code;
     public $banks = [];
-    public $transaction_pin;
     public $showBankModal = false;
     public $showPinModal = false;
+    public $transaction_pin = '';
+    public $new_transaction_pin = '';
+
 
     public $showUserModal = false;
     public $current_password, $new_password, $new_password_confirmation;
@@ -31,7 +33,7 @@ class Profile extends Component
         $this->referral_code = $user->referral_code;
         $this->referred_by = $user->referrer->name ?? null;
         $this->level = Level::findOrFail($user->level);
-        $this->transaction_pin = $user->transaction_pin ?? true;
+        $this->transaction_pin = $user->transaction_pin;
 
         $bank = $user->bankInfo;
         if ($bank) {
@@ -190,16 +192,16 @@ class Profile extends Component
     public function saveTransactionPin()
     {
         $this->validate([
-            'transaction_pin' => 'required|digits:4',
+            'new_transaction_pin' => 'required|digits:4',
         ]);
 
         auth()->user()->update([
-            'transaction_pin' => Hash::make($this->transaction_pin),
+            'transaction_pin' => Hash::make($this->new_transaction_pin),
         ]);
 
         $this->reset('transaction_pin');
-        session()->flash('success', 'Transaction PIN set successfully.');
         $this->closePinModal();
+        session()->flash('success', 'Transaction PIN set successfully.');
     }
 
 
@@ -211,6 +213,8 @@ class Profile extends Component
     public function closePinModal()
     {
         $this->showPinModal = false;
+        $this->mount();
+        session()->flash('success', 'Transaction PIN set successfully.');
     }
 
 

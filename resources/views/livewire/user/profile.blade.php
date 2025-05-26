@@ -149,33 +149,34 @@
         </div>
 
         {{-- Transaction PIN Modal --}}
-        <div class="modal fade @if ($showPinModal) show d-block @endif" tabindex="-1" role="dialog"
-            @if ($showPinModal) style="background-color: rgba(0,0,0,0.5);" @endif>
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <form wire:submit.prevent="saveTransactionPin">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Set Transaction PIN</h5>
-                            <button type="button" class="btn-close" wire:click="closePinModal"></button>
+       <div class="modal fade @if ($showPinModal) show d-block @endif" tabindex="-1" role="dialog"
+        @if ($showPinModal) style="background-color: rgba(0,0,0,0.5);" @endif>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form wire:submit.prevent="saveTransactionPin">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $transaction_pin ? 'Change' : 'Set' }} Transaction PIN</h5>
+                        <button type="button" class="btn-close" wire:click="closePinModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Transaction PIN</label>
+                            <input type="password"
+                                class="form-control @error('new_transaction_pin') is-invalid @enderror"
+                                wire:model.defer="new_transaction_pin"
+                                placeholder="Enter new PIN">
+                            @error('new_transaction_pin')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Transaction PIN</label>
-                                <input type="password"
-                                    class="form-control @error('transaction_pin') is-invalid @enderror"
-                                    wire:model.defer="transaction_pin" placeholder="Enter new PIN">
-                                @error('transaction_pin')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary" type="submit">Save PIN</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Save PIN</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
         {{-- Bank Modal --}}
         <div class="modal fade @if ($showBankModal) show d-block @endif" tabindex="-1" role="dialog"
