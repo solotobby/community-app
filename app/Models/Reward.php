@@ -18,6 +18,7 @@ class Reward extends Model
         'amount',
         'currency',
         'status',
+        'claim_expired'
     ];
 
     public function user()

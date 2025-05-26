@@ -27,7 +27,9 @@ class User extends Authenticatable
         'referral_code',
         'level',
         'referrer_id',
-        'transaction_pin'
+        'transaction_pin',
+        'raffle_draw_count',
+        'can_raffle'
     ];
 
     /**

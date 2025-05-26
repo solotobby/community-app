@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('transaction_pin')->after('level')->nullable();
+        Schema::table('rewards', function (Blueprint $table) {
+            $table->boolean('claim_expired')->default(false)->after('is_claim');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('transaction_pin');
+        Schema::table('rewards', function (Blueprint $table) {
+            $table->dropColumn('claim_expired');
         });
     }
 };

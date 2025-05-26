@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('transaction_pin')->after('level')->nullable();
+            $table->boolean('can_raffle')->default(false)->after('level');
+            $table->integer('raffle_draw_count')->default(0)->after('can_raffle');
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('transaction_pin');
+            $table->dropColumn(['can_raffle', 'raffle_draw_count']);
         });
     }
 };
