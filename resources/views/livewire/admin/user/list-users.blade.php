@@ -1,4 +1,15 @@
-<div>
+<div class="content">
+      @if (session()->has('success'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 3000)"
+            x-show="show"
+            x-transition
+            class="alert alert-success"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="block block-rounded">
         <div class="block-header block-header-default">
             <h3 class="block-title">Users</h3>

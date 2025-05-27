@@ -1,10 +1,16 @@
 <div>
     <div class="content">
-        @if (session()->has('success'))
-            <div class="alert alert-success mb-3">
-                {{ session('success') }}
-            </div>
-        @endif
+         @if (session()->has('success'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 3000)"
+            x-show="show"
+            x-transition
+            class="alert alert-success"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
 
         <table class="table table-bordered">
             <thead>

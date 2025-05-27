@@ -26,7 +26,10 @@ class User extends Authenticatable
         'has_subscribed',
         'referral_code',
         'level',
-        'referrer_id'
+        'referrer_id',
+        'transaction_pin',
+        'raffle_draw_count',
+        'can_raffle'
     ];
 
     /**
@@ -37,6 +40,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'transaction_pin',
     ];
 
     /**
@@ -86,9 +90,18 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'referrer_id');
     }
 
-    // User.php
+    public function bankInfo()
+    {
+        return $this->hasOne(BankInfo::class);
+    }
+
     public function level()
     {
         return $this->belongsTo(Level::class, 'level');
+    }
+
+    public function raffleDraws()
+    {
+        return $this->hasMany(RaffleDraw::class);
     }
 }

@@ -1,15 +1,14 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
+use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\AdminDashboard;
 use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
+use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
 
@@ -38,18 +37,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     //   Route::get('/users', ListUsers::class)->name('admin.users.index');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-});
-
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
 
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
     Route::get('/rewards', Rewards::class)->name('rewards');
+    Route::get('settings/profile', Profile::class)->name('settings');
+    Route::get('raffle/draw', RaffleDraw::class)->name('raffle.draw');
+    Route::post('claim/draw', RaffleDraw::class)->name('claim.draw');
 });
 
 require __DIR__ . '/auth.php';

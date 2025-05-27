@@ -14,13 +14,14 @@ class LevelItemsManager extends Component
 
     public $itemname;
     public $price;
+    public $itemToDeleteId;
 
     public $showModal = false;
 
     public function mount($level)
     {
-      $this->level = Level::findOrFail($level); // Convert ID to model
-    $this->loadItems();
+        $this->level = Level::findOrFail($level);
+        $this->loadItems();
     }
 
     public function loadItems()
@@ -35,6 +36,12 @@ class LevelItemsManager extends Component
         $this->showModal = true;
     }
 
+
+    public function confirmDelete($id)
+    {
+        $this->itemToDeleteId = $id;
+        $this->dispatch('show-delete-modal');
+    }
     public function closeModal()
     {
         $this->showModal = false;
@@ -62,9 +69,21 @@ class LevelItemsManager extends Component
         $this->closeModal();
     }
 
+    public function deleteItem()
+    {
+        $item = LevelItem::find($this->itemToDeleteId);
+        if ($item) {
+            $item->delete();
+        }
+
+        $this->itemToDeleteId = null;
+        $this->dispatch('hide-delete-modal');
+        $this->loadItems();
+        session()->flash('success', 'Level item deleted successfully.');
+    }
+
     public function render()
     {
         return view('livewire.admin.level.level-items-manager');
     }
 }
-
