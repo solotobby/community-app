@@ -15,7 +15,7 @@ class Rewards extends Component
 
     public function render()
     {
-        $rewards = Reward::where('user_id', auth()->id())
+        $rewards = Reward::with('referrer')->where('user_id', auth()->id())
             ->latest()
             ->paginate(10);
 

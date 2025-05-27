@@ -125,7 +125,6 @@ class Register extends Component
         )->json();
 
         if (!$response['status']) {
-            // handle error
             session()->flash('error', 'Payment initialization failed, try again.');
             return;
         }

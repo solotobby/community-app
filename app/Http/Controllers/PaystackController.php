@@ -44,7 +44,6 @@ class PaystackController extends Controller
         return redirect($response['data']['authorization_url']);
     }
 
-
     public function callback(Request $request)
     {
         $reference = $request->query('reference');
@@ -58,15 +57,19 @@ class PaystackController extends Controller
             $transaction->update(['status' => 'success']);
 
             $user = $transaction->user;
-            $user->update(['has_subscribed' => true]);
+            $user->update([
+                'has_subscribed' => true,
+                'can_raffle' => true,
+                'raffle_draw_count' => $user->raffle_draw_count + 1
+            ]);
 
             $user->load('level', 'referrer');
 
             if ($user->referrer_id && $user->level) {
                 $referrer = $user->referrer;
 
-               $levelId= $user->level;
-               $level =  Level::find($levelId);
+                $levelId = $user->level;
+                $level =  Level::find($levelId);
 
                 $bonus = $level->referral_bonus;
 
@@ -74,11 +77,17 @@ class PaystackController extends Controller
                     'user_id' => $referrer->id,
                     'referrer_id' => $user->id,
                     'reward_type' => 'referral',
-                    'reward_status' => 'pending', //['pending', 'earned', 'expired']
+                    'reward_status' => 'pending',
                     'is_claim' => false,
                     'amount' => $bonus,
                     'currency' => 'NGN',
                     'status' => 'active',
+                ]);
+
+                $referrer->update([
+                    'can_raffle' => true,
+                    'raffle_draw_count' => $referrer->raffle_draw_count + 1
+
                 ]);
             }
             Auth::login($user);
@@ -87,6 +96,87 @@ class PaystackController extends Controller
         } else {
             $transaction->update(['status' => 'failed']);
             return redirect()->route('home')->with('error', 'Payment failed.');
+        }
+    }
+
+    public function resolveAccount($account_number, $bank_code)
+    {
+        $paystackSecretKey = config('services.paystack.secret_key');
+
+        $response = Http::withToken($paystackSecretKey)
+            ->get('https://api.paystack.co/bank/resolve', [
+                'account_number' => $account_number,
+                'bank_code' => $bank_code,
+            ]);
+
+        if ($response->successful() && $response->json('status')) {
+            return [
+                'status' => true,
+                'recipient_code' => $response->json('data.recipient_code'),
+                'data' => $response->json('data'),
+            ];
+        }
+
+        return [
+            'status' => false,
+            'message' => $response->json('message') ?? 'Recipient creation failed',
+        ];
+    }
+
+    public function createRecipient($name, $account_number, $bank_code, $currency)
+    {
+        $payload = [
+            'type' => 'nuban',
+            'name' => $name,
+            'account_number' => $account_number,
+            'bank_code' => $bank_code,
+            'currency' => $currency,
+        ];
+
+        $paystackSecretKey = config('services.paystack.secret_key');
+
+        $response = Http::withToken($paystackSecretKey)
+            ->post('https://api.paystack.co/transferrecipient', $payload);
+
+        if ($response->successful() && $response->json('status')) {
+            return [
+                'status' => true,
+                'recipient_code' => $response->json('data.recipient_code'),
+                'data' => $response->json('data'),
+            ];
+        }
+
+        return [
+            'status' => false,
+            'message' => $response->json('message') ?? 'Recipient creation failed',
+        ];
+    }
+
+    public function initializeTransfer($amount, $recipient_code, $reason = null, $txn = null)
+    {
+        $paystackSecretKey = config('services.paystack.secret_key');
+
+        $response = Http::withToken($paystackSecretKey)
+            ->post('https://api.paystack.co/transfer', [
+                'source' => 'balance',
+                'amount' => $amount * 100,
+                'recipient' => $recipient_code,
+                'reason' => $reason ?? 'Payout',
+                'reference' => $txn,
+            ]);
+
+        if ($response->successful()) {
+            return [
+                'status' => true,
+                'message' => 'Transfer initialized successfully',
+                'data' => $response->json('data'),
+            ];
+        } else {
+            return [
+                'status' => false,
+                'message' => $response->json('message') ?? 'Transfer failed',
+                'errors' => $response->json(),
+            ];
         }
     }
 }

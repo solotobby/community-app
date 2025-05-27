@@ -99,4 +99,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Level::class, 'level');
     }
+
+    public function raffleDraws()
+    {
+        return $this->hasMany(RaffleDraw::class);
+    }
 }

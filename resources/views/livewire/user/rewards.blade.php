@@ -9,7 +9,7 @@
         <div class="container-fluid p-0 m-0">
             <div class="card border-0">
                 <div class="card-header">
-                    <h5 class="mb-0">My Rewards</h5>
+                    <h5 class="mb-0">My Referral</h5>
                 </div>
                 <div class="card-body p-2 table-responsive">
                     <table class="table table-bordered table-hover" style="background-color: transparent;">
@@ -39,7 +39,7 @@
                                         </span>
                                     </td>
                                     <td>{{ $reward->is_claim ? 'Yes' : 'No' }}</td>
-                                    <td>{{ $reward->user->name ?? '-' }}</td>
+                                    <td>{{ $reward->referrer->name ?? '-' }}</td>
                                     <td>
                                         @if (!$reward->isclaim && $reward->reward_status === 'pending')
                                             <button wire:click="claim({{ $reward->id }})"

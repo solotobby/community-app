@@ -8,6 +8,7 @@ use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
+use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
 
@@ -41,6 +42,8 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(f
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
     Route::get('/rewards', Rewards::class)->name('rewards');
     Route::get('settings/profile', Profile::class)->name('settings');
+    Route::get('raffle/draw', RaffleDraw::class)->name('raffle.draw');
+    Route::post('claim/draw', RaffleDraw::class)->name('claim.draw');
 });
 
 require __DIR__ . '/auth.php';

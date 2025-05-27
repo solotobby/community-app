@@ -73,17 +73,18 @@
             <a class="nav-main-link {{ request()->routeIs('user.rewards') ? 'active' : '' }}"
                 href="{{ route('user.rewards') }}">
                 <i class="nav-main-link-icon fa fa-history"></i>
-                <span class="nav-main-link-name">Rewards</span>
+                <span class="nav-main-link-name">Referrals</span>
             </a>
         </li>
 
-        <!-- Settings -->
-        {{-- <li class="nav-main-item">
-            <a class="nav-main-link ">
+        <!-- Raffle Draw-->
+        <li class="nav-main-item">
+             <a class="nav-main-link {{ request()->routeIs('user.raffle.draw') ? 'active' : '' }}"
+                href="{{ route('user.raffle.draw') }}">
                 <i class="nav-main-link-icon fa fa-user-cog"></i>
-                <span class="nav-main-link-name">Account Settings</span>
+                <span class="nav-main-link-name">Raffle Draw</span>
             </a>
-        </li> --}}
+        </li>
 
          <!-- Settings -->
          <li class="nav-main-item">
