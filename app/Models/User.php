@@ -29,7 +29,16 @@ class User extends Authenticatable
         'referrer_id',
         'transaction_pin',
         'raffle_draw_count',
-        'can_raffle'
+        'can_raffle',
+        'address',
+        'country',
+        'lga',
+        'state',
+        'landmark',
+        'address',
+        'phone_verified_at',
+        'phone_verified',
+        'phone'
     ];
 
     /**

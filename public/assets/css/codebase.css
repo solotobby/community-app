@@ -142,6 +142,52 @@
   }
 }
 
+.profile-section {
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.section-icon {
+    color: #4f46e5;
+    margin-right: 6px;
+}
+
+.info-row {
+    margin-bottom: 1rem;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #555;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    color: #000;
+    font-weight: 600;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.status-verified {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
