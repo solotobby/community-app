@@ -86,7 +86,7 @@
                                 <div class="d-flex align-items-center">
                                     <code class="bg-light px-2 py-1 rounded me-2">{{ $referral_code }}</code>
                                     <button class="btn btn-outline-secondary btn-sm"
-                                        onclick="copyToClipboard('{{ config('app.url') . '/register/' . $referral_code }}')">
+                                        onclick="copyToClipboard('{{ config('app.url') . '/register?ref=' . $referral_code }}')">
                                         <i class="fas fa-copy"></i>
                                     </button>
 

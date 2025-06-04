@@ -1,6 +1,6 @@
 <div>
     <div class="p-4">
-        <h2 class="text-xl font-semibold mb-4">Raffle Draw</h2>
+        {{-- <h2 class="text-xl font-semibold mb-4">Raffle Draw</h2> --}}
 
         {{-- Session Messages --}}
         @if (session()->has('message'))
@@ -16,17 +16,20 @@
         @endif
 
         {{-- Raffle Draw Button --}}
-        <div class="mb-4">
+        {{-- <div class="mb-4">
             <button wire:click="performDraw"
                 class="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded {{ $user->raffle_draw_count < 1 ? 'opacity-50 cursor-not-allowed' : '' }}"
                 {{ $user->raffle_draw_count < 1 ? 'disabled' : '' }}>
                 Play Raffle Draw
             </button>
             <p class="text-sm text-gray-600 mt-1">You have {{ $user->raffle_draw_count }} raffle draw(s) left</p>
-        </div>
+        </div> --}}
 
         {{-- Draw History --}}
-        <h3 class="text-lg font-semibold mb-2">Raffle Rewards</h3>
+          <div class="card border-0">
+                <div class="card-header">
+                    <h5 class="mb-0">My Referral Reward(s)</h5>
+                </div>
         <div class="card-body p-2 table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -77,6 +80,7 @@
                 </tbody>
             </table>
         </div>
+    </div>
     </div>
 
     {{-- Claim Modal --}}

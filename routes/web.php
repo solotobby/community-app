@@ -8,6 +8,7 @@ use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
+use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
@@ -38,6 +39,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 });
 
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
+
+    Route::get('/raffle-claim/{reward_id}', RaffleClaim::class)->name('raffle.claim');
 
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
     Route::get('/rewards', Rewards::class)->name('rewards');
