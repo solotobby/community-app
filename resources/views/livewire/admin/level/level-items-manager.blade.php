@@ -14,40 +14,56 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade @if ($showModal) show d-block @endif" tabindex="-1" role="dialog"
-            @if ($showModal) style="background-color: rgba(0,0,0,0.5);" @endif>
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add New Item</h5>
-                        <button type="button" class="btn-close" wire:click="closeModal"></button>
+       <div class="modal fade @if ($showModal) show d-block @endif" tabindex="-1" role="dialog"
+    @if ($showModal) style="background-color: rgba(0,0,0,0.5);" @endif>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Item</h5>
+                <button type="button" class="btn-close" wire:click="closeModal"></button>
+            </div>
+            <div class="modal-body">
+                <form wire:submit.prevent="submit">
+                    <div class="mb-3">
+                        <label class="form-label">Item Name</label>
+                        <input wire:model="itemname" type="text"
+                            class="form-control @error('itemname') is-invalid @enderror">
+                        @error('itemname')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <div class="modal-body">
-                        <form wire:submit.prevent="submit">
-                            <div class="mb-3">
-                                <label class="form-label">Item Name</label>
-                                <input wire:model="itemname" type="text"
-                                    class="form-control @error('itemname') is-invalid @enderror">
-                                @error('itemname')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Price</label>
-                                <input wire:model="price" type="number" step="0.01"
-                                    class="form-control @error('price') is-invalid @enderror">
-                                @error('price')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <button class="btn btn-primary" type="submit">Add Item</button>
-                        </form>
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input wire:model="price" type="number" step="0.01"
+                            class="form-control @error('price') is-invalid @enderror">
+                        @error('price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Item Image</label>
+                        <input wire:model="image" type="file"
+                            class="form-control @error('image') is-invalid @enderror">
+                        @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+
+                        @if ($image)
+                            <div class="mt-2">
+                                <img src="{{ $image->temporaryUrl() }}" class="img-thumbnail" style="max-height: 150px;">
+                            </div>
+                        @endif
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Add Item</button>
+                </form>
             </div>
         </div>
+    </div>
+</div>
+
 
         <!-- List of Items -->
         @if ($items->count())

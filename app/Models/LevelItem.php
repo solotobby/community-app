@@ -12,6 +12,7 @@ class LevelItem extends Model
     protected $fillable = [
         'level_id',
         'item_name',
+        'item_url',
         'price',
         'currency',
         'created_by',

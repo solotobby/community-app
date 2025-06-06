@@ -12,6 +12,7 @@ class Level extends Model
     protected $fillable = [
         'name',
         'registration_amount',
+        'entry_gift',
         'referral_bonus',
         'currency',
         'created_by',

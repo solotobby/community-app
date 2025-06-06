@@ -5,15 +5,19 @@ namespace App\Livewire\Admin\Level;
 use Livewire\Component;
 use App\Models\Level;
 use App\Models\LevelItem;
+use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class LevelItemsManager extends Component
 {
+
+    use WithFileUploads;
     public $level;
     public $items;
-
     public $itemname;
     public $price;
+    public $image;
     public $itemToDeleteId;
 
     public $showModal = false;
@@ -50,25 +54,31 @@ class LevelItemsManager extends Component
     protected $rules = [
         'itemname' => 'required|string|max:255',
         'price' => 'required|numeric|min:0',
+        'image' => 'required|image|max:2048', // optional: limit size to 2MB
     ];
 
     public function submit()
     {
         $this->validate();
 
+        $filePath = 'ad/' . time() . '.' . $this->image->getClientOriginalExtension();
+        Storage::disk('s3')->put($filePath, file_get_contents($this->image->getRealPath()), 'public');
+
+        $url = env('AWS_URL') . '/' . $filePath;
+
         $this->level->levelItems()->create([
             'item_name' => $this->itemname,
             'price' => $this->price,
             'created_by' => Auth::id(),
+            'item_url' => $url,
         ]);
 
         session()->flash('success', 'Item added successfully.');
 
+        $this->reset(['itemname', 'price', 'image']);
         $this->loadItems();
-
         $this->closeModal();
     }
-
     public function deleteItem()
     {
         $item = LevelItem::find($this->itemToDeleteId);

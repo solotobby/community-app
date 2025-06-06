@@ -20,7 +20,7 @@ class Register extends Component
 {
     public string $name = '';
     public string $email = '';
-    public string $referral_code     = '';
+    public string $referral_code;
     public string $password = '';
     public string $password_confirmation = '';
     public string $level = '';
@@ -29,9 +29,11 @@ class Register extends Component
     public $levels;
     public $selectedLevelAmount = null;
 
+
     public function mount()
     {
         $this->levels = \App\Models\Level::all();
+         $this->referral_code = request()->query('ref', '');
     }
 
     public function updatedLevel($value)

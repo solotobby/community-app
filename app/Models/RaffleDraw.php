@@ -15,6 +15,7 @@ class RaffleDraw extends Model
     protected $fillable = [
         'user_id',
         'reward',
+        'name',
         'price',
         'currency',
         'used_type',
@@ -23,11 +24,18 @@ class RaffleDraw extends Model
         'expired_at',
     ];
 
-     protected $casts = [
+    protected $casts = [
         'claimed_at' => 'datetime',
         'expired_at' => 'datetime',
         'price' => 'decimal:2',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($draw) {
+            $draw->name = 'Raffle-#' . rand(10000, 99999);
+        });
+    }
 
     public function user()
     {
@@ -35,12 +43,12 @@ class RaffleDraw extends Model
     }
     public function isClaimable(): bool
     {
-        return $this->status === self::STATUS_WON &&
+        return $this->status === self::STATUS_EARNED &&
             $this->expired_at->isFuture() &&
             is_null($this->claimed_at);
     }
 
-     public function isExpired()
+    public function isExpired()
     {
         return $this->expired_at && now()->gt($this->expired_at);
     }
@@ -48,6 +56,5 @@ class RaffleDraw extends Model
     public function canBeClaimed()
     {
         return $this->status === self::STATUS_PENDING && !$this->isExpired();
-    }   
-
+    }
 }
