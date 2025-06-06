@@ -80,6 +80,7 @@ class Profile extends Component
 
             if ($response->ok()) {
                 $this->banks = $response->json('data');
+                return $this->banks;
             } else {
                 session()->flash('error', 'Unable to fetch banks from Paystack.');
             }
@@ -224,7 +225,7 @@ class Profile extends Component
         ]);
 
         $this->closeContactModal();
-        $this->mount(); 
+        $this->mount();
         session()->flash('success', 'Contact information updated successfully.');
     }
 

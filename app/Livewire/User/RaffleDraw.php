@@ -77,8 +77,8 @@ class RaffleDraw extends Component
     private function fetchBanksFromPaystack(): array
     {
         try {
-            $paystackService = app(PaystackService::class);
-            return $paystackService->getBanks();
+            $paystackService = app(Profile::class);
+            return $paystackService->fetchBanks();
         } catch (\Exception $e) {
             Log::error('Failed to fetch banks', ['error' => $e->getMessage()]);
             $this->addError('banks', 'Unable to load banks. Please try again.');
@@ -100,7 +100,7 @@ class RaffleDraw extends Component
         }
 
         try {
-            $paystackService = app(PaystackService::class);
+            $paystackService = app(PaystackController::class);
             $accountData = $paystackService->resolveAccount($this->account_number, $bankCode);
 
             if ($accountData) {
@@ -209,7 +209,6 @@ class RaffleDraw extends Component
 
             $this->user = $this->user->fresh();
             session()->flash('success', 'Congratulations! You won a reward! Claim within 24 hours.');
-
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Draw creation failed', [
@@ -259,7 +258,6 @@ class RaffleDraw extends Component
             }
 
             session()->flash('success', 'Bank details saved successfully!');
-
         } catch (\Exception $e) {
             Log::error('Bank details save failed', [
                 'user_id' => $this->user->id,
@@ -288,7 +286,6 @@ class RaffleDraw extends Component
             $this->showClaimModal = true;
 
             session()->flash('success', 'Transaction PIN set successfully!');
-
         } catch (\Exception $e) {
             Log::error('Transaction PIN save failed', [
                 'user_id' => $this->user->id,
@@ -303,43 +300,53 @@ class RaffleDraw extends Component
      */
     public function confirmClaim()
     {
-        $this->validateOnly(['pin']);
+        try {
 
-        $draw = $this->selectedDraw;
+            $this->validateOnly('pin');
 
-        // Validate draw status
-        if (!$this->isDrawValid($draw)) {
-            $this->resetClaimProcess();
-            session()->flash('error', 'This reward has expired or is already claimed.');
-            return;
-        }
+            $draw = $this->selectedDraw;
 
-        // Verify PIN
-        if (!Hash::check($this->pin, $this->user->transaction_pin)) {
-            $this->resetClaimProcess();
-            session()->flash('error', 'Invalid transaction PIN.');
-            return;
-        }
+            // Validate draw status
+            if (!$this->isDrawValid($draw)) {
+                $this->resetClaimProcess();
+                session()->flash('error', 'This reward has expired or is already claimed.');
+                return;
+            }
 
-        // Process payment
-        if ($this->processPayment($draw)) {
-            $draw->update([
-                'status' => 'earned',
-                'claimed_at' => now(),
+            // Verify PIN
+            if (!Hash::check($this->pin, $this->user->transaction_pin)) {
+                $this->resetClaimProcess();
+                session()->flash('error', 'Invalid transaction PIN.');
+                return;
+            }
+
+            // Process payment
+            if ($this->processPayment($draw)) {
+                $draw->update([
+                    'status' => 'earned',
+                    'claimed_at' => now(),
+                ]);
+
+                $this->resetClaimProcess();
+                session()->flash('success', 'Payment has been initiated to your account.');
+            } else {
+                $this->resetClaimProcess();
+                session()->flash('error', 'Error processing payment to your account.');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Draw creation failed', [
+                'user_id' => $this->user->id,
+                'error' => $e->getMessage()
             ]);
-
-            $this->resetClaimProcess();
-            session()->flash('success', 'Payment has been initiated to your account.');
-        } else {
-            $this->resetClaimProcess();
-            session()->flash('error', 'Error processing payment to your account.');
+            session()->flash('error', 'An error occurred while processing your draw.');
         }
     }
 
     /**
      * Process payment with improved error handling
      */
-    private function processPayment(Raffle $draw): bool
+    private function processPayment($draw): bool
     {
         DB::beginTransaction();
         try {
@@ -359,20 +366,20 @@ class RaffleDraw extends Component
             $paystack = new PaystackController();
 
             // Create recipient if not exists
-            if (!$this->user->recipient_code) {
-                $response = $paystack->createRecipient(
-                    $this->user->bankInfo->account_name,
-                    $this->user->bankInfo->account_number,
-                    $this->user->bankInfo->bank_code,
-                    'NGN'
-                );
 
-                if ($response && isset($response['recipient_code'])) {
-                    $this->user->update(['recipient_code' => $response['recipient_code']]);
-                } else {
-                    throw new \Exception('Failed to create recipient');
-                }
+            $response = $paystack->createRecipient(
+                $this->user->bankInfo->account_name,
+                $this->user->bankInfo->account_number,
+                $this->user->bankInfo->bank_code,
+                'NGN'
+            );
+
+           // Log::info($response);
+            if ($response && isset($response['recipient_code'])) {
+                $this->user->update(['recipient_code' => $response['recipient_code']]);
+                //Log::info($this->user);
             }
+            $this->user->refresh();
 
             // Initialize transfer
             $transferResult = $paystack->initializeTransfer(
@@ -389,7 +396,6 @@ class RaffleDraw extends Component
             } else {
                 throw new \Exception($transferResult['message'] ?? 'Transfer failed');
             }
-
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Payment processing failed', [

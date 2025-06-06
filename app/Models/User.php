@@ -39,7 +39,8 @@ class User extends Authenticatable
         'phone_verified_at',
         'phone_verified',
         'phone',
-        'registration_draw'
+        'registration_draw',
+        'recipient_code'
     ];
 
     /**
