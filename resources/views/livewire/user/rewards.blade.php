@@ -46,18 +46,36 @@
                                         @endphp
                                         {{ $level->name }}</td>
                                     <td>
-                                        <span
-                                            class="badge {{ $reward->referrer->has_subscribed ? 'bg-success' : 'bg-warning text-dark' }}">
-                                            {{ $reward->referrer->has_subscribed ? 'Completed' : 'Pending' }}
+                                        @php
+                                            $isClaimed = $reward->is_claim;
+                                            $hasSubscribed = $reward->referrer->has_subscribed;
+
+                                            if (!$isClaimed && !$hasSubscribed) {
+                                                $status = 'Pending';
+                                                $badgeClass = 'bg-warning text-dark';
+                                            } elseif ($isClaimed && $hasSubscribed) {
+                                                $status = 'Earned';
+                                                $badgeClass = 'bg-success';
+                                            } elseif (!$isClaimed && $hasSubscribed) {
+                                                $status = 'Completed';
+                                                $badgeClass = 'bg-primary';
+                                            } else {
+                                                $status = 'Unknown';
+                                                $badgeClass = 'bg-secondary';
+                                            }
+                                        @endphp
+
+                                        <span class="badge {{ $badgeClass }}">
+                                            {{ $status }}
                                         </span>
+
                                     </td>
                                     <td>{{ $reward->is_claim ? 'Yes' : 'No' }}</td>
                                     <td>{{ $reward->referrer->name ?? '-' }}</td>
                                     <td>{{ $reward->referrer->email ?? '-' }}</td>
                                     <td>
                                         @if (!$reward->is_claim && $reward->referrer->has_subscribed)
-                                            <a href="{{ route('user.raffle.claim') }}"
-                                                class="btn btn-sm btn-success">
+                                            <a href="{{ route('user.raffle.claim') }}" class="btn btn-sm btn-success">
                                                 Claim Now
                                             </a>
                                         @else

@@ -5,6 +5,7 @@ namespace App\Livewire\User;
 use App\Models\Level;
 use App\Models\LevelItem;
 use App\Models\RaffleDraw;
+use App\Models\Reward;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -58,65 +59,89 @@ class RaffleClaim extends Component
     public function processRaffleDraw()
     {
         $this->showConfirmation = false;
-        $this->referralAmount = $this->userLevel->referral_bonus;
-        $this->entryFeeAmount = $this->userLevel->entry_gift;
-        $this->user = Auth::user();
+        $user = Auth::user();
 
-        // Determine draw amount
-        $amount = $this->drawType === 'referral'
-            ? $this->referralAmount
-            : $this->entryFeeAmount;
-        if (!$this->user->can_raffle && $this->user->raffle_draw_count === 0) {
-
-            $this->showConfirmation = false;
+        if (!$user->can_raffle && $user->raffle_draw_count === 0) {
             $this->showSuccess = false;
-            $this->errorMessage = 'You can not play a Raffle Draw as you do not have any slot, kindly upgrade your account or referral more users';
-           return;
-        };
-        $count = $this->drawType === 'referral'
-            ? 3
-            : rand(4, 7);
+            session()->flash('error', 'You cannot play a Raffle Draw as you do not have any slot. Kindly upgrade your account or refer more users.');
+            //  return redirect()->to(url()->current());
+
+            //   return redirect()->route(request()->route()->getName());
+        }
+
+        // If referral type, pick an available referral
+        if ($this->drawType === 'referral') {
+            $referral = Reward::where('user_id', $user->id)
+                ->where('reward_status', 'pending')
+                ->first();
+
+            if (!$referral) {
+                session()->flash('error', 'No available referrals to use for raffle draw.');
+                //  return redirect()->to(url()->current());
+
+                // return redirect()->route(request()->route()->getName());
+            }
+
+            Log::info($referral);
+            $amount = $referral->amount;
+        } else {
+            $amount = $this->userLevel->entry_gift;
+        }
+
+
+        $count = $this->drawType === 'referral' ? 3 : rand(4, 7);
         $finalItems = Arr::random($this->selectedItems, min($count, count($this->selectedItems)));
-        // Prepare reward data
+
         $rewards = LevelItem::whereIn('id', $finalItems)->get()->map(function ($item) {
             return [
                 'name' => $item->item_name,
                 'image' => $item->item_image,
             ];
         });
+
         DB::beginTransaction();
         try {
             // Save draw record
             $this->raffleDraw = RaffleDraw::create([
-                'user_id'   => $this->user->id,
-                'used_type'      => $this->drawType,
+                'user_id'   => $user->id,
+                'used_type' => $this->drawType,
                 'reward'    => json_encode($rewards),
-                'price'    => $amount,
+                'price'     => $amount,
                 'expired_at' => now()->addDays(3),
-                'currency' => 'NGN',
-                'status' => 'pending',
+                'currency'  => 'NGN',
+                'status'    => 'pending',
             ]);
 
+            // If referral, mark as earned
+            if ($this->drawType === 'referral' && isset($referral)) {
+                $referral->update([
+                    'reward_status' => 'earned',
+                    'is_claim' => true,
+                ]);
+            }
+
             // Update user's draw count
-            $newCount = $this->user->raffle_draw_count - 1;
-            $this->user->update([
+            $newCount = $user->raffle_draw_count - 1;
+            $user->update([
                 'raffle_draw_count' => $newCount,
                 'can_raffle' => $newCount > 0,
                 'registration_draw' => false,
             ]);
 
             DB::commit();
-
             $this->showSuccess = true;
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Draw creation failed', [
-                'user_id' => $this->user->id,
+                'user_id' => $user->id,
                 'error' => $e->getMessage()
             ]);
             session()->flash('error', 'An error occurred while processing your draw.');
+            // return redirect()->to(url()->current());
+            //return redirect()->route(request()->route()->getName()); // refresh page on failure
         }
     }
+
 
     public function resetDraw()
     {
