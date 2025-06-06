@@ -9,6 +9,8 @@ use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
 use App\Livewire\Admin\User\ListUsers;
+use App\Livewire\Admin\User\RaffleDraw as UserRaffleDraw;
+use App\Livewire\Admin\User\Reffaral;
 use App\Livewire\Admin\User\UserDetails;
 use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
@@ -39,6 +41,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Users
     Route::get('/users', ListUsers::class)->name('admin.users.index');
     Route::get('user-details/{id}', UserDetails::class)->name('admin.users.details');
+    Route::get('user-raffle-draw/{id}', UserRaffleDraw::class)->name('admin.users.raffle');
+    Route::get('user-referral/{id}', Reffaral::class)->name('admin.users.referral');
 });
 
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {

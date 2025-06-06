@@ -7,7 +7,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center">
                             <div class="avatar-container me-3">
-                                <div class="avatar bg-primary text-white d-flex align-items-center justify-content-center">
+                                <div
+                                    class="avatar bg-primary text-white d-flex align-items-center justify-content-center">
                                     {{ strtoupper(substr($user->name, 0, 2)) }}
                                 </div>
                             </div>
@@ -27,11 +28,15 @@
                             <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
                                 <i class="fas fa-edit me-1"></i>Edit User
                             </a>
-                             <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
-                                <i class="fas fa-eye me-1"></i>View Referral
+
+                            <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
+                                class="btn btn-primary" onclick="event.stopPropagation()">
+                                View Raffle Draw
                             </a>
-                             <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
-                                <i class="fas fa-eye me-1"></i>View Raffle Draw
+
+                            <a href="{{ route('admin.users.referral', $user) }}"
+                                class="btn btn-primary" onclick="event.stopPropagation()">
+                                View Referral
                             </a>
                         </div>
                     </div>
@@ -63,7 +68,8 @@
                         <div class="col-md-6">
                             <label class="form-label text-muted">Referral Code</label>
                             <div class="d-flex align-items-center">
-                                <code class="bg-light px-2 py-1 rounded me-2">{{ $user->referral_code ?? 'N/A' }}</code>
+                                <code
+                                    class="bg-light px-2 py-1 rounded me-2">{{ $user->referral_code ?? 'N/A' }}</code>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -83,11 +89,12 @@
                         <div class="col-md-6">
                             <label class="form-label text-muted">Email Verified</label>
                             <div>
-                                @if($user->email_verified_at)
+                                @if ($user->email_verified_at)
                                     <span class="badge bg-success">
                                         <i class="fas fa-check me-1"></i>Verified
                                     </span>
-                                    <small class="text-muted d-block">{{ $user->email_verified_at->format('d M, Y') }}</small>
+                                    <small
+                                        class="text-muted d-block">{{ $user->email_verified_at->format('d M, Y') }}</small>
                                 @else
                                     <span class="badge bg-warning">
                                         <i class="fas fa-exclamation-triangle me-1"></i>Not Verified
@@ -114,7 +121,8 @@
                         <div class="col-12">
                             <label class="form-label text-muted">Phone Number</label>
                             <div class="d-flex align-items-center">
-                                <div class="fw-medium font-monospace text-light">{{ $user->phone ?? 'Not provided' }}</div>
+                                <div class="fw-medium font-monospace text-light">{{ $user->phone ?? 'Not provided' }}
+                                </div>
                                 @if ($user->phone && !$user->phone_verified)
                                     <span class="badge bg-warning text-dark ms-2">
                                         <i class="fas fa-exclamation-triangle me-1"></i>
@@ -212,7 +220,8 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-label text-muted">Account Number</label>
-                                <div class="fw-medium  text-light font-monospace">{{ $user->bankInfo->account_number }}</div>
+                                <div class="fw-medium  text-light font-monospace">
+                                    {{ $user->bankInfo->account_number }}</div>
                             </div>
                             <div class="col-12">
                                 <label class="form-label text-muted">Account Name</label>
@@ -232,23 +241,22 @@
     </div>
 
 
-<style>
-.avatar-container {
-    width: 80px;
-    height: 80px;
-}
+    <style>
+        .avatar-container {
+            width: 80px;
+            height: 80px;
+        }
 
-.avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    font-weight: 600;
-}
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
 
-.card-header.bg-light {
-    background-color: #f8f9fa !important;
-}
-</style>
+        .card-header.bg-light {
+            background-color: #f8f9fa !important;
+        }
+    </style>
 </div>
-
