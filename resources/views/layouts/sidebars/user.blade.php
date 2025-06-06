@@ -86,6 +86,15 @@
             </a>
         </li>
 
+        <li class="nav-main-item">
+             <a class="nav-main-link {{ request()->routeIs('user.raffle.claim') ? 'active' : '' }}"
+                href="{{ route('user.raffle.claim') }}">
+                <i class="nav-main-link-icon fa fa-user-cog"></i>
+                <span class="nav-main-link-name">Raffle Page</span>
+            </a>
+        </li>
+
+
          <!-- Settings -->
          <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('user.settings') ? 'active' : '' }}"

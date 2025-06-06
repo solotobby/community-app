@@ -56,7 +56,7 @@
                                     <td>{{ $reward->referrer->email ?? '-' }}</td>
                                     <td>
                                         @if (!$reward->is_claim && $reward->referrer->has_subscribed)
-                                            <a href="{{ route('user.raffle.claim', ['reward_id' => $reward->id]) }}"
+                                            <a href="{{ route('user.raffle.claim') }}"
                                                 class="btn btn-sm btn-success">
                                                 Claim Now
                                             </a>

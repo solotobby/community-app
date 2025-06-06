@@ -38,7 +38,8 @@ class User extends Authenticatable
         'address',
         'phone_verified_at',
         'phone_verified',
-        'phone'
+        'phone',
+        'registration_draw'
     ];
 
     /**
