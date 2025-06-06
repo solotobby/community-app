@@ -101,6 +101,12 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'referrer_id');
     }
 
+    // The users this user has referred
+    public function referralCount()
+    {
+        return $this->hasMany(Reward::class, 'user_id');
+    }
+
     public function bankInfo()
     {
         return $this->hasOne(BankInfo::class);
