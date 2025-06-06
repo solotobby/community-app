@@ -8,6 +8,8 @@ use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
+use App\Livewire\Admin\User\ListUsers;
+use App\Livewire\Admin\User\UserDetails;
 use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
@@ -35,7 +37,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('level/items', AllLevelItems::class)->name('admin.level.items.all');
 
     // Users
-    //   Route::get('/users', ListUsers::class)->name('admin.users.index');
+    Route::get('/users', ListUsers::class)->name('admin.users.index');
+    Route::get('user-details/{id}', UserDetails::class)->name('admin.users.details');
 });
 
 Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
