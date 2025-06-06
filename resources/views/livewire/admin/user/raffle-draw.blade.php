@@ -7,9 +7,9 @@
     @endif
 
     <div>
-                   <a href="{{ route('admin.users.details', ['id' => $user->id]) }}" class="btn btn-secondary">
-                       <i class="fas fa-arrow-left me-1"></i>Back to User Details
-                   </a>
+        <a href="{{ route('admin.users.details', ['id' => $user->id]) }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to User Details
+        </a>
     </div>
     <div class="card shadow-sm border-0">
         <div class="card-header bg-grey d-flex justify-content-between align-items-center">

@@ -112,7 +112,7 @@ class User extends Authenticatable
         return $this->hasOne(BankInfo::class);
     }
 
-    public function levels()
+    public function level()
     {
         return $this->belongsTo(Level::class, 'level', 'id');
     }

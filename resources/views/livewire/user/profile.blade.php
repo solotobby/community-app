@@ -119,7 +119,8 @@
                             <div class="col-12">
                                 <label class="form-label text-muted">Phone Number</label>
                                 <div class="d-flex align-items-center">
-                                    <div class="fw-medium text-light font-monospace">{{ $phone ?? 'Not provided' }}</div>
+                                    <div class="fw-medium text-light font-monospace">{{ $phone ?? 'Not provided' }}
+                                    </div>
                                     @if ($phone && !$phone_verified)
                                         <span class="badge bg-warning text-dark">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
@@ -208,7 +209,6 @@
                                 Add Bank Details
                             </button>
                         @else
-
                         @endif
                     </div>
                     <div class="card-body">
@@ -398,30 +398,22 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Account Number <span
-                                            class="text-danger">*</span></label>
-                                    <div class="input-group">
+                                    <label class="form-label">Account Number <span class="text-danger">*</label>
+                                    <div class="input-group" x-data="{ number: @entangle('account_number') }"
+                                        x-effect="if(number.length === 10) { $wire.validateAccount() }">
                                         <input type="text" maxlength="10"
                                             class="form-control @error('account_number') is-invalid @enderror"
-                                            wire:model="account_number" placeholder="Enter 10-digit account number">
-                                        <button class="btn btn-outline-primary" type="button"
+                                            x-model="number" placeholder="Enter 10-digit account number">
+
+                                        <button type="button" class="btn btn-outline-secondary"
                                             wire:click="validateAccount" wire:loading.attr="disabled"
-                                            wire:target="validateAccount"
-                                            @if (!$bank_name || strlen($account_number) !== 10) disabled @endif>
-                                            <span wire:loading.remove wire:target="validateAccount">
-                                                <i class="fas fa-search me-1"></i>
-                                                Validate
-                                            </span>
+                                            wire:target="validateAccount">
+                                            <span wire:loading.remove wire:target="validateAccount">Validate</span>
                                             <span wire:loading wire:target="validateAccount">
-                                                <span class="spinner-border spinner-border-sm me-1"></span>
-                                                Validating...
+                                                <span class="spinner-border spinner-border-sm"></span>
                                             </span>
                                         </button>
                                     </div>
-                                    @error('account_number')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div class="form-text">Enter exactly 10 digits and select a bank to validate</div>
                                 </div>
 
                                 <div class="mb-3">
@@ -498,10 +490,10 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                 <div class="mb-3">
-                                    <label class="form-label">Local Government Area <span class="text-danger">*</span></label>
-                                    <input type="text"
-                                        class="form-control @error('lga') is-invalid @enderror"
+                                <div class="mb-3">
+                                    <label class="form-label">Local Government Area <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('lga') is-invalid @enderror"
                                         wire:model.defer="lga" placeholder="e.g., Ikeja">
                                     @error('lga')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -509,8 +501,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">State <span class="text-danger">*</span></label>
-                                    <input type="text"
-                                        class="form-control @error('state') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('state') is-invalid @enderror"
                                         wire:model.defer="state" placeholder="e.g., Lagos">
                                     @error('state')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -519,8 +510,7 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">Country <span class="text-danger">*</span></label>
-                                    <input type="text"
-                                        class="form-control @error('country') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('country') is-invalid @enderror"
                                         wire:model.defer="country" placeholder="e.g., Nigeria">
                                     @error('country')
                                         <div class="invalid-feedback">{{ $message }}</div>

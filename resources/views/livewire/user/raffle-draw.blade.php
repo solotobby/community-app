@@ -4,14 +4,14 @@
 
         {{-- Session Messages --}}
 
-        @if (session()->has('message'))
+        @if (session()->has('success'))
             <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success">
-                {{ session('message') }}
+                {{ session('success') }}
             </div>
         @endif
 
         @if (session()->has('error'))
-             <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger">
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger">
                 {{ session('error') }}
             </div>
         @endif
@@ -103,7 +103,8 @@
                         <button type="button" class="btn-close" wire:click="$set('showClaimModal', false)"></button>
                     </div>
                     <div class="modal-body">
-                        <p>An equivalent amount for your prizes <b>NGN{{ $draw->price }}</b> will be paid into your account as we do not have a collection center close to you</p>
+                        <p>An equivalent amount for your prizes <b>NGN{{ $draw->price }}</b> will be paid into your
+                            account as we do not have a collection center close to you</p>
                         <p>Payment will be made to the following bank account:</p>
                         <ul class="list-unstyled">
                             <li><strong>Bank:</strong> {{ $bankInfo->bank_name }}</li>
@@ -120,8 +121,13 @@
                             @enderror
                         </div>
 
+                        {{-- <span wire:loading.remove>Update Password</span> --}}
                         <button wire:click="confirmClaim" class="btn btn-success w-100 mt-3">
                             Confirm & Claim Reward
+                            <span wire:loading>
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                                Processing...
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -176,35 +182,37 @@
 
     {{-- Bank Modal --}}
     @if ($showBankModal)
-        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <form wire:submit.prevent="saveBankDetails">
                         <div class="modal-header">
-                            <h5 class="modal-title">Add Bank Details</h5>
+                            <h5 class="modal-title">
+                                <i class="fas fa-university text-primary me-2"></i>
+                                {{ $bank_name && $account_number && $account_name ? 'Update' : 'Add' }} Bank
+                                Details
+                            </h5>
                             <button type="button" class="btn-close" wire:click="closeBankModal"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label class="form-label">Bank Name</label>
-                                <select class="form-control @error('bank_name') is-invalid @enderror"
-                                    wire:model="bank_name">
-                                    <option value="">-- Select Bank --</option>
+                                <label for="bank" class="form-label">Select Bank</label>
+                                <select id="bank" class="form-select" wire:model="bank_code">
+                                    <option value="">-- Choose Bank --</option>
                                     @foreach ($banks as $bank)
-                                        <option value="{{ $bank['name'] }}">{{ $bank['name'] }}</option>
+                                        <option value="{{ $bank['code'] }}">{{ $bank['name'] }}</option>
                                     @endforeach
                                 </select>
-                                @error('bank_name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Account Number</label>
-                                <div class="input-group">
+                                <label class="form-label">Account Number <span class="text-danger">*</label>
+                                <div class="input-group" x-data="{ number: @entangle('account_number') }"
+                                    x-effect="if(number.length === 10) { $wire.validateAccount() }">
                                     <input type="text" maxlength="10"
                                         class="form-control @error('account_number') is-invalid @enderror"
-                                        wire:model="account_number" placeholder="Enter 10-digit account number">
+                                        x-model="number" placeholder="Enter 10-digit account number">
+
                                     <button type="button" class="btn btn-outline-secondary"
                                         wire:click="validateAccount" wire:loading.attr="disabled"
                                         wire:target="validateAccount">
@@ -214,24 +222,34 @@
                                         </span>
                                     </button>
                                 </div>
-                                @error('account_number')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Account Name</label>
                                 <input type="text" class="form-control @error('account_name') is-invalid @enderror"
                                     wire:model="account_name" readonly
-                                    placeholder="Account name will appear after validation">
+                                    placeholder="Will be auto-filled after validation">
                                 @error('account_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                                @if ($account_name)
+                                    <div class="form-text text-success">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Account validated successfully
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary" type="submit" {{ !$account_name ? 'disabled' : '' }}>
-                                Save Bank Details
+                            <button type="button" class="btn btn-secondary"
+                                wire:click="closeBankModal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled"
+                                @if (!$account_name) disabled @endif>
+                                <span wire:loading.remove>Save Bank Details</span>
+                                <span wire:loading>
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Saving...
+                                </span>
                             </button>
                         </div>
                     </form>

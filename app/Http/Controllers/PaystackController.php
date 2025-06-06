@@ -58,6 +58,7 @@ class PaystackController extends Controller
 
             $user = $transaction->user;
             $user->update([
+                'registration_draw' => true,
                 'has_subscribed' => true,
                 'can_raffle' => true,
                 'raffle_draw_count' => $user->raffle_draw_count + 1
@@ -179,5 +180,4 @@ class PaystackController extends Controller
             ];
         }
     }
-    
 }

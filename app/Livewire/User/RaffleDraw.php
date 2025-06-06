@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class RaffleDraw extends Component
@@ -34,6 +35,7 @@ class RaffleDraw extends Component
     public $new_transaction_pin_confirmation = '';
     public $bank_name = '';
     public $account_name = '';
+    public $bank_code = '';
     public $account_number = '';
 
     // Cached data
@@ -43,6 +45,7 @@ class RaffleDraw extends Component
     protected $rules = [
         'new_transaction_pin' => 'required|numeric|digits:4|confirmed',
         'bank_name' => 'required|string',
+        'bank_code' => 'required|string',
         'account_name' => 'required|string',
         'account_number' => 'required|string|min:10|max:10',
         'pin' => 'required|string',
@@ -58,76 +61,60 @@ class RaffleDraw extends Component
     {
         $this->user = Auth::user();
         $this->bankInfo = $this->user->bankInfo;
-        $this->banks = $this->getCachedBanks();
+        $this->banks =  $this->fetchBanks();
     }
 
     /**
      * Get banks with caching for better performance
      */
-    private function getCachedBanks(): array
-    {
-        return Cache::remember('paystack_banks', 3600, function () {
-            return $this->fetchBanksFromPaystack();
-        });
-    }
-
-    /**
-     * Fetch banks from Paystack API
-     */
-    private function fetchBanksFromPaystack(): array
+    public function fetchBanks()
     {
         try {
-            $paystackService = app(Profile::class);
-            return $paystackService->fetchBanks();
-        } catch (\Exception $e) {
-            Log::error('Failed to fetch banks', ['error' => $e->getMessage()]);
-            $this->addError('banks', 'Unable to load banks. Please try again.');
-            return [];
-        }
-    }
+            $response = Http::withToken(config('services.paystack.secret_key'))
+                ->get('https://api.paystack.co/bank');
 
-    /**
-     * Validate bank account details
-     */
-    public function validateAccount()
-    {
-        $this->validateOnly(['account_number', 'bank_name']);
-
-        $bankCode = $this->getBankCode($this->bank_name);
-        if (!$bankCode) {
-            $this->addError('bank_name', 'Invalid bank selected.');
-            return;
-        }
-
-        try {
-            $paystackService = app(PaystackController::class);
-            $accountData = $paystackService->resolveAccount($this->account_number, $bankCode);
-
-            if ($accountData) {
-                $this->account_name = $accountData['account_name'];
-                session()->flash('success', 'Account validated successfully!');
+            if ($response->ok()) {
+                $this->banks = $response->json('data');
+                return $this->banks;
             } else {
-                $this->addError('account_number', 'Unable to validate account. Please check your details.');
-                $this->account_name = '';
+                session()->flash('error', 'Unable to fetch banks from Paystack.');
             }
         } catch (\Exception $e) {
-            Log::error('Account validation failed', [
-                'account_number' => $this->account_number,
-                'bank_code' => $bankCode,
-                'error' => $e->getMessage()
-            ]);
-            $this->addError('account_number', 'Error validating account.');
-            $this->account_name = '';
+            session()->flash('error', 'Error fetching banks.');
         }
     }
 
-    /**
-     * Get bank code from bank name
-     */
-    private function getBankCode(string $bankName): ?string
+    public function validateAccount()
     {
-        return collect($this->banks)->firstWhere('name', $bankName)['code'] ?? null;
+        if (strlen($this->account_number) === 10 && $this->bank_code) {
+            $this->resolveAccountName();
+        } else {
+            session()->flash('error', 'Please select a bank and enter a valid 10-digit account number.');
+        }
     }
+
+    public function resolveAccountName()
+    {
+        try {
+            $response = Http::withToken(config('services.paystack.secret_key'))
+                ->get('https://api.paystack.co/bank/resolve', [
+                    'account_number' => $this->account_number,
+                    'bank_code' => $this->bank_code,
+                ]);
+
+            if ($response->ok()) {
+                $this->account_name = $response['data']['account_name'] ?? '';
+                session()->flash('success', 'Account name fetched successfully.');
+            } else {
+                $this->account_name = '';
+                session()->flash('error', 'Unable to resolve account name.');
+            }
+        } catch (\Exception $e) {
+            $this->account_name = '';
+            session()->flash('error', 'An error occurred while resolving account.');
+        }
+    }
+
 
     /**
      * Open claim modal and check prerequisites
@@ -226,22 +213,18 @@ class RaffleDraw extends Component
     {
         $this->validate([
             'bank_name' => 'required|string',
+            'bank_code' => 'required|string',
             'account_name' => 'required|string',
             'account_number' => 'required|string|min:10|max:10',
         ]);
 
-        $bankCode = $this->getBankCode($this->bank_name);
-        if (!$bankCode) {
-            $this->addError('bank_name', 'Invalid bank selected.');
-            return;
-        }
 
         try {
             BankInfo::updateOrCreate(
                 ['user_id' => $this->user->id],
                 [
                     'bank_name' => $this->bank_name,
-                    'bank_code' => $bankCode,
+                    'bank_code' => $this->bank_code,
                     'account_name' => $this->account_name,
                     'account_number' => $this->account_number,
                 ]
@@ -374,7 +357,7 @@ class RaffleDraw extends Component
                 'NGN'
             );
 
-           // Log::info($response);
+            // Log::info($response);
             if ($response && isset($response['recipient_code'])) {
                 $this->user->update(['recipient_code' => $response['recipient_code']]);
                 //Log::info($this->user);
@@ -437,8 +420,8 @@ class RaffleDraw extends Component
     // Field reset methods
     private function resetBankFields()
     {
-        $this->reset(['bank_name', 'account_name', 'account_number']);
-        $this->resetErrorBag(['bank_name', 'account_name', 'account_number']);
+        $this->reset(['bank_name', 'account_name', 'account_number', 'bank_code']);
+        $this->resetErrorBag(['bank_name', 'account_name', 'account_number', 'bank_code']);
     }
 
     private function resetPinFields()
