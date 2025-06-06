@@ -9,8 +9,7 @@ use Livewire\WithPagination;
 
 class Reffaral extends Component
 {
-
-      use WithPagination;
+    use WithPagination;
 
     public $userId;
     public $user;
