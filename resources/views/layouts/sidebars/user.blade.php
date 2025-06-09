@@ -68,31 +68,32 @@
         </li> --}}
 
 
+
+        <!-- Raffle Draw-->
+        <li class="nav-main-item">
+            <a class="nav-main-link {{ request()->routeIs('user.raffle.draw') ? 'active' : '' }}"
+                href="{{ route('user.raffle.draw') }}">
+                <i class="nav-main-link-icon fa fa-ticket-alt"></i>
+                <span class="nav-main-link-name">Raffle Draw Winnings</span>
+            </a>
+        </li>
+
         <!-- Rewards -->
         <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('user.rewards') ? 'active' : '' }}"
                 href="{{ route('user.rewards') }}">
-                <i class="nav-main-link-icon fa fa-history"></i>
+                <i class="nav-main-link-icon fa fa-users"></i>
                 <span class="nav-main-link-name">Referrals</span>
             </a>
         </li>
-
-        <!-- Raffle Draw-->
-        <li class="nav-main-item">
-             <a class="nav-main-link {{ request()->routeIs('user.raffle.draw') ? 'active' : '' }}"
-                href="{{ route('user.raffle.draw') }}">
-                <i class="nav-main-link-icon fa fa-user-cog"></i>
-                <span class="nav-main-link-name">Raffle Draw</span>
-            </a>
-        </li>
-
-        <li class="nav-main-item">
+        
+        {{-- <li class="nav-main-item">
              <a class="nav-main-link {{ request()->routeIs('user.raffle.claim') ? 'active' : '' }}"
                 href="{{ route('user.raffle.claim') }}">
                 <i class="nav-main-link-icon fa fa-user-cog"></i>
                 <span class="nav-main-link-name">Raffle Page</span>
             </a>
-        </li>
+        </li> --}}
 
 
          <!-- Settings -->
