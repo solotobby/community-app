@@ -28,9 +28,27 @@
 
         {{-- Draw History --}}
         <div class="card border-0">
-            <div class="card-header">
-                <h5 class="mb-0">My Raffle Draw Reward(s)</h5>
+            <div class="card-header bg-grey d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-gift text-primary me-2"></i>
+                    My Raffle Draw Reward(s)
+                </h5>
+                {{-- <div class="d-flex gap-2 align-items-center">
+                    <div class="badge bg-info">
+                        Total: {{ $user->raffleDraws()->count() }}
+                    </div>
+                    <div class="badge bg-success">
+                        Claimed: {{ $user->raffleDraws()->where('status', 'earned')->count() }}
+                    </div>
+                    <div class="badge bg-warning">
+                        Pending: {{ $user->raffleDraws()->where('status', 'pending')->count() }}
+                    </div>
+                    <div class="badge bg-danger">
+                        Expired: {{ $user->raffleDraws()->where('status', 'expired')->count() }}
+                    </div>
+                </div> --}}
             </div>
+
             <div class="card-body p-2 table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead>
@@ -52,9 +70,27 @@
                                 <th class="text-center" scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $draw->name ?? '-' }}</td>
                                 <td>
-                                    @foreach (json_decode($draw->reward, true) as $reward)
-                                        <li>{{ $reward['name'] }}</li>
-                                    @endforeach
+                                    @if ($draw->reward)
+                                        @php
+                                            $rewards = is_string($draw->reward)
+                                                ? json_decode($draw->reward, true)
+                                                : $draw->reward;
+                                        @endphp
+                                        @if (is_array($rewards))
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach ($rewards as $reward)
+                                                    <li class="small">
+                                                        <i class="fas fa-gift text-primary me-1"></i>
+                                                        {{ is_array($reward) ? $reward['name'] ?? 'Unknown' : $reward }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <span class="text-muted">{{ $draw->reward }}</span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted">No rewards specified</span>
+                                    @endif
                                 </td>
                                 {{-- <td>{{ number_format($draw->price, 2) }}</td> --}}
                                 {{-- <td>{{ strtoupper($draw->currency) }}</td> --}}
@@ -90,8 +126,104 @@
                     </tbody>
                 </table>
             </div>
+            {{-- Pagination --}}
+            @if ($draws->hasPages())
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted small">
+                        Showing {{ $draws->firstItem() }} to {{ $draws->lastItem() }} of {{ $draws->total() }}
+                        results
+                    </div>
+                    {{ $draws->links() }}
+                </div>
+            @endif
         </div>
     </div>
+
+    {{-- Contact Information Modal (First Modal) --}}
+    @if ($showContactModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form wire:submit.prevent="saveContactInfo">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-address-book text-primary me-2"></i>
+                                Update Contact Information
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="closeContactModal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <small>Please provide your contact information to complete the claim process.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control @error('phone') is-invalid @enderror"
+                                    wire:model.defer="phone" placeholder="e.g., +234 801 234 5678">
+                                @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address <span class="text-danger">*</span></label>
+                                <textarea class="form-control @error('address') is-invalid @enderror" wire:model.defer="address" rows="3"
+                                    placeholder="Enter your full address"></textarea>
+                                @error('address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Landmark (Optional)</label>
+                                <input type="text" class="form-control @error('landmark') is-invalid @enderror"
+                                    wire:model.defer="landmark" placeholder="e.g., Near City Mall">
+                                @error('landmark')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Local Government Area <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('lga') is-invalid @enderror"
+                                    wire:model.defer="lga" placeholder="e.g., Ikeja">
+                                @error('lga')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">State <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('state') is-invalid @enderror"
+                                    wire:model.defer="state" placeholder="e.g., Lagos">
+                                @error('state')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Country <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('country') is-invalid @enderror"
+                                    wire:model.defer="country" placeholder="e.g., Nigeria">
+                                @error('country')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                wire:click="closeContactModal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                <span wire:loading.remove>Save Contact Info & Continue</span>
+                                <span wire:loading>
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Saving...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 
     {{-- Claim Modal --}}
     @if ($showClaimModal)
@@ -103,7 +235,7 @@
                         <button type="button" class="btn-close" wire:click="$set('showClaimModal', false)"></button>
                     </div>
                     <div class="modal-body">
-                        <p>An equivalent amount for your prizes <b>NGN{{ $draw->price }}</b> will be paid into your
+                        <p>An equivalent amount for your prizes <b>NGN{{ $selectedDraw->price }}</b> will be paid into your
                             account as we do not have a collection center close to you</p>
                         <p>Payment will be made to the following bank account:</p>
                         <ul class="list-unstyled">
@@ -137,7 +269,8 @@
 
     {{-- Set Transaction PIN Modal --}}
     @if ($showSetPinModal)
-        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal fade show d-block" tabindex="-1" role="dialog"
+            style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <form wire:submit.prevent="saveTransactionPin">
@@ -195,6 +328,12 @@
                             <button type="button" class="btn-close" wire:click="closeBankModal"></button>
                         </div>
                         <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <small>Sorry, As we do not have a collection point in your area at the moment,
+                                    an equivalent amount of your winnings will be made into the account details you
+                                    submit below.</small>
+                            </div>
                             <div class="mb-3">
                                 <label for="bank" class="form-label">Select Bank</label>
                                 <select id="bank" class="form-select" wire:model="bank_code">
@@ -226,7 +365,8 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Account Name</label>
-                                <input type="text" class="form-control @error('account_name') is-invalid @enderror"
+                                <input type="text"
+                                    class="form-control @error('account_name') is-invalid @enderror"
                                     wire:model="account_name" readonly
                                     placeholder="Will be auto-filled after validation">
                                 @error('account_name')

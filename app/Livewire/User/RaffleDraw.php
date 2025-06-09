@@ -16,18 +16,21 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Livewire\WithPagination;
 
 class RaffleDraw extends Component
 {
+    use WithPagination;
     // Core properties
     public $user;
-    public $selectedDraw;
+    public $selectedDraw = null;
     public $bankInfo;
 
     // Modal states
     public $showClaimModal = false;
     public $showSetPinModal = false;
     public $showBankModal = false;
+    public $showContactModal = false; // New contact modal state
 
     // Form fields
     public $pin = '';
@@ -37,6 +40,14 @@ class RaffleDraw extends Component
     public $account_name = '';
     public $bank_code = '';
     public $account_number = '';
+
+    // Contact form fields
+    public $phone = '';
+    public $address = '';
+    public $landmark = '';
+    public $lga = '';
+    public $state = '';
+    public $country = '';
 
     // Cached data
     public $banks = [];
@@ -49,6 +60,12 @@ class RaffleDraw extends Component
         'account_name' => 'required|string',
         'account_number' => 'required|string|min:10|max:10',
         'pin' => 'required|string',
+        'phone' => 'required|string|max:20',
+        'address' => 'required|string|max:255',
+        'landmark' => 'nullable|string|max:255',
+        'lga' => 'nullable|string|max:255',
+        'state' => 'nullable|string|max:255',
+        'country' => 'nullable|string|max:255',
     ];
 
     protected $messages = [
@@ -115,7 +132,6 @@ class RaffleDraw extends Component
         }
     }
 
-
     /**
      * Open claim modal and check prerequisites
      */
@@ -123,20 +139,30 @@ class RaffleDraw extends Component
     {
         $this->selectedDraw = Raffle::findOrFail($drawId);
 
+        Log::info('response', [ $this->selectedDraw]);
         // Check if draw is still valid
         if (!$this->isDrawValid($this->selectedDraw)) {
             session()->flash('error', 'This reward has expired or is already claimed.');
             return;
         }
 
-        // Refresh bank info
-        $this->bankInfo = $this->user->fresh()->bankInfo;
+        // Refresh user data
+        $this->user = $this->user->fresh();
+        $this->bankInfo = $this->user->bankInfo;
 
+        // First check: Address information
+        if (!$this->hasContactInfo()) {
+            $this->openContactModal();
+            return;
+        }
+
+        // Second check: Bank information
         if (!$this->bankInfo) {
             $this->showBankModal = true;
             return;
         }
 
+        // Third check: Transaction PIN
         if (!$this->user->transaction_pin) {
             $this->showSetPinModal = true;
             return;
@@ -146,11 +172,92 @@ class RaffleDraw extends Component
     }
 
     /**
+     * Check if user has required contact information
+     */
+    private function hasContactInfo(): bool
+    {
+        return !empty($this->user->phone) && !empty($this->user->address);
+    }
+
+    /**
      * Check if draw is valid for claiming
      */
     private function isDrawValid(Raffle $draw): bool
     {
         return $draw->status === 'pending' && now()->lte($draw->expired_at);
+    }
+
+    /**
+     * Contact Information Methods
+     */
+    public function openContactModal()
+    {
+        $user = $this->user;
+        $this->phone = $user->phone ?? '';
+        $this->address = $user->address ?? '';
+        $this->landmark = $user->landmark ?? '';
+        $this->lga = $user->lga ?? '';
+        $this->state = $user->state ?? '';
+        $this->country = $user->country ?? '';
+        $this->showContactModal = true;
+        $this->resetValidation();
+    }
+
+    public function closeContactModal()
+    {
+        $this->showContactModal = false;
+        $this->resetValidation();
+    }
+
+    public function saveContactInfo()
+    {
+        $this->validate([
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'landmark' => 'nullable|string|max:255',
+            'lga' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+        ]);
+
+        try {
+            // Check if phone number changed to reset verification
+            if ($this->user->phone != $this->phone) {
+                $this->user->update([
+                    'phone_verified' => false,
+                    'phone_verified_at' => null,
+                ]);
+            }
+
+            $this->user->update([
+                'phone' => $this->phone,
+                'address' => $this->address,
+                'landmark' => $this->landmark,
+                'lga' => $this->lga,
+                'state' => $this->state,
+                'country' => $this->country
+            ]);
+
+            $this->user = $this->user->fresh();
+            $this->closeContactModal();
+
+            // Continue with the claim process - check next requirement
+            if (!$this->bankInfo) {
+                $this->showBankModal = true;
+            } elseif (!$this->user->transaction_pin) {
+                $this->showSetPinModal = true;
+            } else {
+                $this->showClaimModal = true;
+            }
+
+            session()->flash('success', 'Contact information updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Contact info save failed', [
+                'user_id' => $this->user->id,
+                'error' => $e->getMessage()
+            ]);
+            session()->flash('error', 'Failed to save contact information. Please try again.');
+        }
     }
 
     /**
@@ -211,13 +318,16 @@ class RaffleDraw extends Component
      */
     public function saveBankDetails()
     {
+        if ($this->bank_code) {
+            $selectedBank = collect($this->banks)->firstWhere('code', $this->bank_code);
+            $this->bank_name = $selectedBank['name'] ?? '';
+        }
         $this->validate([
             'bank_name' => 'required|string',
             'bank_code' => 'required|string',
             'account_name' => 'required|string',
             'account_number' => 'required|string|min:10|max:10',
         ]);
-
 
         try {
             BankInfo::updateOrCreate(
@@ -284,7 +394,6 @@ class RaffleDraw extends Component
     public function confirmClaim()
     {
         try {
-
             $this->validateOnly('pin');
 
             $draw = $this->selectedDraw;
@@ -349,7 +458,6 @@ class RaffleDraw extends Component
             $paystack = new PaystackController();
 
             // Create recipient if not exists
-
             $response = $paystack->createRecipient(
                 $this->user->bankInfo->account_name,
                 $this->user->bankInfo->account_number,
@@ -357,10 +465,8 @@ class RaffleDraw extends Component
                 'NGN'
             );
 
-            // Log::info($response);
             if ($response && isset($response['recipient_code'])) {
                 $this->user->update(['recipient_code' => $response['recipient_code']]);
-                //Log::info($this->user);
             }
             $this->user->refresh();
 
@@ -441,7 +547,7 @@ class RaffleDraw extends Component
         // Get user's draws with optimized query
         $draws = Raffle::where('user_id', $this->user->id)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('livewire.user.raffle-draw', [
             'availableDraws' => $this->user->raffle_draw_count,

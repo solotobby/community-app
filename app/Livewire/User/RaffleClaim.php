@@ -66,17 +66,14 @@ class RaffleClaim extends Component
             session()->flash('error', 'You cannot play a Raffle Draw as you do not have any slot. Kindly upgrade your account or refer more users.');
 
             return redirect(request()->header('Referer') ?? url()->current());
-            //   return redirect()->route(request()->route()->getName());
         }
 
-        // If referral type, pick an available referral
         if ($this->drawType === 'referral') {
             $referral = Reward::where('user_id', $user->id)
                 ->where('reward_status', 'pending')
                 ->first();
 
-            if (!$referral || $referral->isEmpty()) {
-
+            if (!$referral) {
                 session()->flash('error', 'No available referrals to use for raffle draw.');
                  return redirect(request()->header('Referer') ?? url()->current());
             }
