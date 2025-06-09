@@ -21,6 +21,7 @@
                         <th>Name</th>
                         <th>Currency</th>
                         <th>Registration Amount</th>
+                        <th>Entry Gift Amount</th>
                         <th>Referral Bonus</th>
                         {{-- <th>Created By</th> --}}
                         <th>Created At</th>
@@ -34,6 +35,7 @@
                             <td>{{ $level->name }}</td>
                             <td>{{ $level->currency }}</td>
                             <td>{{ number_format($level->registration_amount, 2) }}</td>
+                            <td>{{ number_format($level->entry_gift, 2) }}</td>
                             <td>{{ number_format($level->referral_bonus, 2) }}</td>
                             {{-- <td>{{ $level->creator->name ?? 'N/A' }}</td> --}}
                             <td>{{ $level->created_at->format('Y-m-d') }}</td>
