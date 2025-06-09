@@ -25,9 +25,9 @@
                             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-1"></i>Back to Users
                             </a>
-                            <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
+                            {{-- <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
                                 <i class="fas fa-edit me-1"></i>Edit User
-                            </a>
+                            </a> --}}
 
                             <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
                                 class="btn btn-primary" onclick="event.stopPropagation()">

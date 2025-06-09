@@ -26,115 +26,99 @@
             <p class="text-sm text-gray-600 mt-1">You have {{ $user->raffle_draw_count }} raffle draw(s) left</p>
         </div> --}}
 
-        {{-- Draw History --}}
-        <div class="card border-0">
-            <div class="card-header bg-grey d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-gift text-primary me-2"></i>
-                    My Raffle Draw Reward(s)
-                </h5>
-                {{-- <div class="d-flex gap-2 align-items-center">
-                    <div class="badge bg-info">
-                        Total: {{ $user->raffleDraws()->count() }}
-                    </div>
-                    <div class="badge bg-success">
-                        Claimed: {{ $user->raffleDraws()->where('status', 'earned')->count() }}
-                    </div>
-                    <div class="badge bg-warning">
-                        Pending: {{ $user->raffleDraws()->where('status', 'pending')->count() }}
-                    </div>
-                    <div class="badge bg-danger">
-                        Expired: {{ $user->raffleDraws()->where('status', 'expired')->count() }}
-                    </div>
-                </div> --}}
-            </div>
-
-            <div class="card-body p-2 table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 50px;">S/N</th>
-                            <th>Raffle ID</th>
-                            <th style="min-width: 200px;">Reward</th>
-                            <th>Status</th>
-                            <th>Claimed At</th>
-                            <th>Expires At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($draws as $draw)
-                            <tr>
-                                <th class="text-center" scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $draw->name ?? '-' }}</td>
-                                <td>
-                                    @if ($draw->reward)
-                                        @php
-                                            $rewards = is_string($draw->reward)
-                                                ? json_decode($draw->reward, true)
-                                                : $draw->reward;
-                                        @endphp
-                                        @if (is_array($rewards))
-                                            <ul class="list-unstyled mb-0">
-                                                @foreach ($rewards as $reward)
-                                                    <li class="small">
-                                                        <i class="fas fa-gift text-primary me-1"></i>
-                                                        {{ is_array($reward) ? $reward['name'] ?? 'Unknown' : $reward }}
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @else
-                                            <span class="text-muted">{{ $draw->reward }}</span>
-                                        @endif
-                                    @else
-                                        <span class="text-muted">No rewards specified</span>
-                                    @endif
-                                </td>
-                                {{-- <td>{{ number_format($draw->price, 2) }}</td> --}}
-                                {{-- <td>{{ strtoupper($draw->currency) }}</td> --}}
-                                <td>
-                                    @if ($draw->status === 'pending')
-                                        <span class="text-yellow-600 font-medium">Pending</span>
-                                    @elseif ($draw->status === 'earned')
-                                        <span class="text-green-600 font-medium">Claimed</span>
-                                    @else
-                                        <span class="text-red-600 font-medium">Expired</span>
-                                    @endif
-                                </td>
-                                <td>{{ $draw->claimed_at ? $draw->claimed_at->format('M d, Y H:i') : '-' }}</td>
-                                <td>{{ $draw->expired_at ? $draw->expired_at->format('M d, Y H:i') : '-' }}</td>
-                                <td>
-                                    @if ($draw->status === 'pending' && now()->lt($draw->expired_at))
-                                        <button wire:click="openClaimModal({{ $draw->id }})"
-                                            class="btn btn-sm btn-success">
-                                            Claim Now
-                                        </button>
-                                    @elseif ($draw->status === 'earned')
-                                        <span class="badge bg-success">Claimed</span>
-                                    @elseif ($draw->status === 'expired')
-                                        <span class="badge bg-danger">Expired</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-gray-500 py-4">No raffle draws yet.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            {{-- Pagination --}}
-            @if ($draws->hasPages())
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div class="text-muted small">
-                        Showing {{ $draws->firstItem() }} to {{ $draws->lastItem() }} of {{ $draws->total() }}
-                        results
-                    </div>
-                    {{ $draws->links() }}
+        <div class="container-fluid p-0 m-0">
+            <div class="card border-0">
+                <div class="card-header bg-grey d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-gift text-primary me-2"></i>
+                        My Raffle Draw Reward(s)
+                    </h5>
                 </div>
-            @endif
+
+                <div class="card-body p-2 table-responsive">
+                    <table class="table table-bordered table-hover" style="background-color: transparent;">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">S/N</th>
+                                <th>Raffle ID</th>
+                                <th style="min-width: 200px;">Reward</th>
+                                <th>Status</th>
+                                <th>Claimed At</th>
+                                <th>Expires At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($draws as $draw)
+                                <tr>
+                                    <th class="text-center" scope="row">{{ $loop->iteration }}</th>
+                                    <td>{{ $draw->name ?? '-' }}</td>
+                                    <td>
+                                        @if ($draw->reward)
+                                            @php
+                                                $rewards = is_string($draw->reward)
+                                                    ? json_decode($draw->reward, true)
+                                                    : $draw->reward;
+                                            @endphp
+                                            @if (is_array($rewards))
+                                                <ul class="list-unstyled mb-0">
+                                                    @foreach ($rewards as $reward)
+                                                        <li class="small">
+                                                            <i class="fas fa-gift text-primary me-1"></i>
+                                                            {{ is_array($reward) ? $reward['name'] ?? 'Unknown' : $reward }}
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span class="text-muted">{{ $draw->reward }}</span>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">No rewards specified</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $badgeClass = match ($draw->status) {
+                                                'pending' => 'bg-warning text-dark',
+                                                'earned' => 'bg-success',
+                                                'expired' => 'bg-danger',
+                                                default => 'bg-secondary',
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }}">
+                                            {{ ucfirst($draw->status) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $draw->claimed_at ? $draw->claimed_at->format('M d, Y H:i') : '-' }}</td>
+                                    <td>{{ $draw->expired_at ? $draw->expired_at->format('M d, Y H:i') : '-' }}</td>
+                                    <td>
+                                        @if ($draw->status === 'pending' && now()->lt($draw->expired_at))
+                                            <button wire:click="openClaimModal({{ $draw->id }})"
+                                                class="btn btn-sm btn-success">
+                                                Claim Now
+                                            </button>
+                                        @elseif ($draw->status === 'earned')
+                                            <span class="text-muted">Claimed</span>
+                                        @elseif ($draw->status === 'expired')
+                                            <span class="text-muted">Expired</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">No raffle draws found.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+
+                    <div class="mt-2">
+                        {{ $draws->links() }}
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
 
     {{-- Contact Information Modal (First Modal) --}}
@@ -236,7 +220,8 @@
                         <p>An equivalent amount for your winnings
                             <b>NGN{{ number_format($selectedDraw->price, 2) }}</b>
                             will be paid into your
-                            account as we do not have a collection center close to you</p>
+                            account as we do not have a collection center close to you
+                        </p>
                         <p>Payment will be made to the following bank account:</p>
                         <ul class="list-unstyled">
                             <li><strong>Bank:</strong> {{ $bankInfo->bank_name }}</li>
