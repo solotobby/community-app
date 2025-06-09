@@ -17,6 +17,9 @@
 
                 <div class="card-header bg-grey d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
+                        <a href="{{ route('admin.users.details', ['id' => $user->id]) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back
+                        </a>
                         <i class="fas fa-gift text-primary me-2"></i>
                         {{ $user->name }} Referrals
                     </h5>
