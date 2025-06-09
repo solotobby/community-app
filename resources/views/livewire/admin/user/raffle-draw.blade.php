@@ -98,7 +98,8 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <small class="text-light">{{ $draw->currency }}{{ $draw->price }}</small>
+                                    <small class="text-light">{{ $draw->currency }}<b>{{ number_format($draw->price, 2) }}</b>
+</small>
                                 </td>
                                 <td>
                                     @if ($draw->status === 'pending')

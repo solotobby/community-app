@@ -55,7 +55,7 @@
                         <tr>
                             <th class="text-center" style="width: 50px;">S/N</th>
                             <th>Raffle ID</th>
-                           <th style="min-width: 200px;">Reward</th>
+                            <th style="min-width: 200px;">Reward</th>
                             <th>Status</th>
                             <th>Claimed At</th>
                             <th>Expires At</th>
@@ -233,7 +233,9 @@
                         <button type="button" class="btn-close" wire:click="$set('showClaimModal', false)"></button>
                     </div>
                     <div class="modal-body">
-                        <p>An equivalent amount for your winnings <b>NGN{{ $selectedDraw->price }}</b> will be paid into your
+                        <p>An equivalent amount for your winnings
+                            <b>NGN{{ number_format($selectedDraw->price, 2) }}</b>
+                            will be paid into your
                             account as we do not have a collection center close to you</p>
                         <p>Payment will be made to the following bank account:</p>
                         <ul class="list-unstyled">
