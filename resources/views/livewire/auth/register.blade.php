@@ -1,5 +1,5 @@
 <div class="row mx-0 bg-earth-op">
-    <div class="hero-static col-md-6 col-xl-8 d-none d-md-flex align-items-md-end bg-image"
+    <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end bg-image"
         style="background-image: url('{{ asset('assets/media/photos/photo34@2x.jpg') }}');">
         <div class="p-4">
             <p class="fs-3 fw-semibold text-white mb-1">
@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-body-extra-light">
+    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center bg-body-extra-light">
         <div class="content content-full">
             <div class="px-4 py-2 mb-4">
                 <a class="link-fx fw-bold" href="{{ url('/') }}">

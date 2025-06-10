@@ -42,5 +42,9 @@ return [
         'callbackUrl' => env('PAYSTACK_CALLBACK_URL'),
     ],
 
+    'termii' => [
+        'api_key' => env('TERMII_API_KEY'),
+        'sender_id' => env('TERMII_SENDER_ID'),
+    ],
 
 ];

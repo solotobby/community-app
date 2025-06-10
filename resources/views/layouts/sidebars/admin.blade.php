@@ -34,7 +34,7 @@
         </li>
 
         <!-- Manage Users -->
-        {{-- <li class="nav-main-item">
+        <li class="nav-main-item">
             <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" data-toggle="submenu" href="#">
                 <i class="nav-main-link-icon fa fa-users"></i>
                 <span class="nav-main-link-name">Manage Users</span>
@@ -46,22 +46,22 @@
                     </a>
                 </li>
             </ul>
-        </li> --}}
+        </li>
 
         <!-- Manage Games -->
-        {{-- <li class="nav-main-item">
-            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.games.*') ? 'active' : '' }}" data-toggle="submenu" href="#">
-                <i class="nav-main-link-icon fa fa-gamepad"></i>
-                <span class="nav-main-link-name">Manage Games</span>
+        <li class="nav-main-item">
+            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}" data-toggle="submenu" href="#">
+                <i class="nav-main-link-icon fa fa-wallet"></i>
+                <span class="nav-main-link-name">Transactions</span>
             </a>
             <ul class="nav-main-submenu">
                 <li class="nav-main-item">
-                    <a class="nav-main-link" href="{{ route('admin.games.index') }}">
+                    <a class="nav-main-link" href="{{ route('admin.transactions.all') }}">
                         View All
                     </a>
                 </li>
             </ul>
-        </li> --}}
+        </li>
 
         <!-- Manage Questions -->
         {{-- <li class="nav-main-item">

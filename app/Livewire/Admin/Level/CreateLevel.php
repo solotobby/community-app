@@ -8,12 +8,13 @@ use Livewire\Component;
 
 class CreateLevel extends Component
 {
-    public $name, $registration_amount, $referral_bonus, $currency;
+    public $name, $registration_amount, $referral_bonus, $currency, $entry_gift;
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'registration_amount' => 'required|numeric|min:0',
-        'referral_bonus' => 'required|numeric|min:0'
+        'referral_bonus' => 'required|numeric|min:0',
+        'entry_gift' => 'required|numeric|min:0'
     ];
 
     public function submit()
@@ -24,6 +25,7 @@ class CreateLevel extends Component
             'name' => $this->name,
             'registration_amount' => $this->registration_amount,
             'referral_bonus' => $this->referral_bonus,
+            'entry_gift' => $this->entry_gift,
             'created_by' => Auth::id(),
         ]);
 

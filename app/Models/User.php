@@ -29,7 +29,18 @@ class User extends Authenticatable
         'referrer_id',
         'transaction_pin',
         'raffle_draw_count',
-        'can_raffle'
+        'can_raffle',
+        'address',
+        'country',
+        'lga',
+        'state',
+        'landmark',
+        'address',
+        'phone_verified_at',
+        'phone_verified',
+        'phone',
+        'registration_draw',
+        'recipient_code'
     ];
 
     /**
@@ -90,6 +101,12 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'referrer_id');
     }
 
+    // The users this user has referred
+    public function referralCount()
+    {
+        return $this->hasMany(Reward::class, 'user_id');
+    }
+
     public function bankInfo()
     {
         return $this->hasOne(BankInfo::class);
@@ -97,11 +114,15 @@ class User extends Authenticatable
 
     public function level()
     {
-        return $this->belongsTo(Level::class, 'level');
+        return $this->belongsTo(Level::class, 'level', 'id');
     }
 
     public function raffleDraws()
     {
         return $this->hasMany(RaffleDraw::class);
+    }
+    public function levelInfo()
+    {
+        return $this->belongsTo(Level::class, 'level');
     }
 }

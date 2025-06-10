@@ -2,7 +2,6 @@
 
 namespace App\Livewire\User;
 
-
 use App\Models\Level;
 use App\Models\LevelItem;
 use App\Models\RaffleDraw;
@@ -15,10 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class UserDashboard extends Component
+class RaffleClaim extends Component
 {
-
-     public $drawType;
+    public $drawType;
     public $selectedItems = [];
     public $showConfirmation = false;
     public $showSuccess = false;
@@ -34,7 +32,7 @@ class UserDashboard extends Component
     public function mount()
     {
         $this->drawType = Auth::user()->registration_draw ? 'registration' : 'referral';
-        $this->availableItems = LevelItem::where('level_id', Auth::user()->level)->get();
+        $this->availableItems = LevelItem::all();
         $this->userLevel = Level::findOrFail(Auth::user()->level);
     }
 
@@ -155,8 +153,10 @@ class UserDashboard extends Component
     {
         return count($this->selectedItems);
     }
+
+
     public function render()
     {
-        return view('livewire.user.user-dashboard');
+        return view('livewire.user.raffle-claim');
     }
 }
