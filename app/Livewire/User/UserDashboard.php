@@ -34,7 +34,8 @@ class UserDashboard extends Component
     public function mount()
     {
         $this->drawType = Auth::user()->registration_draw ? 'registration' : 'referral';
-        $this->availableItems = LevelItem::where('level_id', Auth::user()->level)->get();
+        $this->availableItems = LevelItem::all();
+        //$this->availableItems = LevelItem::where('level_id', Auth::user()->level)->get();
         $this->userLevel = Level::findOrFail(Auth::user()->level);
     }
 
