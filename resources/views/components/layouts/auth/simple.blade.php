@@ -37,11 +37,11 @@
     -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Community App - Login</title>
+    <title>Community App</title>
 
-    <meta name="description" content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
-    <meta name="author" content="pixelcave">
-    <meta name="robots" content="index, follow">
+    <meta name="description" content="Famlic">
+    <meta name="author" content="famlic">
+    <meta name="robots" content="famlic">
 
     <!-- Open Graph Meta -->
     <meta property="og:title" content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework">
