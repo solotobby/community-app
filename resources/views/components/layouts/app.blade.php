@@ -27,14 +27,14 @@
 
     <title>Dashbaord - Community App</title>
 
-    <meta name="description" content="hodcrm">
-    <meta name="author" content="hodcrm">
-    <meta name="robots" content="hodcrm">
+    <meta name="description" content="famlic">
+    <meta name="author" content="famlic">
+    <meta name="robots" content="famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="hodcrm">
-    <meta property="og:site_name" content="hodcrm">
-    <meta property="og:description" content="hodcrm">
+    <meta property="og:title" content="Famlic - support for every family">
+    <meta property="og:site_name" content="Famlic">
+    <meta property="og:description" content="The best place to have the best food and gadget">
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
     <meta property="og:image" content="">

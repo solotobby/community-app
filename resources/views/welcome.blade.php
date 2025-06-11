@@ -8,6 +8,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <meta name="description" content="The best place to have the best food and gadget">
+    <meta name="author" content="Famlic">
+    <meta name="robots" content="Famlic">
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="Famlic - support for every family">
+    <meta property="og:site_name" content="Famlic">
+    <meta property="og:description" content="The best place to have the best food and gadget">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
     <!-- Place favicon.ico in the root directory -->
     <link rel="shortcut icon" type="image/x-icon" href="assets__/img/logo/favicon.png">
 
@@ -51,10 +63,10 @@
                         <div class="main-menu">
                             <nav id="mobile-menu">
                                 <ul id="menu-main-menu">
-                                    <li><a href="index.html">Home</a> </li>
-                                    <li><a href="about.html">About</a></li>
-                                    <li><a href="news.html">News</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="{{ url('/') }}">Home</a> </li>
+                                    <li><a href="{{ url('about-us') }}">About</a></li>
+                                    <li><a href="{{ url('blog') }}">Blog</a></li>
+                                    <li><a href="{{ url('food-fundraising') }}">Support a family</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -88,90 +100,7 @@
     </header>
 
 
-        <!-- slide-bar start -->
-        <div class="fix">
-            <div class="side-info d-lg-none">
-                <button class="side-info-close"><i class="fal fa-times"></i></button>
-
-                <div class="side__logo mb-25">
-                    <a href="index.html"><img src="{{asset('assets__/img/logo/logo.png')}}" alt="logo" /></a>
-                </div>
-
-                <div class="mobile-menu"></div>
-
-                <div class="contact-infos mt-30 mb-30">
-                    <div class="contact-list mb-30">
-                        <h4>Contact Info</h4>
-                        <ul class="p-0">
-                            <li><i class="fal fa-map"></i>12/A, Mirnada City Tower, NYC</li>
-                            <li><i class="flaticon-phone-call"></i><a href="tell:+876864764764">+876 864 764 764</a></li>
-                            <li><i class="flaticon-email-1"></i><a href="mailto:info@webmail.com">info@webmail.com</a></li>  
-                        </ul>
-                        <div class="sidebar__menu--social">
-                            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="side-info d-none d-lg-block text-center">
-                <button class="side-info-close"><i class="fal fa-times"></i></button>
-
-                <div class="side__logo mb-25">
-                    <a href="index.html"><img src="{{asset('assets__/img/logo/logo.png')}}" alt="logo" /></a>
-                </div>
-
-                <div class="info-text mb-30">
-                    <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and will give you a complete account of the system and expound the actual teachings of the great explore</p>
-                </div>
-                <div class="row side-row">
-                    <div class="col-4 mb-15">
-                        <a class="popup-image" href="assets/img/grid/g-img-2.jpg"><img alt="#" src="assets/img/grid/g-img-2.jpg"></a>
-                    </div>
-                    <div class="col-4 mb-15">
-                        <a class="popup-image" href="assets/img/grid/g-img-3.jpg"><img alt="#" src="assets/img/grid/g-img-3.jpg"></a>
-                    </div>
-                    <div class="col-4 mb-15">
-                        <a class="popup-image" href="assets/img/grid/g-img-4.jpg"><img alt="#" src="assets/img/grid/g-img-4.jpg"></a>
-                    </div>
-                    <div class="col-4 mb-15">
-                        <a class="popup-image" href="assets/img/grid/g-img-5.jpg"><img alt="#" src="assets/img/grid/g-img-5.jpg"></a>
-                    </div>
-                    <div class="col-4 mb-15">
-                        <a class="popup-image" href="assets/img/grid/g-img-6.jpg"><img alt="#" src="assets/img/grid/g-img-6.jpg"></a>
-                    </div>
-                    <div class="col-4 mb-15">
-                        <a class="popup-image" href="assets/img/grid/g-img-7.jpg"><img alt="#" src="assets/img/grid/g-img-7.jpg"></a>
-                    </div>
-                </div>
-    
-                <div class="side-map mt-20 mb-30">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29176.030811137334!2d90.3883827!3d23.924917699999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1605272373598!5m2!1sen!2sbd"></iframe>
-                </div>
-
-                <div class="contact-infos mt-30 mb-30">
-                    <div class="contact-list mb-30">
-                        <div class="sidebar__menu--social">
-                            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="offcanvas-overlay"></div>
-        <!-- slide-bar end -->
+   
 
     <main>
         <div class="hero-area f-header-space fix pt-232 pb-155  pt-md-100 pb-md-100 pt-xs-100 pb-md-100">
@@ -193,7 +122,7 @@
                                 </span>
                             </h4>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-xl-9">
                                 <div class="filter-area filter-padding mb-23">
                                     <form action="#">
@@ -243,7 +172,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -372,7 +301,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-1.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-1.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -398,7 +327,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-2.jpg" alt="thumb">
+                                <img src="{{asset('assets__//img/thumb/thumb-2.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -424,7 +353,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-3.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-3.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -450,7 +379,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-4.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-4.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -476,7 +405,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-5.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-5.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -502,7 +431,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-6.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-6.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -528,7 +457,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-7.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-7.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -554,7 +483,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-8.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-8.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -580,7 +509,7 @@
                 </div>
             </div>
         </div>
-        <div class="cta-area pt-140 pb-140" style="background-image: url(assets/img/bg/cta-bg-1.jpg)"
+        <div class="cta-area pt-140 pb-140" style="background-image: url({{asset('assets__/img/bg/cta-bg-1.jpg')}})"
             data-overlay="dark" data-opacity="6">
             <div class="container">
                 <div class="row">
@@ -639,7 +568,7 @@
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="work-wrap mb-30">
                             <div class="icon">
-                                <img src="assets/img/icon/icon-1.png" alt="icon">
+                                <img src="{{asset('assets__/img/icon/icon-1.png')}}" alt="icon">
                                 <span class="num">01</span>
                             </div>
                             <div class="content f-content">
@@ -655,7 +584,7 @@
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="work-wrap mb-30">
                             <div class="icon">
-                                <img src="assets/img/icon/icon-2.png" alt="icon">
+                                <img src="{{asset('assets__/img/icon/icon-2.png')}}" alt="icon">
                                 <span class="num">02</span>
                             </div>
                             <div class="content f-content">
@@ -669,7 +598,7 @@
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="work-wrap mb-30">
                             <div class="icon">
-                                <img src="assets/img/icon/icon-3.png" alt="icon">
+                                <img src="{{asset('assets__/img/icon/icon-3.png')}}" alt="icon">
                                 <span class="num">03</span>
                             </div>
                             <div class="content f-content">
@@ -685,7 +614,7 @@
                     <div class="col-xl-12">
                         <div class="testimonial-wrap">
                             <div class="thumb">
-                                <img src="assets/img/author/author-1.png" alt="author">
+                                <img src="{{asset('assets__/img/author/author-1.png')}}" alt="author">
                             </div>
                             <div class="content-wrapper ">
                                 <div class="testimonial-content-slider">
@@ -746,7 +675,7 @@
                 <div class="row justify-content-xl-end">
                     <div class="col-xl-6 col-lg-10">
                         <div class="section-title newsletter-content">
-                            <h5 class="sub-title">Subscribe</h5>
+                            <h5 class="sub-title">Different Levels</h5>
                             <h3 class="animated-title">
                                 Get Every Monthly
                                 <span>
@@ -775,7 +704,7 @@
                 </div>
             </div>
             <div class="newsletter-video">
-                <img src="assets/img/bg/bg-newsletter.jpg" alt="newsletter">
+                <img src="{{asset('assets__/img/bg/bg-newsletter.jpg')}}" alt="newsletter">
                 <a href="https://www.youtube.com/watch?v=p_3ZjiZMtN4"
                     class="play-btn popup-video"><i class="fas fa-play"></i></a>
             </div>
@@ -804,7 +733,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-6">
                         <div class="blog-post-wrap mt-30 mb-30">
                             <div class="thumb">
-                                <img src="assets/img/blog/blog-1.jpg" alt="blog">
+                                <img src="{{asset('assets__/img/blog/blog-1.jpg')}}" alt="blog">
                                 <div class="date">
                                     24
                                     <span>Nov</span>
@@ -824,7 +753,7 @@
                                 </div>
                                 <div class="author">
                                     <div class="author-img">
-                                        <img src="assets/img/author/author-1.jpg" alt="author">
+                                        <img src="{{asset('assets__/img/author/author-1.jpg')}}" alt="author">
                                     </div>
                                     <div class="author-name">
                                         <h4>By <span>Rosalina W.</span></h4>
@@ -836,7 +765,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-6">
                         <div class="blog-post-wrap mt-30 mb-30">
                             <div class="thumb">
-                                <img src="assets/img/blog/blog-2.jpg" alt="blog">
+                                <img src="{{asset('assets__/img/blog/blog-2.jpg')}}" alt="blog">
                                 <div class="date">
                                     24
                                     <span>Nov</span>
@@ -856,7 +785,7 @@
                                 </div>
                                 <div class="author">
                                     <div class="author-img">
-                                        <img src="assets/img/author/author-1.jpg" alt="author">
+                                        <img src="{{asset('assets__/img/author/author-1.jpg')}}" alt="author">
                                     </div>
                                     <div class="author-name">
                                         <h4>By <span>Rosalina W.</span></h4>
@@ -868,7 +797,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-6">
                         <div class="blog-post-wrap mt-30 mb-30">
                             <div class="thumb">
-                                <img src="assets/img/blog/blog-3.jpg" alt="blog">
+                                <img src="{{asset('assets__/img/blog/blog-3.jpg')}}" alt="blog">
                                 <div class="date">
                                     24
                                     <span>Nov</span>
@@ -888,7 +817,7 @@
                                 </div>
                                 <div class="author">
                                     <div class="author-img">
-                                        <img src="assets/img/author/author-1.jpg" alt="author">
+                                        <img src="{{asset('assets__/img/author/author-1.jpg')}}" alt="author">
                                     </div>
                                     <div class="author-name">
                                         <h4>By <span>Rosalina W.</span></h4>
@@ -915,7 +844,7 @@
                     <div class="footer-widget f-w-space widget-spacing about-widget">
                         <div class="footer-logo">
                             <a href="index.html">
-                                <img src="assets/img/logo/logo-w.png" alt="logo">
+                                <img src="{{asset('assets__/img/logo/logo-w.png')}}" alt="logo">
                             </a>
                         </div>
                         <p>
