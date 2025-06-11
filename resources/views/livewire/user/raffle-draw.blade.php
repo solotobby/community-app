@@ -1,4 +1,5 @@
 <div>
+     <div class="content">
     <div class="p-4">
         {{-- <h2 class="text-xl font-semibold mb-4">Raffle Draw</h2> --}}
 
@@ -382,4 +383,5 @@
             </div>
         </div>
     @endif
+     </div>
 </div>
