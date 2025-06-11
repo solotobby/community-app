@@ -30,6 +30,7 @@
                                 <i class="fas fa-edit me-1"></i>Edit User
                             </a> --}}
 
+                            
                             <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
                                 class="btn btn-primary" onclick="event.stopPropagation()">
                                 View Raffle Draw
