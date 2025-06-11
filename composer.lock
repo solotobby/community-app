@@ -4,11 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "8abefbc86d84efb6a12bc1b54cffb458",
-=======
+
     "content-hash": "531ff90789b22bcb7bde60c91a7167d0",
->>>>>>> 9891aa005d4eb431b543c4e9a35fa51aa461c6e4
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -66,7 +63,7 @@
         },
         {
             "name": "aws/aws-sdk-php",
-<<<<<<< HEAD
+
             "version": "3.344.1",
             "source": {
                 "type": "git",
@@ -77,7 +74,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7ff4b73f2d6550949be14b8822e100963e068705",
                 "reference": "7ff4b73f2d6550949be14b8822e100963e068705",
-=======
+
             "version": "3.343.22",
             "source": {
                 "type": "git",
@@ -88,7 +85,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/174cc187df3bde52c21e9c00a4e99610a08732a3",
                 "reference": "174cc187df3bde52c21e9c00a4e99610a08732a3",
->>>>>>> 9891aa005d4eb431b543c4e9a35fa51aa461c6e4
+
                 "shasum": ""
             },
             "require": {
@@ -170,15 +167,14 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-<<<<<<< HEAD
+
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.344.1"
             },
             "time": "2025-06-05T18:09:40+00:00"
-=======
+
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.343.22"
             },
             "time": "2025-05-30T18:11:02+00:00"
->>>>>>> 9891aa005d4eb431b543c4e9a35fa51aa461c6e4
         },
         {
             "name": "brick/math",
