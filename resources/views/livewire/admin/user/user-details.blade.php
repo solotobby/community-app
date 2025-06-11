@@ -1,3 +1,4 @@
+<div class="content">
 <div class="container-fluid">
     {{-- Header Section --}}
     <div class="row mb-4">
@@ -259,4 +260,5 @@
             background-color: #f8f9fa !important;
         }
     </style>
+</div>
 </div>
