@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{asset('assets__/css/main.css')}}">
 
 <main>
-    <div class="breadcrumb-area" style="background-image: url({{asset('assets__/img/bg/breadcrumb-bg.jpg')}})" data-overlay="dark"
+    <div class="breadcrumb-area" style="background-image: url({{asset('assets__/img/famlic/about.jpg')}})" data-overlay="dark"
          data-opacity="7">
         <div class="container pt-150 pb-150 position-relative">
             <div class="row justify-content-center">
@@ -166,7 +166,7 @@
             </div>
         </div>
     </div>
-    <div class="video-area f-video-area pt-150 pb-150 overflow-hidden" style="background-image: url(assets__/img/bg/cta-bg-1.jpg)"
+    <div class="video-area f-video-area pt-150 pb-150 overflow-hidden" style="background-image: url(assets__/img/famlic/about.jpg)"
          data-overlay="dark"
          data-opacity="6">
         <div class="container">

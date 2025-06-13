@@ -410,7 +410,7 @@
                 </div>
             </div>
         </div>
-        <div class="cta-area pt-140 pb-140" style="background-image: url({{asset('assets__/img/bg/cta-bg-1.jpg')}})"
+        <div class="cta-area pt-140 pb-140" style="background-image: url({{asset('assets__/img/famlic/about.jpg')}})"
             data-overlay="dark" data-opacity="6">
             <div class="container">
                 <div class="row">
@@ -441,7 +441,7 @@
                 </div>
             </div>
             <div class="cta-thumb">
-                <img class="jump-animation" src="{{asset('assets__/img/thumb/thumb-3.png')}}" alt="thumb">
+                <img class="jump-animation" src="{{asset('assets__/img/famlic/garri.jpg')}}" alt="thumb">
             </div>
         </div>
         <div class="how-work-area pt-100 pb-120">
