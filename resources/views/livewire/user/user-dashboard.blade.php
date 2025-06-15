@@ -55,7 +55,7 @@
      {{-- Draw Section --}}
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">🎁 Raffle Draw — {{ ucfirst($drawType) }}</h5>
+            <h5 class="mb-0">🎁 Gifting Draw — {{ ucfirst($drawType) }}</h5>
             <span class="badge bg-info">Select up to 7 items</span>
         </div>
 
@@ -102,7 +102,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">🎯 Confirm Your Raffle Items</h5>
+                        <h5 class="modal-title">🎯 Confirm Your Gift Items</h5>
                         <button type="button" class="btn-close" wire:click="$set('showConfirmation', false)"></button>
                     </div>
                     <div class="modal-body">
@@ -178,7 +178,7 @@
                         <div class="mb-4">
                             <div class="display-1 text-warning mb-3">🏆</div>
                             <h5 class="text-success fw-bold mb-3">
-                                {{ count(json_decode($raffleDraw->reward, true)) }} Lucky Winners Selected!
+                                {{ count(json_decode($raffleDraw->reward, true)) }} Gift Selected!
                             </h5>
                         </div>
 

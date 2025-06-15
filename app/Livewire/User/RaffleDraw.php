@@ -547,7 +547,7 @@ class RaffleDraw extends Component
         // Get user's draws with optimized query
         $draws = Raffle::where('user_id', $this->user->id)
             ->latest()
-            ->paginate(10);
+            ->paginate(25);
 
         return view('livewire.user.raffle-draw', [
             'availableDraws' => $this->user->raffle_draw_count,

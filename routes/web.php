@@ -30,7 +30,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('home', [HomeController::class, 'home'])->name('home');
 });
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware([
+    'auth',
+    'role:admin'
+])->prefix(
+    'admin'
+)->group(function () {
     Route::get('dashboard', AdminDashboard::class)->name('admin');
 
     //Levels
@@ -49,15 +54,22 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('transactions', ListTransactions::class)->name('admin.transactions.all');
 });
 
-Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
+Route::middleware([
+    'auth',
+    'role:user'
+])->prefix(
+    'user'
+)->name(
+    'user.'
+)->group(function () {
 
-    Route::get('/raffle-claim', RaffleClaim::class)->name('raffle.claim');
+    Route::get('/gift-claim', RaffleClaim::class)->name('raffle.claim');
 
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
-    Route::get('/rewards', Rewards::class)->name('rewards');
+    Route::get('/referrals', Rewards::class)->name('referrals');
     Route::get('settings/profile', Profile::class)->name('settings');
-    Route::get('raffle/draw', RaffleDraw::class)->name('raffle.draw');
-    Route::post('claim/draw', RaffleDraw::class)->name('claim.draw');
+    Route::get('gift/draw', RaffleDraw::class)->name('raffle.draw');
+    Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
 });
 
 require __DIR__ . '/auth.php';

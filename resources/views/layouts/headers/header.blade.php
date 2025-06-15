@@ -88,7 +88,7 @@
               </div>
             </div>
           </div>
-         
+
         </div>
       </div>
       <!-- END Color Themes -->
@@ -107,7 +107,7 @@
         <div class="dropdown-menu dropdown-menu-md dropdown-menu-end p-0" aria-labelledby="page-header-user-dropdown">
           <div class="px-2 py-3 bg-body-light rounded-top">
             <h5 class="h6 text-center mb-0">
-              {{auth()->user()->getRoleNames()}} 
+              {{auth()->user()->getRoleNames()}}
             </h5>
           </div>
           <div class="p-2">

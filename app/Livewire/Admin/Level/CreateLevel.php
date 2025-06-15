@@ -13,8 +13,8 @@ class CreateLevel extends Component
     protected $rules = [
         'name' => 'required|string|max:255',
         'registration_amount' => 'required|numeric|min:0',
-        'referral_bonus' => 'required|numeric|min:0',
-        'entry_gift' => 'required|numeric|min:0'
+        'referral_bonus' => 'required|numeric|min:0|max:100',
+        'entry_gift' => 'required|numeric|min:0|max:100'
     ];
 
     public function submit()

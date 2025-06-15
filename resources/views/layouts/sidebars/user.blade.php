@@ -78,15 +78,15 @@
             </a>
         </li>
 
-        <!-- Rewards -->
+        <!-- Referrals -->
         <li class="nav-main-item">
-            <a class="nav-main-link {{ request()->routeIs('user.rewards') ? 'active' : '' }}"
-                href="{{ route('user.rewards') }}">
+            <a class="nav-main-link {{ request()->routeIs('user.referrals') ? 'active' : '' }}"
+                href="{{ route('user.referrals') }}">
                 <i class="nav-main-link-icon fa fa-users"></i>
                 <span class="nav-main-link-name">Referrals</span>
             </a>
         </li>
-        
+
         {{-- <li class="nav-main-item">
              <a class="nav-main-link {{ request()->routeIs('user.raffle.claim') ? 'active' : '' }}"
                 href="{{ route('user.raffle.claim') }}">
