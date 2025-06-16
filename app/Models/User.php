@@ -26,6 +26,7 @@ class User extends Authenticatable
         'has_subscribed',
         'referral_code',
         'level',
+        'dob',
         'referrer_id',
         'transaction_pin',
         'raffle_draw_count',
