@@ -12,6 +12,7 @@ class CreateLevel extends Component
 
     protected $rules = [
         'name' => 'required|string|max:255',
+        'currency' => 'required|string|max:255',
         'registration_amount' => 'required|numeric|min:0',
         'referral_bonus' => 'required|numeric|min:0|max:100',
         'entry_gift' => 'required|numeric|min:0|max:100'
@@ -21,11 +22,14 @@ class CreateLevel extends Component
     {
         $this->validate();
 
+        $referral = ($this->referral_bonus/100) * $this->registration_amount;
+        $entry = ($this->entry_gift/100) * $this->registration_amount;
         Level::create([
             'name' => $this->name,
             'registration_amount' => $this->registration_amount,
-            'referral_bonus' => $this->referral_bonus,
-            'entry_gift' => $this->entry_gift,
+            'referral_bonus' => $referral,
+            'entry_gift' => $entry,
+            'currency' => $this->currency,
             'created_by' => Auth::id(),
         ]);
 

@@ -47,4 +47,8 @@ return [
         'sender_id' => env('TERMII_SENDER_ID'),
     ],
 
+    'aws' => [
+        'url' => env('AWS_URL')
+    ],
+
 ];
