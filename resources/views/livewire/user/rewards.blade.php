@@ -15,7 +15,7 @@
                 {{ session('error') }}
             </div>
         @endif
-        
+
             <div class="container-fluid p-0 m-0">
                 <div class="card border-0">
                     <div class="card-header">
@@ -91,8 +91,15 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        <div class="mt-2">
-                            {{ $rewards->links() }}
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    Page {{ $rewards->currentPage() }} of {{ $rewards->lastPage() }}
+                                </small>
+                            </div>
+                            <div>
+                                {{ $rewards->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>

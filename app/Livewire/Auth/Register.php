@@ -107,7 +107,7 @@ class Register extends Component
 
         // Create transaction
         $transaction = Transaction::create([
-            'reference' => 'TXN_' . Str::uuid(),
+            'reference' => 'TXN_' . Str::upper(Str::random(15)),
             'user_id' => $user->id,
             'transaction_type' => 'subscription',
             'transaction_reason' => 'Registration Level Payment',

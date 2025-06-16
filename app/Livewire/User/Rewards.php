@@ -2,14 +2,8 @@
 
 namespace App\Livewire\User;
 
-use App\Http\Controllers\PaystackController;
-use App\Models\BankInfo;
 use App\Models\Reward;
-use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -22,7 +16,7 @@ class Rewards extends Component
     public $showClaimModal = false;
     public $showPinModal = false;
     public $showSetPinModal = false;
-    public $selectedReward; // Changed from selectedDraw to selectedReward
+    public $selectedReward;
     public $hasBankAccount = false;
     public $bankInfo;
     public $pin = '';

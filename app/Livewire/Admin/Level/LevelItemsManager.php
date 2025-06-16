@@ -64,7 +64,7 @@ class LevelItemsManager extends Component
         $filePath = 'ad/' . time() . '.' . $this->image->getClientOriginalExtension();
         Storage::disk('s3')->put($filePath, file_get_contents($this->image->getRealPath()), 'public');
 
-        $url = env('AWS_URL') . '/' . $filePath;
+        $url = config('services.aws.url') . '/' . $filePath;
 
         $this->level->levelItems()->create([
             'item_name' => $this->itemname,
