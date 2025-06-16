@@ -33,7 +33,7 @@ class RaffleDraw extends Model
     protected static function booted()
     {
         static::creating(function ($draw) {
-            $draw->name = 'Raffle-#' . rand(10000, 99999);
+            $draw->name = 'Gift-#' . rand(10000, 99999);
         });
     }
 

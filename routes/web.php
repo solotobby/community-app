@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaystackController;
 use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\AdminDashboard;
@@ -64,12 +65,13 @@ Route::middleware([
 )->group(function () {
 
     Route::get('/gift-claim', RaffleClaim::class)->name('raffle.claim');
-
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
     Route::get('/referrals', Rewards::class)->name('referrals');
     Route::get('settings/profile', Profile::class)->name('settings');
     Route::get('gift/draw', RaffleDraw::class)->name('raffle.draw');
     Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
+    Route::get('/level-upgrade/callback', [PaystackController::class, 'upgradeCallback'])->name('paystack.upgrade.callback');
+
 });
 
 require __DIR__ . '/auth.php';
