@@ -73,7 +73,7 @@
                     </div>
                     <div class="modal-body">
                         <p>You selected {{ count($selectedItems) }} items. Items from your selection will be picked
-                            randomly as your rewards.</p>
+                            randomly as your winnings.</p>
                         <ul>
                             @foreach ($availableItems->whereIn('id', $selectedItems) as $item)
                                 <li>{{ $item->item_name }}</li>
@@ -126,7 +126,7 @@
                             <h4 class="modal-title fw-bold mb-0" id="raffleSuccessModalLabel">
                                 🎉 Congratulations! 🎉
                             </h4>
-                            <p class="mb-0 mt-2 opacity-90">Raffle Draw Complete!</p>
+                            <p class="mb-0 mt-2 opacity-90">Gift Draw Complete!</p>
                         </div>
                         <!-- Decorative elements -->
                         <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10">
@@ -144,7 +144,7 @@
                         <div class="mb-4">
                             <div class="display-1 text-warning mb-3">🏆</div>
                             <h5 class="text-success fw-bold mb-3">
-                                {{ count(json_decode($raffleDraw->reward, true)) }} Lucky Winners Selected!
+                                {{ count(json_decode($raffleDraw->reward, true)) }} Gift Won!
                             </h5>
                         </div>
 

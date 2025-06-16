@@ -21,6 +21,7 @@ class Transaction extends Model
         'level_id',
         'amount',
         'status',
+        'metadata'
     ];
 
     // Relationships

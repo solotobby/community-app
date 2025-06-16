@@ -139,6 +139,10 @@
                                 </div>
                             </div>
                             <div class="col-12">
+                                <label class="form-label text-muted">Date of Birth</label>
+                                <div class="fw-medium text-light">{{ $dob ?? 'Not provided' }}</div>
+                            </div>
+                            <div class="col-12">
                                 <label class="form-label text-muted">Address</label>
                                 <div class="fw-medium text-light">{{ $address ?? 'Not provided' }}</div>
                             </div>
@@ -473,6 +477,15 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('dob') is-invalid @enderror"
+                                        wire:model.defer="dob" placeholder="Select your date of birth">
+                                    @error('dob')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Address <span class="text-danger">*</span></label>
                                     <textarea class="form-control @error('address') is-invalid @enderror" wire:model.defer="address" rows="3"

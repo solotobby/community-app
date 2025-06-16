@@ -7,7 +7,6 @@ use App\Models\LevelItem;
 use App\Models\BankInfo;
 use App\Models\RaffleDraw as Raffle;
 use App\Models\Transaction;
-use App\Services\PaystackService;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +29,7 @@ class RaffleDraw extends Component
     public $showClaimModal = false;
     public $showSetPinModal = false;
     public $showBankModal = false;
-    public $showContactModal = false; // New contact modal state
+    public $showContactModal = false;
 
     // Form fields
     public $pin = '';
@@ -51,6 +50,9 @@ class RaffleDraw extends Component
 
     // Cached data
     public $banks = [];
+
+    protected $paginationTheme = 'bootstrap';
+    protected $queryString = ['page' => ['except' => 1]];
 
     // Validation rules
     protected $rules = [
@@ -139,7 +141,7 @@ class RaffleDraw extends Component
     {
         $this->selectedDraw = Raffle::findOrFail($drawId);
 
-        Log::info('response', [ $this->selectedDraw]);
+        Log::info('response', [$this->selectedDraw]);
         // Check if draw is still valid
         if (!$this->isDrawValid($this->selectedDraw)) {
             session()->flash('error', 'This reward has expired or is already claimed.');

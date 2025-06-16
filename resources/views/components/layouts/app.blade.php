@@ -52,7 +52,7 @@
     <link rel="stylesheet" id="css-main" href="{{ asset('assets/css/codebase.min.css') }}">
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
-    <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/flat.min.css"> -->
+    <link rel="stylesheet" id="css-theme" href="{{ asset('assets/css/themes/earth.min.css') }}">
     <!-- END Stylesheets -->
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
@@ -428,7 +428,7 @@
               <span class="smini-visible fw-bold tracking-wide fs-lg">
                 c<span class="text-primary">b</span>
               </span>
-              <a class="link-fx fw-bold tracking-wide mx-auto" href="index.html">
+              <a class="link-fx fw-bold tracking-wide mx-auto" href="{{ route('home') }}">
                 <span class="smini-hidden">
                   <i class="fa fa-fire text-primary"></i>
                   <span class="fs-4 text-dual">Community </span><span class="fs-4 text-primary">App</span>
@@ -539,6 +539,7 @@
         webpack is putting everything together at assets/_js/main/app.js
     -->
     <script src="{{ asset('assets/js/codebase.app.min.js')}}"></script>
+    <script src="{{ asset('assets/_js/main/app.js')}}"></script>
 
     <!-- Page JS Plugins -->
     <script src="{{ asset('assets/js/plugins/chart.js/chart.umd.js')}}"></script>

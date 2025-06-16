@@ -88,14 +88,6 @@
                     });
                 </script>
 
-                <div class="form-floating mb-4">
-                    <input wire:model.defer="referral_code" type="text" class="form-control"
-                        placeholder="Referral code (optional)">
-                    <label>Referral Code (optional)</label>
-                    @error('referral_code')
-                        <span class="text-danger fs-sm">{{ $message }}</span>
-                    @enderror
-                </div>
 
 
                 <div class="form-floating mb-4">
@@ -111,6 +103,15 @@
                     <input wire:model.defer="password_confirmation" type="password" class="form-control"
                         placeholder="Confirm password">
                     <label>Confirm Password</label>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input wire:model.defer="referral_code" type="text" class="form-control"
+                        placeholder="Referral code (optional)">
+                    <label>Referral Code (optional)</label>
+                    @error('referral_code')
+                        <span class="text-danger fs-sm">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="mb-4">

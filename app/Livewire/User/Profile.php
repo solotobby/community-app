@@ -22,7 +22,7 @@ class Profile extends Component
     public $showPhoneVerificationModal = false;
 
     // Contact information
-    public $phone, $phone_verified, $address, $landmark, $lga, $state, $country;
+    public $phone, $dob, $phone_verified, $address, $landmark, $lga, $state, $country;
 
     // User information
     public $name, $email, $level, $referred_by, $referral_code;
@@ -55,6 +55,7 @@ class Profile extends Component
         $this->address = $user->address;
         $this->landmark = $user->landmark;
         $this->lga = $user->lga;
+        $this->dob = $user->dob;
         $this->state = $user->state;
         $this->country = $user->country;
         $this->referral_code = $user->referral_code;
@@ -182,6 +183,7 @@ class Profile extends Component
     {
         $user = auth()->user();
         $this->phone = $user->phone;
+        $this->dob = $user->dob;
         $this->address = $user->address;
         $this->landmark = $user->landmark;
         $this->landmark = $user->landmark;
@@ -205,11 +207,12 @@ class Profile extends Component
             'address' => 'required|string|max:255',
             'landmark' => 'nullable|string|max:255',
             'lga' => 'nullable|string|max:255',
+            'dob' => 'nullable|date|before:today',
             'state' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
         ]);
 
-        if (auth()->user()->phone ==! $this->phone) {
+        if (auth()->user()->phone !== $this->phone) {
             auth()->user()->update([
                 'phone_verified' => false,
                 'phone_verified_at' => null,
@@ -217,6 +220,7 @@ class Profile extends Component
         }
         auth()->user()->update([
             'phone' => $this->phone,
+            'dob' => $this->dob,
             'address' => $this->address,
             'landmark' => $this->landmark,
             'lga' =>  $this->lga,
