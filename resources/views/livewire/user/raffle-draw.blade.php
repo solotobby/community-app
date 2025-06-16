@@ -113,9 +113,18 @@
                         </tbody>
                     </table>
 
-                    <div class="mt-2">
-                        {{ $draws->links() }}
-                    </div>
+                    @if($draws->hasPages())
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    Page {{ $draws->currentPage() }} of {{ $draws->lastPage() }}
+                                </small>
+                            </div>
+                            <div>
+                                {{ $draws->links() }}
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

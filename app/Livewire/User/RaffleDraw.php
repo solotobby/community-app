@@ -52,6 +52,9 @@ class RaffleDraw extends Component
     // Cached data
     public $banks = [];
 
+    protected $paginationTheme = 'bootstrap';
+protected $queryString = ['page' => ['except' => 1]];
+
     // Validation rules
     protected $rules = [
         'new_transaction_pin' => 'required|numeric|digits:4|confirmed',
@@ -547,7 +550,7 @@ class RaffleDraw extends Component
         // Get user's draws with optimized query
         $draws = Raffle::where('user_id', $this->user->id)
             ->latest()
-            ->paginate(25);
+            ->paginate(10);
 
         return view('livewire.user.raffle-draw', [
             'availableDraws' => $this->user->raffle_draw_count,
