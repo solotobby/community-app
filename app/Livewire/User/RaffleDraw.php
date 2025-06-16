@@ -444,6 +444,9 @@ class RaffleDraw extends Component
     {
         DB::beginTransaction();
         try {
+            $feePercentage = 2;
+            $amount = $draw->price * (1 - ($feePercentage / 100));
+
             $txnReference = 'TXN_' . Str::uuid();
 
             // Create transaction record
@@ -451,9 +454,9 @@ class RaffleDraw extends Component
                 'reference' => $txnReference,
                 'user_id' => $this->user->id,
                 'transaction_type' => 'payout',
-                'transaction_reason' => 'Raffle Draw Withdrawal',
+                'transaction_reason' => 'Gifts Won Withdrawal',
                 'level_id' => $this->user->level,
-                'amount' => $draw->price,
+                'amount' => $amount,
                 'status' => 'pending',
             ]);
 
@@ -474,9 +477,9 @@ class RaffleDraw extends Component
 
             // Initialize transfer
             $transferResult = $paystack->initializeTransfer(
-                $draw->price,
+                $amount,
                 $this->user->recipient_code,
-                'Raffle Draw Withdrawal',
+                'Gifts Won Withdrawal',
                 $txnReference
             );
 
@@ -492,7 +495,7 @@ class RaffleDraw extends Component
             Log::error('Payment processing failed', [
                 'user_id' => $this->user->id,
                 'draw_id' => $draw->id,
-                'amount' => $draw->price,
+                'amount' => $amount,
                 'error' => $e->getMessage()
             ]);
 
