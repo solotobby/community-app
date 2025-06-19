@@ -68,8 +68,8 @@
                 <!-- Header -->
                 <div class="px-4 py-2 mb-4">
                     <a class="link-fx fw-bold" href="{{ url('/') }}">
-                        <i class="fa fa-fire"></i>
-                        <span class="fs-4 text-body-color">Community</span><span class="fs-4"> App</span>
+                        <i class="fa fa-gift"></i>
+                        <span class="fs-4 text-body-color"> Fam</span><span class="fs-4">lic</span>
                     </a>
                     <h1 class="h3 fw-bold mt-4 mb-2">Welcome to Your Dashboard</h1>
                     <h2 class="h5 fw-medium text-muted mb-0">Please sign in</h2>
