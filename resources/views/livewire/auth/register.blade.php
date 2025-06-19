@@ -18,8 +18,8 @@
         <div class="content content-full">
             <div class="px-4 py-2 mb-4">
                 <a class="link-fx fw-bold" href="{{ url('/') }}">
-                    <i class="fa fa-fire"></i>
-                    <span class="fs-4 text-body-color">Community</span><span class="fs-4"> App</span>
+                    <i class="fa fa-gift"></i>
+                    <span class="fs-4 text-body-color"> Fam</span><span class="fs-4">lic</span>
                 </a>
                 <h1 class="h3 fw-bold mt-4 mb-2">Create New Account</h1>
                 <h2 class="h5 fw-medium text-muted mb-0">Please add your details</h2>
@@ -44,7 +44,7 @@
 
                 <div class="form-floating mb-4">
                     <select id="levelSelect" wire:model="level" class="form-control">
-                        <option value="">-- Select Level --</option>
+                        <option value="">-- Select any Level of your Choice --</option>
                         @foreach ($levels as $lvl)
                             <option value="{{ $lvl->id }}">{{ $lvl->name }}</option>
                         @endforeach
@@ -54,7 +54,7 @@
 
                 <div id="amountToPay" class="mb-3 text-center" style="display:none;">
                     <div class="alert alert-info py-2">
-                        <strong>Amount to Pay:</strong> ₦<span id="amountValue"></span>
+                        <strong>Get-In Fee:</strong> ₦<span id="amountValue"></span>
                     </div>
                 </div>
 
@@ -117,7 +117,7 @@
                 <div class="mb-4">
                     <div class="form-check">
                         <input wire:model="agreeTerms" type="checkbox" class="form-check-input" id="signup-terms">
-                        <label class="form-check-label" for="signup-terms">I agree to Terms</label>
+                        <label class="form-check-label" for="signup-terms">I agree to Terms and Conditions</label>
                     </div>
                     @error('agreeTerms')
                         <span class="text-danger fs-sm">{{ $message }}</span>
@@ -126,7 +126,7 @@
 
                 <div class="mb-4">
                     <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold" wire:loading.attr="disabled">
-                        <span wire:loading.remove>Make Payment</span>
+                        <span wire:loading.remove>Continue</span>
                         <span wire:loading>Processing...</span>
                     </button>
 

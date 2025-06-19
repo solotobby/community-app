@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaystackController;
 use App\Livewire\User\Profile;
@@ -19,10 +20,14 @@ use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('welcome');
 
+Route::get('/', [GeneralController::class, 'index']);
+Route::get('about-us', [GeneralController::class, 'aboutUs']);
+Route::get('blog', [GeneralController::class, 'blog']);
+Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard');

@@ -33,7 +33,7 @@
                     <div class="card-header bg-grey d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-gift text-primary me-2"></i>
-                            My Gifting Draw Winning(s)
+                            My Famlic Gift(s)
                         </h5>
                     </div>
 
@@ -241,7 +241,7 @@
                                 will be paid into your
                                 account as we do not have a collection center close to you
                                 <br>
-                                    Payment will be made to the following bank account:
+                                    Payment will be made to the following bank account and a withdrawal fee of 2% will be deducted:
                             </p>
                             <ul class="list-unstyled">
                                 <li><strong>Bank:</strong> {{ $bankInfo->bank_name }}</li>

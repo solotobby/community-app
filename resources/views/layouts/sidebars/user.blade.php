@@ -74,7 +74,7 @@
             <a class="nav-main-link {{ request()->routeIs('user.raffle.draw') ? 'active' : '' }}"
                 href="{{ route('user.raffle.draw') }}">
                 <i class="nav-main-link-icon fa fa-ticket-alt"></i>
-                <span class="nav-main-link-name">My Winnings</span>
+                <span class="nav-main-link-name">My Gifts</span>
             </a>
         </li>
 
