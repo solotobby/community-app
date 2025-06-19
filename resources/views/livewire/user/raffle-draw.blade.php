@@ -33,7 +33,7 @@
                     <div class="card-header bg-grey d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-gift text-primary me-2"></i>
-                            My Gifting Draw Winning(s)
+                            My Famlic Gift(s)
                         </h5>
                     </div>
 

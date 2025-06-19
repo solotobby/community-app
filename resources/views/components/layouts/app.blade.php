@@ -25,7 +25,7 @@
     -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Dashbaord - Community App</title>
+    <title>Dashbaord - Famlic | Support for every Family</title>
 
     <meta name="description" content="hodcrm">
     <meta name="author" content="hodcrm">
@@ -430,8 +430,8 @@
               </span>
               <a class="link-fx fw-bold tracking-wide mx-auto" href="{{ route('home') }}">
                 <span class="smini-hidden">
-                  <i class="fa fa-fire text-primary"></i>
-                  <span class="fs-4 text-dual">Community </span><span class="fs-4 text-primary">App</span>
+                  <i class="fa fa-gift text-primary"></i>
+                  <span class="fs-4 text-dual">Fam</span><span class="fs-4 text-primary">lic</span>
                 </span>
               </a>
             </div>

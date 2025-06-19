@@ -16,9 +16,18 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <h5 class="mb-0">🎁 Gifting Draw — {{ ucfirst($drawType) }}</h5>
+                <h5 class="mb-0">
+                    🎁 Claim Available Gifts (
+                    @if ($drawType === 'registration')
+                        <strong>Sign Up</strong>
+                    @else
+                        <strong>{{ ucfirst($drawType) }}</strong>
+                    @endif
+                    )
+                </h5>
                 <span class="badge bg-info ms-3">Select up to 7 items</span>
             </div>
+
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Current Level Display -->
@@ -69,7 +78,7 @@
             <div class="mt-4 text-end">
                 <button wire:click="confirmSelection" class="btn btn-success"
                     @if (count($selectedItems) < 4) disabled @endif>
-                    🎯 Confirm Selection ({{ count($selectedItems) }}/7)
+                    🎁 Confirm Selection ({{ count($selectedItems) }}/7)
                 </button>
             </div>
         </div>
@@ -81,23 +90,32 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">🎯 Confirm Your Gift Items</h5>
+                        <h5 class="modal-title">🎁 Confirm Your Gift Items</h5>
                         <button type="button" class="btn-close" wire:click="$set('showConfirmation', false)"></button>
                     </div>
                     <div class="modal-body">
                         <p>You selected {{ count($selectedItems) }} items. Items from your selection will be picked
-                            randomly as your winnings.</p>
+                            randomly as your gift.</p>
                         <ul>
                             @foreach ($availableItems->whereIn('id', $selectedItems) as $item)
                                 <li>{{ $item->item_name }}</li>
                             @endforeach
                         </ul>
-                        <p class="mt-3"><strong>Draw Type:</strong> {{ ucfirst($drawType) }}</p>
+                        <p class="mt-3">
+                            <strong>Gift Type:
+                                @if ($drawType === 'registration')
+                                    Sign Up
+                                @else
+                                    {{ ucfirst($drawType) }}
+                                @endif
+                            </strong>
+                        </p>
+
                     </div>
                     <div class="modal-footer">
                         <button wire:click="processRaffleDraw" class="btn btn-primary" wire:loading.attr="disabled"
                             wire:target="processRaffleDraw">
-                            <span wire:loading.remove wire:target="processRaffleDraw">✅ Confirm & Draw</span>
+                            <span wire:loading.remove wire:target="processRaffleDraw">✅ Confirm & Claim</span>
                             <span wire:loading wire:target="processRaffleDraw">
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                                 Processing Draw...
