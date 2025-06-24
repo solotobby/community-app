@@ -16,9 +16,9 @@ class HomeController extends Controller
             return redirect()->route('admin');
         }
 
-        if ($user->transaction_pin === null || !$user->bankInfo?->exists() || !$user->phone_verified) {
-            return redirect()->route('user.settings');
-        }
+        // if ($user->transaction_pin === null || !$user->bankInfo?->exists() || !$user->phone_verified) {
+        //     return redirect()->route('user.settings');
+        // }
 
         return redirect()->route('user.dashboard');
     }

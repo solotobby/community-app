@@ -24,7 +24,8 @@
 
 <!doctype html>
 <html lang="en" class="remember-theme">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <!--
       Available classes for <html> element:
@@ -46,7 +47,8 @@
     <!-- Open Graph Meta -->
     <meta property="og:title" content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework">
     <meta property="og:site_name" content="Codebase">
-    <meta property="og:description" content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
+    <meta property="og:description"
+        content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
@@ -61,17 +63,17 @@
     <!-- Stylesheets -->
 
     <!-- Codebase framework -->
-    <link rel="stylesheet" id="css-main" href="assets/css/codebase.min.css">
+    <link rel="stylesheet" id="css-main" href="{{ asset('assets/css/codebase.min.css') }}">
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
-    <link rel="stylesheet" id="css-theme" href="assets/css/themes/earth.min.css">
+    <link rel="stylesheet" id="css-theme" href="{{ asset('assets/css/themes/earth.min.css') }}">
     <!-- END Stylesheets -->
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
-    <script src="assets/js/setTheme.js"></script>
-  </head>
+    <script src="{{ asset('assets/js/setTheme.js') }}"></script>
+</head>
 
-  <body>
+<body>
     <!-- Page Container -->
     <!--
       Available classes for #page-container:
@@ -112,28 +114,28 @@
         'main-content-boxed'                        Full width Main Content with a specific maximum width (screen width > 1200px)
         'main-content-narrow'                       Full width Main Content with a percentage width (screen width > 1200px)
     -->
-   <div id="page-container" class="main-content-boxed">
+    <div id="page-container" class="main-content-boxed">
 
-      <!-- Main Container -->
-      <main id="main-container">
-        <!-- Page Content -->
-       <!-- END Header -->
+        <!-- Main Container -->
+        <main id="main-container">
+            <!-- Page Content -->
+            <!-- END Header -->
 
-                <!-- Sign In Form -->
-                <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js -->
-                <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
+            <!-- Sign In Form -->
+            <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js -->
+            <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
 
 
-                {{ $slot }}
+            {{ $slot }}
 
-                <!-- END Sign In Form -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- END Page Content -->
-      </main>
-      <!-- END Main Container -->
+            <!-- END Sign In Form -->
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
     </div>
     <!-- END Page Container -->
 
@@ -153,6 +155,6 @@
 
     <!-- Page JS Code -->
     <script src="assets/js/pages/op_auth_signin.min.js"></script>
-  </body>
-</html>
+</body>
 
+</html>
