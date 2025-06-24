@@ -25,6 +25,8 @@ class UserDashboard extends Component
     public $showSuccess = false;
     public $errorMessage = null;
     public $raffleDraw;
+    public $showWelcomeModal = true;
+
 
     // Account Upgrade Properties
     public $showUpgradeModal = false;
@@ -45,6 +47,9 @@ class UserDashboard extends Component
         //$this->availableItems = LevelItem::where('level_id', Auth::user()->level)->get();
         $this->userLevel = Level::findOrFail(Auth::user()->level);
         $this->loadAvailableLevels();
+        // if (Auth::user()->recipient_code != null) {
+            $this->showWelcomeModal;
+        // }
     }
 
     // Account Upgrade Methods
@@ -207,7 +212,7 @@ class UserDashboard extends Component
 
             if (!$referral) {
                 session()->flash('error', 'No available referrals to use for raffle draw.');
-                 return redirect(request()->header('Referer') ?? url()->current());
+                return redirect(request()->header('Referer') ?? url()->current());
             }
 
             Log::info($referral);

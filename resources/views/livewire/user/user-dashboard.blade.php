@@ -84,6 +84,30 @@
         </div>
     </div>
 
+    {{-- Welcome Modal --}}
+@if ($showWelcomeModal)
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🎉 Welcome to Famlic!</h5>
+                    <button type="button" class="btn-close" wire:click="$set('showWelcomeModal', false)"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="fs-5">
+                        🎁 your sign up gift is ready, claim it now!
+                    </p>
+                    <p>Click the continue button below to claim it now and begin your Famlic experience.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" wire:click="$set('showWelcomeModal', false)">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+
     {{-- Confirmation Modal --}}
     @if ($showConfirmation)
         <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
