@@ -43,16 +43,32 @@ class UserDashboard extends Component
     public function mount()
     {
         $this->drawType = Auth::user()->registration_draw ? 'registration' : 'referral';
-        $this->availableItems = LevelItem::all();
-        //$this->availableItems = LevelItem::where('level_id', Auth::user()->level)->get();
+        $this->availableItems();
         $this->userLevel = Level::findOrFail(Auth::user()->level);
         $this->loadAvailableLevels();
-        // if (Auth::user()->recipient_code != null) {
-            $this->showWelcomeModal;
-        // }
+        $this->showWelcomeModal;
     }
 
-    // Account Upgrade Methods
+    public function availableItems()
+    {
+        $user = Auth::user();
+        $userLevel = Level::findOrFail($user->level);
+
+        $items = LevelItem::with('level')->get();
+
+        $this->availableItems = $items->map(function ($item) use ($userLevel) {
+            return [
+                'id' => $item->id,
+                'item_name' => $item->item_name,
+                'item_url' => $item->item_url,
+                'level_id' => $item->level_id,
+                'price' => $item->price,
+                'currency' => $item->currency,
+                'created_at' => $item->created_at,
+                'clickable' => $item->level->registration_amount <= $userLevel->registration_amount,
+            ];
+        })->toArray();
+    }
     public function loadAvailableLevels()
     {
         $currentUser = Auth::user();
