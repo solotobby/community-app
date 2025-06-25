@@ -26,7 +26,7 @@ class UserDashboard extends Component
     public $showSuccess = false;
     public $errorMessage = null;
     public $raffleDraw;
-    public $showWelcomeModal = true;
+    public $showWelcomeModal = false;
 
 
     // Account Upgrade Properties
@@ -43,11 +43,12 @@ class UserDashboard extends Component
 
     public function mount()
     {
-        $this->drawType = Auth::user()->registration_draw ? 'registration' : 'referral';
+        $user = Auth::user();
+        $this->drawType = $user->registration_draw ? 'registration' : 'referral';
         $this->availableItems();
         $this->userLevel = Level::findOrFail(Auth::user()->level);
         $this->loadAvailableLevels();
-        $this->showWelcomeModal;
+        $this->showWelcomeModal = $user->welcome_modal ? true : false;
     }
 
     public function availableItems()
@@ -274,6 +275,7 @@ class UserDashboard extends Component
                 'raffle_draw_count' => $newCount,
                 'can_raffle' => $newCount > 0,
                 'registration_draw' => false,
+                'welcome_modal' => false,
             ]);
 
             DB::commit();
