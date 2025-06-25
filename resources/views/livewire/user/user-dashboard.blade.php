@@ -71,7 +71,7 @@
                                     @this.call('selectItem', {{ $item['id'] }});
                                     error = '';
                                 } else {
-                                    error = '🎁 Gift is in a higher level than yours. Upgrade to access it.';
+                                    error = '🎁 This Gift is not accessible in your level, please select another one';
                                     setTimeout(() => error = '', 3000);
                                 }
                             "
@@ -113,7 +113,7 @@
                 </div>
                 <div class="modal-body text-light">
                     <p class="fs-5">
-                        🎁 your sign up gift is ready, claim it now!
+                        🎁 Your sign up gift is ready, claim it now!
                     </p>
                     <p>Click the continue button below to claim it now and begin your Famlic experience.</p>
                 </div>

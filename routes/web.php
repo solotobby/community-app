@@ -18,6 +18,7 @@ use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
+use App\Livewire\User\Wallet;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,6 +71,7 @@ Route::middleware([
     Route::get('settings/profile', Profile::class)->name('settings');
     Route::get('gift/draw', RaffleDraw::class)->name('raffle.draw');
     Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
+    Route::get('wallet', Wallet::class)->name('wallet');
     Route::get('/level-upgrade/callback', [PaystackController::class, 'upgradeCallback'])->name('paystack.upgrade.callback');
 
 });

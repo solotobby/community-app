@@ -75,7 +75,7 @@ class AccountUpgrade extends Component
             'transaction_reason' => 'level_upgrade',
             'amount' => $upgradeAmount,
             'status' => 'pending',
-            'reference' => 'UPG_' . Str::upper(Str::random(10)),
+            'reference' => 'TXN_' . Str::upper(Str::random(15)),
             'description' => "Account upgrade to {$this->selectedLevel->name}",
             'metadata' => json_encode([
                 'from_level_id' => $this->currentUser->level_id,

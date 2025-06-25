@@ -41,34 +41,6 @@
             </ul>
         </li> --}}
 
-        <!-- Wallet -->
-        {{-- <li class="nav-main-item">
-            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
-                data-toggle="submenu" href="#">
-                <i class="nav-main-link-icon fa fa-wallet"></i>
-                <span class="nav-main-link-name">Wallet</span>
-            </a>
-            <ul class="nav-main-submenu">
-                <li class="nav-main-item">
-                    <a class="nav-main-link" href="{{ route('user.wallet.deposit') }}">
-                        Deposit
-                    </a>
-                </li>
-                <li class="nav-main-item">
-                    <a class="nav-main-link" href="{{ route('user.wallet.withdraw') }}">
-                        Withdraw
-                    </a>
-                </li>
-                <li class="nav-main-item">
-                    <a class="nav-main-link" href="{{ route('user.wallet.transactions') }}">
-                        Transactions
-                    </a>
-                </li>
-            </ul>
-        </li> --}}
-
-
-
         <!-- Raffle Draw-->
         <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('user.raffle.draw') ? 'active' : '' }}"
@@ -87,6 +59,14 @@
             </a>
         </li>
 
+        <!-- Wallet -->
+        <li class="nav-main-item">
+            <a class="nav-main-link {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
+               href="{{ route('user.wallet') }}">
+                <i class="nav-main-link-icon fa fa-wallet"></i>
+                <span class="nav-main-link-name">Wallet</span>
+            </a>
+        </li>
         {{-- <li class="nav-main-item">
              <a class="nav-main-link {{ request()->routeIs('user.raffle.claim') ? 'active' : '' }}"
                 href="{{ route('user.raffle.claim') }}">
