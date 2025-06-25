@@ -8,6 +8,7 @@ use App\Models\RaffleDraw;
 use App\Models\Reward;
 use App\Models\User;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -105,7 +106,6 @@ class UserDashboard extends Component
 
         $currentUser = Auth::user();
 
-        // Calculate upgrade cost (difference between levels)
         $currentAmount = $currentUser->level->registration_amount ?? 0;
         $upgradeAmount = $this->selectedLevel->registration_amount;
 
@@ -182,8 +182,8 @@ class UserDashboard extends Component
             }
 
             return null;
-        } catch (\Exception $e) {
-            \Log::error('Paystack initialization failed: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
         }
     }
@@ -278,7 +278,7 @@ class UserDashboard extends Component
 
             DB::commit();
             $this->showSuccess = true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             Log::error('Draw creation failed', [
                 'user_id' => $user->id,

@@ -3,11 +3,12 @@
 namespace App\Livewire\User;
 
 use App\Models\Level;
-use App\Models\User;
 use App\Models\Transaction;
+use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AccountUpgrade extends Component
@@ -132,8 +133,8 @@ class AccountUpgrade extends Component
             }
 
             return null;
-        } catch (\Exception $e) {
-            \Log::error('Paystack initialization failed: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
         }
     }

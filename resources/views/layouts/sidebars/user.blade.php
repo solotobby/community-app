@@ -64,7 +64,7 @@
             <a class="nav-main-link {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
                href="{{ route('user.wallet') }}">
                 <i class="nav-main-link-icon fa fa-wallet"></i>
-                <span class="nav-main-link-name">Wallet</span>
+                <span class="nav-main-link-name">My Wallet</span>
             </a>
         </li>
         {{-- <li class="nav-main-item">

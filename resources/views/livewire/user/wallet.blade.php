@@ -107,12 +107,14 @@
                     <tbody>
                         @forelse ($transactions as $transaction)
                             <tr>
-                                <th class="text-center" scope="row">{{ $loop->iteration + (($transactions->currentPage() - 1) * $transactions->perPage()) }}</th>
+                                <th class="text-center" scope="row">
+                                    {{ $loop->iteration + ($transactions->currentPage() - 1) * $transactions->perPage() }}
+                                </th>
                                 <td>{{ $transaction->reference ?? '-' }}</td>
                                 <td>{{ ucfirst($transaction->transaction_type) }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $transaction->transaction_reason)) }}</td>
                                 <td>
-                                    @if($transaction->level)
+                                    @if ($transaction->level)
                                         {{ $transaction->level->name }}
                                     @else
                                         -
@@ -122,7 +124,7 @@
                                 <td>
                                     @php
                                         $status = $transaction->status;
-                                        $badgeClass = match($status) {
+                                        $badgeClass = match ($status) {
                                             'success' => 'bg-success',
                                             'pending' => 'bg-warning text-dark',
                                             'failed' => 'bg-danger',
