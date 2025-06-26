@@ -11,7 +11,7 @@ if (rememberDarkMode) {
   // Set Dark mode
   let darkModePreference = localStorage.getItem("codebaseDarkMode");
 
-  if (darkModePreference === "on") {
+  if (darkModePreference === "off") {
     lHtml.classList.add("dark");
   } else if (darkModePreference === "off") {
     lHtml.classList.remove("dark");

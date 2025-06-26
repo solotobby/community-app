@@ -1,15 +1,3 @@
-{{-- <x-layouts.app.sidebar :title="$title ?? null">
-    <flux:main>
-        {{ $slot }}
-    </flux:main>
-</x-layouts.app.sidebar> --}}
-
-{{-- <x-layouts.app.sidebar :title="$title ?? null">
-    <flux:main>
-        {{ $slot }}
-    </flux:main>
-</x-layouts.app.sidebar> --}}
-
 <!doctype html>
 <html lang="en" class="remember-theme">
   <head>

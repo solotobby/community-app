@@ -18,7 +18,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/payment/initialize/{reference}', [PaystackController::class, 'initialize'])->name('paystack.payment.init');
     Route::get('/paystack/callback', [PaystackController::class, 'callback'])->name('paystack.payment.callback');
-    // Route::get('/level-upgrade/callback', [PaystackController::class, 'upgradeCallback'])->name('paystack.upgrade.callback');
+    Route::get('/paystack/gift/callback', [PaystackController::class, 'giftingCallback'])->name('payment.gifting.callback');
 });
 
 Route::middleware('auth')->group(function () {

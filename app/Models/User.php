@@ -41,7 +41,8 @@ class User extends Authenticatable
         'phone_verified',
         'phone',
         'registration_draw',
-        'recipient_code'
+        'recipient_code',
+        'welcome_modal'
     ];
 
     /**
@@ -65,6 +66,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'welcome_modal' => 'boolean'
         ];
     }
 
@@ -125,5 +127,10 @@ class User extends Authenticatable
     public function levelInfo()
     {
         return $this->belongsTo(Level::class, 'level');
+    }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
     }
 }

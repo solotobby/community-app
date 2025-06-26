@@ -33,12 +33,16 @@
 
                             <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
                                 class="btn btn-primary" onclick="event.stopPropagation()">
-                                View Raffle Draw
+                                User Raffle Draw
                             </a>
 
                             <a href="{{ route('admin.users.referral', $user) }}"
                                 class="btn btn-primary" onclick="event.stopPropagation()">
-                                View Referral
+                                User Referral
+                            </a>
+                             <a href="{{ route('admin.users.wallet', $user) }}"
+                                class="btn btn-primary" onclick="event.stopPropagation()">
+                                User Wallet
                             </a>
                         </div>
                     </div>

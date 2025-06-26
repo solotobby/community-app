@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contribution;
 use App\Models\Level;
 use App\Models\Reward;
 use App\Models\Transaction;
@@ -99,6 +100,39 @@ class PaystackController extends Controller
             return redirect()->route('home')->with('error', 'Payment failed.');
         }
     }
+
+    public function giftingCallback(Request $request)
+    {
+        $reference = $request->query('reference');
+
+
+        $response = Http::withToken(config('services.paystack.secret_key'))
+            ->get("https://api.paystack.co/transaction/verify/{$reference}")
+            ->json();
+
+        $contribution = Contribution::where('payment_reference', $reference)->firstOrFail();
+
+        if (data_get($response, 'status') && data_get($response, 'data.status') === 'success') {
+
+            $contribution->markAsCompleted();
+            $user = $contribution->giftRequest->user;
+
+            $wallet = $user->wallet()->firstOrCreate([], ['balance' => 0]);
+
+            $bonus = $contribution->amount * 0.95;
+            $wallet->increment('balance', $bonus);
+
+            return redirect()
+                ->route('gift.public', ['slug' => $contribution->giftRequest->slug])
+                ->with('message', 'Payment successful. Thank you for your gifting!');
+        }
+        $contribution->update(['status' => 'failed']);
+
+        return redirect()
+            ->route('gift.public', ['slug' => $contribution->giftRequest->slug])
+            ->with('error', 'Payment unsuccessful. Please try again.');
+    }
+
 
     public function upgradeCallback(Request $request)
     {
