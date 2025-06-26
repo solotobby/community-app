@@ -67,13 +67,33 @@
                 <span class="nav-main-link-name">My Wallet</span>
             </a>
         </li>
-        {{-- <li class="nav-main-item">
-             <a class="nav-main-link {{ request()->routeIs('user.raffle.claim') ? 'active' : '' }}"
-                href="{{ route('user.raffle.claim') }}">
-                <i class="nav-main-link-icon fa fa-user-cog"></i>
-                <span class="nav-main-link-name">Raffle Page</span>
+
+         <!-- Crowdfunding -->
+        <li class="nav-main-item">
+            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('user.gift.*') ? 'active' : '' }}"
+                data-toggle="submenu" href="#">
+                <i class="nav-main-link-icon fa fa-gamepad"></i>
+                <span class="nav-main-link-name">Crowdfunding</span>
             </a>
-        </li> --}}
+            <ul class="nav-main-submenu">
+                  <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.gift.index') }}">
+                        View Requested Gifts
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.gift.create-gift') }}">
+                        Request Gift
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.gift.create-gift') }}">
+                        Offer Gift
+                    </a>
+                </li>
+            </ul>
+        </li>
+
 
 
          <!-- Settings -->

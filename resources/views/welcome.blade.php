@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="en">
 
@@ -105,7 +103,7 @@
                         <ul class="p-0">
                             <li><i class="fal fa-map"></i>12/A, Mirnada City Tower, NYC</li>
                             <li><i class="flaticon-phone-call"></i><a href="tell:+876864764764">+876 864 764 764</a></li>
-                            <li><i class="flaticon-email-1"></i><a href="mailto:info@webmail.com">info@webmail.com</a></li>  
+                            <li><i class="flaticon-email-1"></i><a href="mailto:info@webmail.com">info@webmail.com</a></li>
                         </ul>
                         <div class="sidebar__menu--social">
                             <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -150,7 +148,7 @@
                         <a class="popup-image" href="assets/img/grid/g-img-7.jpg"><img alt="#" src="assets/img/grid/g-img-7.jpg"></a>
                     </div>
                 </div>
-    
+
                 <div class="side-map mt-20 mb-30">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29176.030811137334!2d90.3883827!3d23.924917699999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1605272373598!5m2!1sen!2sbd"></iframe>
                 </div>
