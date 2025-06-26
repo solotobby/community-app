@@ -4,19 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {{ $title ?? 'Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa' }}
-    </title>
-    <meta name="description"
-        content="Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <title>{{ $title ?? 'Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa' }}</title>
+    <meta name="description" content="Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta name="author" content="FamlicApp">
     <meta name="robots" content="FamlicApp">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="Gift Request - Famlic">
+    <meta property="og:title" content="Gift Request - Famlic:>
     <meta property="og:site_name" content="FamlicApp">
-    <meta property="og:description"
-        content="Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:description" content="Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
@@ -78,7 +74,7 @@
     <!-- Header Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand text-primary" href="#">
+            <a class="navbar-brand text-primary" href="{{ route('homepage') }}">
                 <i class="fas fa-gift me-2"></i>Famlic
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -86,11 +82,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="fas fa-info-circle me-1"></i>How it Works
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('register') }}">
                             <i class="fas fa-user-plus me-1"></i>Create Your Link

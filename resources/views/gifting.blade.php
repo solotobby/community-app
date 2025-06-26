@@ -52,7 +52,8 @@
                         @if ($gift->deadline->isPast())
                             <small class="text-danger">Expired</small>
                         @else
-                            <small class="text-success">{{ $gift->deadline->diffForHumans() }}</small>
+                            <small class="card-text"><strong>{{ round(now()->diffInRealDays($gift->deadline, true)) }}
+                                    day(s)</strong></small>
                         @endif
                         <br> Organized by: {{ $gift->user?->name }}
                     </p>
@@ -202,25 +203,32 @@
                         </label>
                     </div>
 
-                    <div class="d-flex gap-2">
-                        @if ($gift->canReceiveContributions())
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-heart me-2"></i>Gift Now
-                            </button>
-                        @else
-                            <button class="btn btn-secondary" disabled>
-                                @if ($gift->current_amount >= $gift->target_amount)
-                                    <i class="fas fa-check me-2"></i>Target Reached!
-                                @elseif($gift->is_expired)
-                                    <i class="fas fa-clock me-2"></i>Expired
-                                @else
-                                    <i class="fas fa-pause me-2"></i>Paused
-                                @endif
-                            </button>
-                        @endif
-                        <button type="button" class="btn btn-secondary" wire:click="toggleContributeForm">
-                            Cancel
-                        </button>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            @if ($gift->canReceiveContributions())
+                                <button type="submit" class="btn btn-success w-100" wire:loading.attr="disabled"
+                                    wire:target="submit">
+                                    <span wire:loading.remove wire:target="submit">
+                                        <i class="fas fa-heart me-2"></i>Gift Now
+                                    </span>
+                                    <span wire:loading wire:target="submit">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"
+                                            aria-hidden="true"></span>
+                                        Processing...
+                                    </span>
+                                </button>
+                            @else
+                                <button class="btn btn-secondary w-100" disabled>
+                                    @if ($gift->current_amount >= $gift->target_amount)
+                                        <i class="fas fa-check me-2"></i>Target Reached!
+                                    @elseif($gift->is_expired)
+                                        <i class="fas fa-clock me-2"></i>Expired
+                                    @else
+                                        <i class="fas fa-pause me-2"></i>Paused
+                                    @endif
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 </form>
             </div>

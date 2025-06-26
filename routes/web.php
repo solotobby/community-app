@@ -31,7 +31,7 @@ use App\Livewire\User\Wallet;
 // })->name('welcome');
 
 
-Route::get('/', [GeneralController::class, 'index']);
+Route::get('/', [GeneralController::class, 'index'])->name('homepage');
 Route::get('about-us', [GeneralController::class, 'aboutUs']);
 Route::get('blog', [GeneralController::class, 'blog']);
 Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
