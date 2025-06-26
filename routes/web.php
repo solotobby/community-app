@@ -29,12 +29,14 @@ use App\Livewire\User\Wallet;
 //     return view('welcome');
 // })->name('welcome');
 
+
+Route::get('/', [GeneralController::class, 'index']);
+Route::get('about-us', [GeneralController::class, 'aboutUs']);
+Route::get('blog', [GeneralController::class, 'blog']);
+Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
+
 Route::get('/gift/{slug}', Gifting::class)->name('gift.public');
 
-
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('home', [HomeController::class, 'home'])->name('home');

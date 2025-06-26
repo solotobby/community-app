@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Gift Request - Famlic | Support for every Family' }}</title>
+    <title>{{ $title ?? 'Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa' }}</title>
     <meta name="description" content="hodcrm">
     <meta name="author" content="hodcrm">
     <meta name="robots" content="hodcrm">
