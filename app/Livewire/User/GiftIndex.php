@@ -107,9 +107,9 @@ class GiftIndex extends Component
         // }
 
         if ($this->search) {
-            $query->where(function($q) {
+            $query->where(function ($q) {
                 $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('description', 'like', '%' . $this->search . '%');
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -124,22 +124,33 @@ class GiftIndex extends Component
 
         // Calculate stats
         $stats = [
-            'total' => GiftRequest::when($this->showMyGifts && Auth::check(), function($q) {
-                return $q->where('user_id', Auth::id());
-            })->count(),
-            'active' => GiftRequest::where('status', 'active')
-                ->when($this->showMyGifts && Auth::check(), function($q) {
-                    return $q->where('user_id', Auth::id());
-                })
-                ->count(),
-            'completed' => GiftRequest::where('status', 'completed')
-                ->when($this->showMyGifts && Auth::check(), function($q) {
-                    return $q->where('user_id', Auth::id());
-                })
-                ->count(),
-            'total_raised' => GiftRequest::when($this->showMyGifts && Auth::check(), function($q) {
-                return $q->where('user_id', Auth::id());
-            })->sum('current_amount'),
+            'total' => GiftRequest::where(
+                'user_id',
+                Auth::id()
+            )->count(),
+
+            'active' => GiftRequest::where(
+                'status',
+                'active'
+            )->where(
+                'user_id',
+                Auth::id()
+            )->count(),
+
+            'completed' => GiftRequest::where(
+                'status',
+                'completed'
+            )->where(
+                'user_id',
+                Auth::id()
+            )->count(),
+            
+            'total_raised' => GiftRequest::where(
+                'user_id',
+                Auth::id()
+            )->sum(
+                'current_amount'
+            ),
         ];
 
         return view('livewire.user.gift-index', [

@@ -4,15 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa' }}</title>
-    <meta name="description" content="hodcrm">
-    <meta name="author" content="hodcrm">
-    <meta name="robots" content="hodcrm">
+    <title>
+        {{ $title ?? 'Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa' }}
+    </title>
+    <meta name="description"
+        content="Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="author" content="FamlicApp">
+    <meta name="robots" content="FamlicApp">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="hodcrm">
-    <meta property="og:site_name" content="hodcrm">
-    <meta property="og:description" content="hodcrm">
+    <meta property="og:title" content="Gift Request - Famlic">
+    <meta property="og:site_name" content="FamlicApp">
+    <meta property="og:description"
+        content="Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
     <meta property="og:image" content="">

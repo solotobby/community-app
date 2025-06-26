@@ -106,7 +106,7 @@
                 <div class="row mb-3">
                     <div class="col-md-3 mb-2">
                         <input type="text" class="form-control" placeholder="Search gifts..."
-                               wire:model.live.debounce.300ms="search">
+                            wire:model.live.debounce.300ms="search">
                     </div>
                     <div class="col-md-2 mb-2">
                         <select class="form-select" wire:model.live="statusFilter">
@@ -144,44 +144,50 @@
 
     <!-- Gifts Grid -->
     <div class="container-fluid p-0 m-0">
-        @if($gifts->count() > 0)
+        @if ($gifts->count() > 0)
             <div class="row">
-                @foreach($gifts as $gift)
+                @foreach ($gifts as $gift)
                     <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            @if($gift->gift_image)
-                                <img src="{{ Storage::url($gift->gift_image) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                        <div class="card h-100 border-0 shadow-sm" style="cursor:pointer;"
+                            onclick="window.location='{{ route('user.gift.detail', $gift->id) }}'">
+                            @if ($gift->gift_image)
+                                <img src="{{ Storage::url($gift->gift_image) }}" class="card-img-top"
+                                    style="height: 200px; object-fit: cover;">
                             @else
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                                    style="height: 200px;">
                                     <i class="fas fa-gift fa-3x text-muted"></i>
                                 </div>
                             @endif
 
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="card-title mb-0 flex-grow-1 me-2">{{ Str::limit($gift->title, 40) }}</h6>
-                                    <span class="badge {{
-                                        $gift->status === 'active' ? 'bg-success' :
-                                        ($gift->status === 'completed' ? 'bg-primary' :
-                                        ($gift->status === 'expired' ? 'bg-warning text-dark' : 'bg-secondary'))
-                                    }}">
+                                    <h6 class="card-title mb-0 flex-grow-1 me-2">{{ Str::limit($gift->title, 40) }}
+                                    </h6>
+                                    <span
+                                        class="badge {{ $gift->status === 'active' ? 'bg-success' : ($gift->status === 'completed' ? 'bg-primary' : ($gift->status === 'expired' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
                                         {{ ucfirst($gift->status) }}
                                     </span>
                                 </div>
 
-                                <p class="card-text text-muted small mb-3">{{ Str::limit($gift->description, 80) }}</p>
+                                <p class="card-text text-muted small mb-3">{{ Str::limit($gift->description, 80) }}
+                                </p>
 
                                 <!-- Progress -->
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between mb-1">
-                                        <small class="text-success fw-bold">₦{{ number_format($gift->current_amount, 2) }}</small>
-                                        <small class="text-muted">₦{{ number_format($gift->target_amount, 2) }}</small>
+                                        <small
+                                            class="text-success fw-bold">₦{{ number_format($gift->current_amount, 2) }}</small>
+                                        <small
+                                            class="text-muted">₦{{ number_format($gift->target_amount, 2) }}</small>
                                     </div>
                                     <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar bg-success" style="width: {{ $gift->progress_percentage }}%"></div>
+                                        <div class="progress-bar bg-success"
+                                            style="width: {{ $gift->progress_percentage }}%"></div>
                                     </div>
                                     <div class="d-flex justify-content-between mt-1">
-                                        <small class="text-muted">{{ round($gift->progress_percentage) }}% funded</small>
+                                        <small class="text-muted">{{ round($gift->progress_percentage) }}%
+                                            funded</small>
                                         <small class="text-muted">{{ $gift->contributors_count }} contributors</small>
                                     </div>
                                 </div>
@@ -189,10 +195,11 @@
                                 <!-- Gift Info -->
                                 <div class="mb-3">
                                     <div class="row text-center">
-                                        @if($gift->deadline)
+                                        @if ($gift->deadline)
                                             <div class="col-6">
                                                 <small class="text-muted">Deadline</small>
-                                                <div class="small fw-bold">{{ $gift->deadline->format('M d, Y') }}</div>
+                                                <div class="small fw-bold">{{ $gift->deadline->format('M d, Y') }}
+                                                </div>
                                             </div>
                                         @endif
                                         <div class="col-{{ $gift->deadline ? '6' : '12' }}">
@@ -204,37 +211,37 @@
 
                                 <!-- Actions -->
                                 <div class="mt-auto">
-                                    <div class="d-flex gap-2">
-                                        <a href="{{ $gift->getPublicUrl() }}" class="btn btn-primary btn-sm flex-grow-1">
-                                            <i class="fas fa-eye me-1"></i>View
-                                        </a>
-
-                                        {{-- @auth --}}
-                                            {{-- @if($gift->user_id === Auth::id()) --}}
-                                                <button class="btn btn-outline-secondary btn-sm"
-                                                        wire:click="toggleStatus({{ $gift->id }})"
-                                                        title="Toggle Status">
-                                                    <i class="fas fa-{{ $gift->status === 'active' ? 'pause' : 'play' }}"></i>
-                                                </button>
-
-                                                {{-- @if($gift->completedContributions()->count() === 0) --}}
-                                                    <button class="btn btn-outline-danger btn-sm"
-                                                            wire:click="deleteGift({{ $gift->id }})"
-                                                            onclick="return confirm('Are you sure you want to delete this gift?')"
-                                                            title="Delete Gift">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                {{-- @endif --}}
-                                            {{-- @endif --}}
-                                        {{-- @endauth --}}
-
-                                        <button class="btn btn-outline-info btn-sm"
+                                    <div class="row row-cols-2 g-2">
+                                        <div class="col">
+                                            <a href="{{ $gift->getPublicUrl() }}"
+                                                class="btn btn-primary btn-sm w-100">
+                                                <i class="fas fa-eye me-1"></i> Preview
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-secondary btn-sm w-100"
+                                                wire:click="toggleStatus({{ $gift->id }})" title="Toggle Status">
+                                                <i
+                                                    class="fas fa-{{ $gift->status === 'active' ? 'pause' : 'play' }}"></i>
+                                                {{ $gift->status === 'active' ? 'Pause' : 'Resume' }}
+                                            </button>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-primary btn-sm w-100"
+                                                onclick="window.location='{{ route('user.gift.detail', $gift->id) }}'">
+                                                <i class="fas fa-edit me-1"></i> Gift Details
+                                            </button>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-info btn-sm w-100"
                                                 onclick="copyToClipboard('{{ $gift->getPublicUrl() }}')"
                                                 title="Copy Link">
-                                            <i class="fas fa-share"></i>
-                                        </button>
+                                                <i class="fas fa-share me-1"></i> Share
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -245,7 +252,8 @@
             <div class="d-flex justify-content-between align-items-center mt-4">
                 <div>
                     <small class="text-muted">
-                        Showing {{ $gifts->firstItem() }} to {{ $gifts->lastItem() }} of {{ $gifts->total() }} results
+                        Showing {{ $gifts->firstItem() }} to {{ $gifts->lastItem() }} of {{ $gifts->total() }}
+                        results
                     </small>
                 </div>
                 <div>
@@ -258,22 +266,22 @@
                     <i class="fas fa-gift fa-4x text-muted mb-3"></i>
                     <h5 class="text-muted mb-3">No gifts found</h5>
                     <p class="text-muted">
-                        {{-- @if($showMyGifts)
+                        {{-- @if ($showMyGifts)
                             You haven't created any gifts yet.
                         @else
                             No gifts match your current filters.
                         @endif --}}
                     </p>
 
-                        @if(!$showMyGifts)
-                            <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success">
-                                <i class="fas fa-plus me-2"></i>Create Your First Gift
-                            </a>
-                        @else
-                            <button class="btn btn-outline-secondary" wire:click="resetFilters">
-                                <i class="fas fa-redo me-2"></i>Clear Filters
-                            </button>
-                        @endif
+                    @if (!$showMyGifts)
+                        <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Create Your First Gift
+                        </a>
+                    @else
+                        <button class="btn btn-outline-secondary" wire:click="resetFilters">
+                            <i class="fas fa-redo me-2"></i>Clear Filters
+                        </button>
+                    @endif
 
                 </div>
             </div>
@@ -281,27 +289,27 @@
     </div>
 
     <script>
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(function() {
-        // You could show a toast notification here
-        alert('Link copied to clipboard!');
-    });
-}
-</script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // You could show a toast notification here
+                alert('Link copied to clipboard!');
+            });
+        }
+    </script>
 
-<style>
-.card:hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease-in-out;
-}
+    <style>
+        .card:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s ease-in-out;
+        }
 
-.progress {
-    border-radius: 10px;
-}
+        .progress {
+            border-radius: 10px;
+        }
 
-.progress-bar {
-    border-radius: 10px;
-}
-</style>
+        .progress-bar {
+            border-radius: 10px;
+        }
+    </style>
 
 </div>

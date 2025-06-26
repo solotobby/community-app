@@ -18,6 +18,7 @@ use App\Livewire\Admin\User\UserDetails;
 use App\Livewire\Admin\User\UserWallet;
 use App\Livewire\Public\Gifting;
 use App\Livewire\User\CreateGift;
+use App\Livewire\User\GiftDetail;
 use App\Livewire\User\GiftIndex;
 use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
@@ -84,6 +85,7 @@ Route::middleware([
     Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
     Route::get('wallet', Wallet::class)->name('wallet');
     Route::get('crowdfund/gifts', GiftIndex::class)->name('gift.index');
+    Route::get('crowdfund/gift-details/{giftId}', GiftDetail::class)->name('gift.detail');
     Route::get('crowdfund/request-gift', CreateGift::class)->name('gift.create-gift');
     Route::get('/level-upgrade/callback', [PaystackController::class, 'upgradeCallback'])->name('paystack.upgrade.callback');
 

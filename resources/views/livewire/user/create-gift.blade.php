@@ -34,7 +34,7 @@
                             <h6 class="mb-3">Tell us about your gift</h6>
 
                             <div class="mb-3">
-                                <label for="title" class="form-label">Gift Title *</label>
+                                <label for="title" class="form-text"><strong>Title *</strong></label>
                                 <input type="text" class="form-control @error('title') is-invalid @enderror"
                                     id="title" wire:model="title" placeholder="e.g., Sarah's Birthday Fund">
                                 @error('title')
@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="reason" class="form-label">Gift Reason *</label>
+                                <label for="reason" class="form-text"><strong> Reason *</strong></label>
                                 <select wire:model="reason" class="form-control @error('reason') is-invalid @enderror">
                                     <option value="">Select Reason</option>
                                     <option value="Birthday">Birthday</option>
@@ -63,7 +63,7 @@
 
 
                             <div class="mb-3">
-                                <label for="description" class="form-label">Description *</label>
+                                <label for="description" class="form-text"><strong> Description *</strong></label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" id="description" wire:model="description"
                                     rows="4" placeholder="Tell people what this gift is for and why it's special..."></textarea>
                                 @error('description')
@@ -81,7 +81,7 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="target_amount" class="form-label">Target Amount (₦) *</label>
+                                    <label for="target_amount" class="form-text"><strong> Amount (₦) *</strong></label>
                                     <input type="number"
                                         class="form-control @error('target_amount') is-invalid @enderror"
                                         id="target_amount" wire:model="target_amount" min="1" step="0.01">
@@ -91,18 +91,20 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="deadline" class="form-label">Deadline (Optional)</label>
+                                    <label for="deadline" class="form-text"><strong> Deadline (Defaults to 60 days from today if not selected)</strong></label>
                                     <input type="date" class="form-control @error('deadline') is-invalid @enderror"
                                         id="deadline" wire:model="deadline"
-                                        min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                                        min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                                        max="{{ date('Y-m-d', strtotime('+60 days')) }}">
                                     @error('deadline')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
                             </div>
 
                             <div class="mb-3">
-                                <label for="gift_image" class="form-label">Gift Image (Optional)</label>
+                                <label for="gift_image" class="form-text"><strong> Image (Optional)</strong></label>
                                 <input type="file" class="form-control @error('gift_image') is-invalid @enderror"
                                     id="gift_image" wire:model="gift_image" accept="image/*">
                                 @error('gift_image')
@@ -125,18 +127,8 @@
                         <div class="step-content">
                             <h6 class="mb-3">Configure settings</h6>
 
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_public"
-                                        wire:model="is_public">
-                                    <label class="form-check-label" for="is_public">
-                                        Make this gift request public
-                                    </label>
-                                </div>
-                                <small class="text-muted">Public gifts can be found by anyone with the link</small>
-                            </div>
 
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="allow_messages"
                                         wire:model="allow_messages">
@@ -144,30 +136,42 @@
                                         Allow contributors to leave messages
                                     </label>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div class="mb-3">
-                                <label for="min_contribution" class="form-label">Minimum Contribution (₦)</label>
+                            <div class="col-md-6 mb-3">
+                                <label for="min_contribution" class="form-text"><strong> Minimum Amount Accepted (₦)</strong></label>
                                 <input type="number"
-                                    class="form-control @error('min_contribution') is-invalid @enderror"
-                                    id="min_contribution" wire:model="min_contribution" min="1"
-                                    step="0.01">
+                                class="form-control @error('min_contribution') is-invalid @enderror"
+                                id="min_contribution" wire:model="min_contribution" min="1"
+                                step="0.01">
                                 @error('min_contribution')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text">Leave empty for no minimum</div>
                             </div>
 
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_public"
+                                        wire:model="is_public">
+                                    <label class="form-text" for="is_public">
+                                       <strong> Make this gift request public </strong>
+                                    </label>
+                                </div>
+                                <small class="form-text">Public gifts can be found by anyone with the link</small>
+                            </div>
+
                             <!-- Preview -->
-                            <div class="card bg-light mt-4">
+                            <div class="card bg-grey col-md-6 mb-3">
                                 <div class="card-header">
                                     <h6 class="mb-0">Preview</h6>
                                 </div>
                                 <div class="card-body">
-                                    <h6>{{ $title ?: 'Your Gift Title' }}</h6>
-                                    <p class="text-muted mb-2">
-                                        {{ $description ?: 'Your gift description will appear here...' }}</p>
-                                    <div class="d-flex justify-content-between">
+                                    <h5 class="mb-2"><strong>{{ $title ?: 'Your Gift Title' }}</strong></h5>
+                                    <h6 class="mb-2"><strong>
+                                        {{ $description ?: 'Your gift description will appear here...' }}</strong></h6>
+
+                                    <div class="d-flex justify-content-between flex-wrap form-text">
                                         <small><strong>Target:</strong>
                                             ₦{{ number_format($target_amount ?: 0, 2) }}</small>
                                         @if ($deadline)
@@ -176,6 +180,7 @@
                                         @endif
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     @endif
