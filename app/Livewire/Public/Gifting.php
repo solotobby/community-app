@@ -6,8 +6,11 @@ use Livewire\Component;
 use App\Models\GiftRequest;
 use Livewire\Attributes\Layout;
 use App\Models\Contribution;
+use Exception;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
-#[Layout('components.layouts.public')]class Gifting extends Component
+#[Layout('components.layouts.public')] class Gifting extends Component
 {
     public $gift;
     public $showContributeForm = false;
@@ -75,20 +78,53 @@ use App\Models\Contribution;
             'status' => 'pending'
         ]);
 
-        // For demo purposes, we'll mark as completed immediately
-        // In production, you'd integrate with payment gateway
-        $contribution->markAsCompleted();
+        // Initialize Paystack payment
+        $paymentUrl = $this->initializePaystackPayment($contribution);
 
-        session()->flash('message', 'Thank you for your contribution!');
+        // $contribution->markAsCompleted();
 
         // Reset form
-        $this->reset(['contributor_name', 'contributor_email', 'amount', 'message', 'is_anonymous']);
-        $this->showContributeForm = false;
+        // $this->reset(['contributor_name', 'contributor_email', 'amount', 'message', 'is_anonymous']);
 
-        // Refresh gift data
-        $this->gift->refresh();
+         if ($paymentUrl) {
+            // Redirect to Paystack payment page
+            return redirect()->away($paymentUrl);
+        } else {
+
+            session()->flash('error', 'Failed to initialize payment. Please try again.');
+        }
+
     }
 
+    private function initializePaystackPayment($contribution)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
+                'Content-Type' => 'application/json',
+            ])->post('https://api.paystack.co/transaction/initialize', [
+                'email' => $contribution->contributor_email,
+                'amount' => $contribution->amount * 100,
+                'reference' => $contribution->payment_reference,
+                'callback_url' => route('payment.gifting.callback'),
+                'metadata' => [
+                    'gift_request_id' => $contribution->gift_request_id,
+                    'transaction_id' => $contribution->id,
+                    'type' => 'gifting'
+                ]
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                return $data['data']['authorization_url'] ?? null;
+            }
+
+            return null;
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
+            return null;
+        }
+    }
     public function shareGift($platform)
     {
         $url = urlencode(request()->url());

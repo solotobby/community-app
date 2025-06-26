@@ -49,7 +49,6 @@ class Contribution extends Model
         $this->status = 'completed';
         $this->save();
 
-        // Update gift request current amount
         $this->giftRequest->updateCurrentAmount();
     }
 

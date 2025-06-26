@@ -64,6 +64,12 @@ class GiftRequest extends Model
         return $this->hasMany(Contribution::class)->where('status', 'completed');
     }
 
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class,'user_id', 'user_id');
+    }
+
+
     // Accessors & Mutators
     public function getProgressPercentageAttribute()
     {
