@@ -61,4 +61,4 @@ export default class App extends Template {
 }
 
 // Create a new instance of App
-window.Codebase = new App({ darkMode: "system" }); // Default darkMode preference: "on" or "off" or "system"
+window.Codebase = new App({ darkMode: "off" }); // Default darkMode preference: "on" or "off" or "system"
