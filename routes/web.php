@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaystackController;
 use App\Livewire\User\Profile;
@@ -24,11 +25,12 @@ use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
 use App\Livewire\User\Wallet;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('welcome');
 
 Route::get('/gift/{slug}', Gifting::class)->name('gift.public');
+
 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])

@@ -38,19 +38,18 @@
     -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Community App - Login</title>
+    <title>Community App</title>
 
-    <meta name="description" content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
-    <meta name="author" content="pixelcave">
-    <meta name="robots" content="index, follow">
+   <meta name="description" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="author" content="Famlic">
+    <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework">
-    <meta property="og:site_name" content="Codebase">
-    <meta property="og:description"
-        content="Codebase - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave">
+    <meta property="og:title" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:site_name" content="Famlic">
+    <meta property="og:description" content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="">
+    <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="">
 
     <!-- Icons -->

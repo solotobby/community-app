@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="en">
 
@@ -171,18 +173,18 @@
         <div class="offcanvas-overlay"></div>
         <!-- slide-bar end -->
 
-    <main>
+ <main>
         <div class="hero-area f-header-space fix pt-232 pb-155  pt-md-100 pb-md-100 pt-xs-100 pb-md-100">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="hero-text mb-50">
                             <span class="sub-title">Now</span>
-                            <h3 class="title">Discover</h3>
+                            <h3 class="title">Family</h3>
                             <h4 class="animated-title">
-                                Your
+                                Food &
                                 <span>
-                                    Destination
+                                    Support App
                                     <svg xmlns="http://www.w3.org/2000/svg" width="316px" height="32px">
                                         <path fill-rule="evenodd" stroke="rgb(67, 130, 79)" stroke-width="4px"
                                             stroke-linecap="butt" stroke-linejoin="miter" fill="none"
@@ -191,7 +193,7 @@
                                 </span>
                             </h4>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-xl-9">
                                 <div class="filter-area filter-padding mb-23">
                                     <form action="#">
@@ -241,7 +243,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -370,7 +372,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-1.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-1.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -396,7 +398,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-2.jpg" alt="thumb">
+                                <img src="{{asset('assets__//img/thumb/thumb-2.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -422,7 +424,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-3.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-3.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -448,7 +450,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-4.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-4.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -474,7 +476,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-5.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-5.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -500,7 +502,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-6.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-6.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -526,7 +528,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-7.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-7.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -552,7 +554,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                         <div class="featured-wrap mb-30">
                             <div class="thumb">
-                                <img src="assets/img/thumb/thumb-8.jpg" alt="thumb">
+                                <img src="{{asset('assets__/img/thumb/thumb-8.jpg')}}" alt="thumb">
                             </div>
                             <div class="content f-content">
                                 <div class="icon">
@@ -578,17 +580,17 @@
                 </div>
             </div>
         </div>
-        <div class="cta-area pt-140 pb-140" style="background-image: url(assets/img/bg/cta-bg-1.jpg)"
+        <div class="cta-area pt-140 pb-140" style="background-image: url({{asset('assets__/img/famlic/about.jpg')}})"
             data-overlay="dark" data-opacity="6">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-7 col-lg-8 col-md-10">
                         <div class="section-title cta-text">
                             <h5 class="sub-title">
-                                Best In New York
+                                Gift & Get Support
                             </h5>
                             <h3 class="animated-title aniamted-title-2">
-                                Visit The Best Cafes
+                               Get support for food, gadget & daily needs'
                                 <span>
                                     Restaurants
                                     <svg xmlns="http://www.w3.org/2000/svg" width="334px" height="33px">
@@ -599,10 +601,9 @@
                                 </span>
                             </h3>
                             <p>
-                                Select a category that best suits your interest. Use filters to customize
-                                your search and to find exactly what you want.
+                                Request for a special gift on your big day from a friend or family in a unique way. Get instant food and gadget gifts on sign up
                             </p>
-                            <a href="listings-grid-right-sidebar.html" class="a-btn a-btn-space mt-40">
+                            <a href="{{url('register')}}" class="a-btn a-btn-space mt-40">
                                 Check Listing
                             </a>
                         </div>
@@ -610,7 +611,7 @@
                 </div>
             </div>
             <div class="cta-thumb">
-                <img class="jump-animation" src="{{asset('assets__/img/thumb/thumb-3.png')}}" alt="thumb">
+                <img class="jump-animation" src="{{asset('assets__/img/famlic/garri.jpg')}}" alt="thumb">
             </div>
         </div>
         <div class="how-work-area pt-100 pb-120">
@@ -637,15 +638,13 @@
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="work-wrap mb-30">
                             <div class="icon">
-                                <img src="assets/img/icon/icon-1.png" alt="icon">
+                                <img src="{{asset('assets__/img/icon/icon-1.png')}}" alt="icon">
                                 <span class="num">01</span>
                             </div>
                             <div class="content f-content">
-                                <h4>Choose a Category</h4>
+                                <h4>Create an Account</h4>
                                 <p>
-                                    Select a category that best suits your interest. Use filters to customize your
-                                    search
-                                    and to find exactly.
+                                    Select a suitable famlic plan for you then login to claim your sign up gift offer (food items or gadgets). You'll receive the money for your gifts in your wallet instantly
                                 </p>
                             </div>
                         </div>
@@ -653,13 +652,13 @@
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="work-wrap mb-30">
                             <div class="icon">
-                                <img src="assets/img/icon/icon-2.png" alt="icon">
+                                <img src="{{asset('assets__/img/icon/icon-2.png')}}" alt="icon">
                                 <span class="num">02</span>
                             </div>
                             <div class="content f-content">
-                                <h4>Find What You Want</h4>
+                                <h4>Request or Gift a friend</h4>
                                 <p>
-                                    Use filters to customize your search and to find exactly select a category that best suits your interest.
+                                    Create a unique link to request a gift from a friend or family any day or on your big day (birthday, graduation, wedding, retirement)
                                 </p>
                             </div>
                         </div>
@@ -667,13 +666,13 @@
                     <div class="col-xl-4 col-lg-4 col-md-6">
                         <div class="work-wrap mb-30">
                             <div class="icon">
-                                <img src="assets/img/icon/icon-3.png" alt="icon">
+                                <img src="{{asset('assets__/img/icon/icon-3.png')}}" alt="icon">
                                 <span class="num">03</span>
                             </div>
                             <div class="content f-content">
-                                <h4>Go Our & Explore</h4>
+                                <h4>Earn Referral Bonuses</h4>
                                 <p>
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+                                   For every family member you invite to sign up, you earn up to 100,000 naira
                                 </p>
                             </div>
                         </div>
@@ -683,7 +682,7 @@
                     <div class="col-xl-12">
                         <div class="testimonial-wrap">
                             <div class="thumb">
-                                <img src="assets/img/author/author-1.png" alt="author">
+                                <img src="{{asset('assets__/img/author/author-1.png')}}" alt="author">
                             </div>
                             <div class="content-wrapper ">
                                 <div class="testimonial-content-slider">
@@ -744,7 +743,7 @@
                 <div class="row justify-content-xl-end">
                     <div class="col-xl-6 col-lg-10">
                         <div class="section-title newsletter-content">
-                            <h5 class="sub-title">Subscribe</h5>
+                            <h5 class="sub-title">Different Levels</h5>
                             <h3 class="animated-title">
                                 Get Every Monthly
                                 <span>
@@ -773,7 +772,7 @@
                 </div>
             </div>
             <div class="newsletter-video">
-                <img src="assets/img/bg/bg-newsletter.jpg" alt="newsletter">
+                <img src="{{asset('assets__/img/bg/bg-newsletter.jpg')}}" alt="newsletter">
                 <a href="https://www.youtube.com/watch?v=p_3ZjiZMtN4"
                     class="play-btn popup-video"><i class="fas fa-play"></i></a>
             </div>
@@ -802,7 +801,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-6">
                         <div class="blog-post-wrap mt-30 mb-30">
                             <div class="thumb">
-                                <img src="assets/img/blog/blog-1.jpg" alt="blog">
+                                <img src="{{asset('assets__/img/blog/blog-1.jpg')}}" alt="blog">
                                 <div class="date">
                                     24
                                     <span>Nov</span>
@@ -822,7 +821,7 @@
                                 </div>
                                 <div class="author">
                                     <div class="author-img">
-                                        <img src="assets/img/author/author-1.jpg" alt="author">
+                                        <img src="{{asset('assets__/img/author/author-1.jpg')}}" alt="author">
                                     </div>
                                     <div class="author-name">
                                         <h4>By <span>Rosalina W.</span></h4>
@@ -834,7 +833,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-6">
                         <div class="blog-post-wrap mt-30 mb-30">
                             <div class="thumb">
-                                <img src="assets/img/blog/blog-2.jpg" alt="blog">
+                                <img src="{{asset('assets__/img/blog/blog-2.jpg')}}" alt="blog">
                                 <div class="date">
                                     24
                                     <span>Nov</span>
@@ -854,7 +853,7 @@
                                 </div>
                                 <div class="author">
                                     <div class="author-img">
-                                        <img src="assets/img/author/author-1.jpg" alt="author">
+                                        <img src="{{asset('assets__/img/author/author-1.jpg')}}" alt="author">
                                     </div>
                                     <div class="author-name">
                                         <h4>By <span>Rosalina W.</span></h4>
@@ -866,7 +865,7 @@
                     <div class="col-xl-4 col-md-6 col-sm-6">
                         <div class="blog-post-wrap mt-30 mb-30">
                             <div class="thumb">
-                                <img src="assets/img/blog/blog-3.jpg" alt="blog">
+                                <img src="{{asset('assets__/img/blog/blog-3.jpg')}}" alt="blog">
                                 <div class="date">
                                     24
                                     <span>Nov</span>
@@ -886,7 +885,7 @@
                                 </div>
                                 <div class="author">
                                     <div class="author-img">
-                                        <img src="assets/img/author/author-1.jpg" alt="author">
+                                        <img src="{{asset('assets__/img/author/author-1.jpg')}}" alt="author">
                                     </div>
                                     <div class="author-name">
                                         <h4>By <span>Rosalina W.</span></h4>
@@ -899,123 +898,4 @@
             </div>
         </div>
     </main>
-       <!-- back to top start -->
-       <div class="progress-wrap">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-        </svg>
-    </div>
-    <!-- back to top end -->
-    <footer class="footer-area footer-1">
-        <div class="container-fluid px-0">
-            <div class="row no-gutters">
-                <div class="col-xl-3 col-md-12">
-                    <div class="footer-widget f-w-space widget-spacing about-widget">
-                        <div class="footer-logo">
-                            <a href="index.html">
-                                <img src="assets/img/logo/logo-w.png" alt="logo">
-                            </a>
-                        </div>
-                        <p>
-                            Considering its massive size, New York is a remarkably safe city and few travellers
-                            experience
-                            any problems in terms of crime (although you should always take extra care of your
-                            belongings in
-                            overly crowded places such as markets and train and bus stations).
-                        </p>
-                        <div class="social-logo">
-                            <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="behance"><i class="fab fa-behance"></i></a>
-                            <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6">
-                    <div class="footer-widget-wrap position-relative">
-                        <div class="row no-gutters">
-                            <div class="col-xl-6 col-md-6">
-                                <div class="footer-widget widget-spacing menu-widget">
-                                    <h3 class="widget-title widget-title-1 border-0 mb-0">
-                                        About <span>Us</span>
-                                    </h3>
-                                    <ul>
-                                        <li><a href="index.html">Home</a></li>
-                                        <li><a href="about.html">About</a></li>
-                                        <li><a href="about.html">Services</a></li>
-                                        <li><a href="about.html">Portfolio</a></li>
-                                        <li><a href="works.html">Features</a></li>
-                                        <li><a href="about.html">Case Study</a></li>
-                                        <li><a href="pricing.html">Pricing</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                        <li><a href="news.html">News</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-md-6">
-                                <div class="footer-widget widget-spacing menu-widget-2">
-                                    <h3 class="widget-title border-0 mb-0">
-                                        Make <span>Support</span>
-                                    </h3>
-                                    <ul>
-                                        <li><a href="faq.html">Terms & Conditions</a></li>
-                                        <li><a href="faq.html">Privacy Policy</a></li>
-                                        <li><a href="news.html">News Feeds</a></li>
-                                        <li><a href="faq.html">Faq & Updates</a></li>
-                                        <li><a href="faq.html">Refund Policy</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="footer-copyright d-none d-xl-block">
-                            <p>Copyright ©2021 <a href="https://themeforest.net/user/theme_pure/portfolio">ThemePure</a>. All Reserved</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-12">
-                    <div class="footer-widget f-w-space widget-spacing contact-widget pb-200 pb-xl-0">
-                        <h3 class="widget-title border-0  widget-title-1 mb-0">
-                            Subscribe <span>Now</span>
-                        </h3>
-                        <form action="#">
-                            <div class="input-wrap">
-                                <input type="text" placeholder="Enter full name">
-                            </div>
-                            <div class="input-wrap">
-                                <input type="text" placeholder="Enter email address">
-                            </div>
-                            <div class="input-wrap">
-                                <textarea name="msg" placeholder="Enter message"></textarea>
-                            </div>
-                            <div class="input-wrap">
-                                <input type="submit" class="submit-btn" value="Submit Now">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="row no-gutters d-block d-xl-none">
-                <div class="col-xl-12">
-                    <div class="footer-copyright">
-                        <p>Copyright ©2021 <a href="https://themeforest.net/user/theme_pure/portfolio">ThemePure</a>. All Reserved</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="{{asset('assets__/js/jquery-3.6.0.min.js')}}"></script>
-    <script src="{{asset('assets__/js/meanmenu.min.js')}}"></script>
-    <script src="{{asset('assets__/js/back-to-top.min.js')}}"></script>
-    <script src="{{asset('assets__/js/popper.min.js')}}"></script>
-    <script src="{{asset('assets__/js/nice-select.min.js')}}"></script>
-    <script src="{{asset('assets__/js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('assets__/js/slick.min.js')}}"></script>
-    <script src="{{asset('assets__/js/magnafic.popup.min.js')}}"></script>
-    <script src="{{asset('assets__/js/script.js')}}"></script>
-</body>
-
-</html>
+@endsection

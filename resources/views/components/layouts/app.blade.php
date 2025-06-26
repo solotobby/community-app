@@ -15,16 +15,16 @@
 
     <title>Dashbaord - Famlic | Support for every Family</title>
 
-    <meta name="description" content="hodcrm">
-    <meta name="author" content="hodcrm">
-    <meta name="robots" content="hodcrm">
+    <meta name="description" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="author" content="Famlic">
+    <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="hodcrm">
-    <meta property="og:site_name" content="hodcrm">
-    <meta property="og:description" content="hodcrm">
+    <meta property="og:title" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:site_name" content="Famlic">
+    <meta property="og:description" content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="">
+    <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="">
 
     <!-- Icons -->
