@@ -8,6 +8,7 @@ use App\Models\RaffleDraw;
 use App\Models\Reward;
 use App\Models\User;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -25,6 +26,8 @@ class UserDashboard extends Component
     public $showSuccess = false;
     public $errorMessage = null;
     public $raffleDraw;
+    public $showWelcomeModal = false;
+
 
     // Account Upgrade Properties
     public $showUpgradeModal = false;
@@ -40,14 +43,34 @@ class UserDashboard extends Component
 
     public function mount()
     {
-        $this->drawType = Auth::user()->registration_draw ? 'registration' : 'referral';
-        $this->availableItems = LevelItem::all();
-        //$this->availableItems = LevelItem::where('level_id', Auth::user()->level)->get();
+        $user = Auth::user();
+        $this->drawType = $user->registration_draw ? 'registration' : 'referral';
+        $this->availableItems();
         $this->userLevel = Level::findOrFail(Auth::user()->level);
         $this->loadAvailableLevels();
+        $this->showWelcomeModal = $user->welcome_modal ? true : false;
     }
 
-    // Account Upgrade Methods
+    public function availableItems()
+    {
+        $user = Auth::user();
+        $userLevel = Level::findOrFail($user->level);
+
+        $items = LevelItem::with('level')->get();
+
+        $this->availableItems = $items->map(function ($item) use ($userLevel) {
+            return [
+                'id' => $item->id,
+                'item_name' => $item->item_name,
+                'item_url' => $item->item_url,
+                'level_id' => $item->level_id,
+                'price' => $item->price,
+                'currency' => $item->currency,
+                'created_at' => $item->created_at,
+                'clickable' => $item->level->registration_amount <= $userLevel->registration_amount,
+            ];
+        })->toArray();
+    }
     public function loadAvailableLevels()
     {
         $currentUser = Auth::user();
@@ -84,7 +107,6 @@ class UserDashboard extends Component
 
         $currentUser = Auth::user();
 
-        // Calculate upgrade cost (difference between levels)
         $currentAmount = $currentUser->level->registration_amount ?? 0;
         $upgradeAmount = $this->selectedLevel->registration_amount;
 
@@ -161,8 +183,8 @@ class UserDashboard extends Component
             }
 
             return null;
-        } catch (\Exception $e) {
-            \Log::error('Paystack initialization failed: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
         }
     }
@@ -207,7 +229,7 @@ class UserDashboard extends Component
 
             if (!$referral) {
                 session()->flash('error', 'No available referrals to use for raffle draw.');
-                 return redirect(request()->header('Referer') ?? url()->current());
+                return redirect(request()->header('Referer') ?? url()->current());
             }
 
             Log::info($referral);
@@ -253,11 +275,12 @@ class UserDashboard extends Component
                 'raffle_draw_count' => $newCount,
                 'can_raffle' => $newCount > 0,
                 'registration_draw' => false,
+                'welcome_modal' => false,
             ]);
 
             DB::commit();
             $this->showSuccess = true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             Log::error('Draw creation failed', [
                 'user_id' => $user->id,

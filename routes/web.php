@@ -15,22 +15,28 @@ use App\Livewire\Admin\User\ListUsers;
 use App\Livewire\Admin\User\RaffleDraw as UserRaffleDraw;
 use App\Livewire\Admin\User\Reffaral;
 use App\Livewire\Admin\User\UserDetails;
+use App\Livewire\Admin\User\UserWallet;
+use App\Livewire\Public\Gifting;
+use App\Livewire\User\CreateGift;
+use App\Livewire\User\GiftIndex;
 use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
 use App\Livewire\User\UserDashboard;
+use App\Livewire\User\Wallet;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // })->name('welcome');
 
+
 Route::get('/', [GeneralController::class, 'index']);
 Route::get('about-us', [GeneralController::class, 'aboutUs']);
 Route::get('blog', [GeneralController::class, 'blog']);
 Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
+
+Route::get('/gift/{slug}', Gifting::class)->name('gift.public');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('home', [HomeController::class, 'home'])->name('home');
@@ -55,6 +61,7 @@ Route::middleware([
     Route::get('user-details/{id}', UserDetails::class)->name('admin.users.details');
     Route::get('user-raffle-draw/{id}', UserRaffleDraw::class)->name('admin.users.raffle');
     Route::get('user-referral/{id}', Reffaral::class)->name('admin.users.referral');
+    Route::get('user-wallet/{id}', UserWallet::class)->name('admin.users.wallet');
 
     //Transactions
     Route::get('transactions', ListTransactions::class)->name('admin.transactions.all');
@@ -75,6 +82,9 @@ Route::middleware([
     Route::get('settings/profile', Profile::class)->name('settings');
     Route::get('gift/draw', RaffleDraw::class)->name('raffle.draw');
     Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
+    Route::get('wallet', Wallet::class)->name('wallet');
+    Route::get('crowdfund/gifts', GiftIndex::class)->name('gift.index');
+    Route::get('crowdfund/request-gift', CreateGift::class)->name('gift.create-gift');
     Route::get('/level-upgrade/callback', [PaystackController::class, 'upgradeCallback'])->name('paystack.upgrade.callback');
 
 });

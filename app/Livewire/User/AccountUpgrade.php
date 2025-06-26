@@ -3,11 +3,12 @@
 namespace App\Livewire\User;
 
 use App\Models\Level;
-use App\Models\User;
 use App\Models\Transaction;
+use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AccountUpgrade extends Component
@@ -75,7 +76,7 @@ class AccountUpgrade extends Component
             'transaction_reason' => 'level_upgrade',
             'amount' => $upgradeAmount,
             'status' => 'pending',
-            'reference' => 'UPG_' . Str::upper(Str::random(10)),
+            'reference' => 'TXN_' . Str::upper(Str::random(15)),
             'description' => "Account upgrade to {$this->selectedLevel->name}",
             'metadata' => json_encode([
                 'from_level_id' => $this->currentUser->level_id,
@@ -132,8 +133,8 @@ class AccountUpgrade extends Component
             }
 
             return null;
-        } catch (\Exception $e) {
-            \Log::error('Paystack initialization failed: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
         }
     }

@@ -75,11 +75,11 @@
                         <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label text-muted">Full Name</label>
-                                <div class="fw-medium text-light">{{ $name }}</div>
+                                <div class="fw-bold text-muted">{{ $name }}</div>
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label text-muted">Email Address</label>
-                                <div class="fw-medium text-light">{{ $email }}</div>
+                                <div class="fw-bold text-muted">{{ $email }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted">Referral Code</label>
@@ -94,7 +94,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted">Referred By</label>
-                                <div class="fw-medium text-light">{{ $referred_by ?? 'Direct signup' }}</div>
+                                <div class="fw-bold text-muted">{{ $referred_by ?? 'Direct signup' }}</div>
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                             <div class="col-12">
                                 <label class="form-label text-muted">Phone Number</label>
                                 <div class="d-flex align-items-center">
-                                    <div class="fw-medium text-light font-monospace">{{ $phone ?? 'Not provided' }}
+                                    <div class="fw-bold text-muted font-monospace">{{ $phone ?? 'Not provided' }}
                                     </div>
                                     @if ($phone && !$phone_verified)
                                         <span class="badge bg-warning text-dark">
@@ -140,27 +140,27 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-label text-muted">Date of Birth</label>
-                                <div class="fw-medium text-light">{{ $dob ?? 'Not provided' }}</div>
+                                <div class="fw-bold text-muted">{{ $dob ?? 'Not provided' }}</div>
                             </div>
                             <div class="col-12">
                                 <label class="form-label text-muted">Address</label>
-                                <div class="fw-medium text-light">{{ $address ?? 'Not provided' }}</div>
+                                <div class="fw-bold text-muted">{{ $address ?? 'Not provided' }}</div>
                             </div>
                             <div class="col-12">
                                 <label class="form-label text-muted">Landmark</label>
-                                <div class="fw-medium text-light">{{ $landmark ?? 'Not provided' }}</div>
+                                <div class="fw-bold text-muted">{{ $landmark ?? 'Not provided' }}</div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted">LGA</label>
-                                <div class="fw-medium text-light">{{ $lga ?? 'Not provided' }}</div>
+                                <div class="fw-bold text-muted">{{ $lga ?? 'Not provided' }}</div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted">State</label>
-                                <div class="fw-medium text-light">{{ $state ?? 'Not provided' }}</div>
+                                <div class="fw-bold text-muted">{{ $state ?? 'Not provided' }}</div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted">Country</label>
-                                <div class="fw-medium text-light">{{ $country ?? 'Not provided' }}</div>
+                                <div class="fw-bold text-muted">{{ $country ?? 'Not provided' }}</div>
                             </div>
                         </div>
                     </div>
@@ -220,15 +220,15 @@
                             <div class="row g-3">
                                 <div class="col-12">
                                     <label class="form-label text-muted">Bank Name</label>
-                                    <div class="fw-medium text-light">{{ $bank_name }}</div>
+                                    <div class="fw-bold text-muted">{{ $bank_name }}</div>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-muted">Account Number</label>
-                                    <div class="fw-medium text-light font-monospace">{{ $account_number }}</div>
+                                    <div class="fw-bold text-muted font-monospace">{{ $account_number }}</div>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label text-muted">Account Name</label>
-                                    <div class="fw-medium text-light">{{ $account_name }}</div>
+                                    <div class="fw-bold text-muted">{{ $account_name }}</div>
                                 </div>
                             </div>
                         @else

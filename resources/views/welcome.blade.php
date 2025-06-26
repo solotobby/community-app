@@ -420,7 +420,7 @@
                                 Gift & Get Support
                             </h5>
                             <h3 class="animated-title aniamted-title-2">
-                               Get support for food, gadget & daily needs'  
+                               Get support for food, gadget & daily needs'
                                 <span>
                                     Restaurants
                                     <svg xmlns="http://www.w3.org/2000/svg" width="334px" height="33px">
