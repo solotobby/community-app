@@ -96,7 +96,7 @@ class CreateGift extends Component
             'reason' => $this->reason,
             'description' => $this->description,
             'target_amount' => $this->target_amount,
-            'deadline' => $this->deadline ?: null,
+            'deadline' => $deadline = $this->deadline ?? now()->addDays(60)->toDateString(),
             'gift_image' => $imagePath,
             'is_public' => $this->is_public,
             'settings' => $settings,
