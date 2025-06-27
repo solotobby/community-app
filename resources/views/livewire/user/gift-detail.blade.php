@@ -20,9 +20,14 @@
                 </a>
             </div>
             <div>
-                <span class="badge fs-6 {{ $gift->status === 'active' ? 'bg-success' :
-                    ($gift->status === 'completed' ? 'bg-primary' :
-                    ($gift->status === 'paused' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
+                <span
+                    class="badge fs-6 {{ $gift->status === 'active'
+                        ? 'bg-success'
+                        : ($gift->status === 'completed'
+                            ? 'bg-primary'
+                            : ($gift->status === 'paused'
+                                ? 'bg-warning text-dark'
+                                : 'bg-secondary')) }}">
                     {{ ucfirst($gift->status) }}
                 </span>
             </div>
@@ -37,10 +42,10 @@
                 <div class="col-md-4">
                     @if ($gift->gift_image)
                         <img src="{{ Storage::url($gift->gift_image) }}" class="img-fluid rounded-start h-100"
-                             style="object-fit: cover; min-height: 300px;">
+                            style="object-fit: cover; min-height: 300px;">
                     @else
                         <div class="bg-light d-flex align-items-center justify-content-center rounded-start h-100"
-                             style="min-height: 300px;">
+                            style="min-height: 300px;">
                             <i class="fas fa-gift fa-5x text-muted"></i>
                         </div>
                     @endif
@@ -65,10 +70,11 @@
                                 </div>
                                 <div class="progress mb-2" style="height: 12px;">
                                     <div class="progress-bar bg-success"
-                                         style="width: {{ $stats['progress_percentage'] }}%"></div>
+                                        style="width: {{ $stats['progress_percentage'] }}%"></div>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <small class="text-muted">{{ round($stats['progress_percentage']) }}% funded</small>
+                                    <small class="text-muted">{{ round($stats['progress_percentage']) }}%
+                                        funded</small>
                                     <small class="text-muted">{{ $stats['total_contributors'] }} contributors</small>
                                 </div>
                             </div>
@@ -104,16 +110,44 @@
                                     </button>
                                 </div>
                                 <div class="col-md-3 col-6">
-                                    <button class="btn btn-{{ $gift->status === 'active' ? 'warning' : 'success' }} w-100"
-                                            wire:click="toggleStatus">
-                                        <i class="fas fa-{{ $gift->status === 'active' ? 'pause' : 'play' }} me-1"></i>
-                                        {{ $gift->status === 'active' ? 'Pause' : 'Resume' }}
+                                    <button
+                                        class="btn btn-{{ $gift->is_public === true ? 'warning' : 'success' }} w-100"
+                                        wire:click="toggleStatus">
+                                        <i class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }} me-1"></i>
+                                        {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
                                     </button>
                                 </div>
-                                <div class="col-md-3 col-6">
-                                    <button class="btn btn-info w-100" wire:click="copyGiftLink">
-                                        <i class="fas fa-share me-1"></i> Share
-                                    </button>
+                                <div class="col-md-3 mb-6">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary btn-lg w-100 dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                            <i class="fas fa-share me-2"></i>Share
+                                        </button>
+                                        <ul class="dropdown-menu w-100">
+                                            <li><a class="dropdown-item" href="#"
+                                                    wire:click="shareGift('facebook')">
+                                                    <i class="fab fa-facebook me-2"></i>Facebook
+                                                </a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    wire:click="shareGift('twitter')">
+                                                    <i class="fab fa-twitter me-2"></i>Twitter
+                                                </a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    wire:click="shareGift('whatsapp')">
+                                                    <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                                                </a></li>
+                                            <li><a class="dropdown-item" href="#"
+                                                    wire:click="shareGift('telegram')">
+                                                    <i class="fab fa-telegram me-2"></i>Telegram
+                                                </a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" href="#" wire:click="copyLink">
+                                                    <i class="fas fa-copy me-2"></i>Copy Link
+                                                </a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="col-md-3 col-6">
                                     <button class="btn btn-danger w-100" wire:click="openDeleteModal">
@@ -221,18 +255,22 @@
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
-                                                     style="width: 32px; height: 32px;">
+                                                    style="width: 32px; height: 32px;">
                                                     <i class="fas fa-user text-white small"></i>
                                                 </div>
                                                 <div>
-                                                   <div class="fw-bold">{{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_name }}</div>
+                                                    <div class="fw-bold">
+                                                        {{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_name }}
+                                                    </div>
 
-                                                    <small class="text-muted">{{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_email }}</small>
+                                                    <small
+                                                        class="text-muted">{{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_email }}</small>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-success">₦{{ number_format($contribution->amount, 2) }}</span>
+                                            <span
+                                                class="badge bg-success">₦{{ number_format($contribution->amount, 2) }}</span>
                                         </td>
                                         <td>{{ $contribution->created_at->format('M d, Y') }}</td>
                                         <td>{{ $contribution->message ?: '-' }}</td>
@@ -261,13 +299,16 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Title *</strong></label>
                                     <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                           wire:model="title">
-                                    @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        wire:model="title">
+                                    @error('title')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Reason *</strong></label>
-                                    <select class="form-select @error('reason') is-invalid @enderror" wire:model="reason">
+                                    <select class="form-select @error('reason') is-invalid @enderror"
+                                        wire:model="reason">
                                         <option value="">Select Reason</option>
                                         <option value="Birthday">Birthday</option>
                                         <option value="Anniversary">Anniversary</option>
@@ -278,30 +319,38 @@
                                         <option value="New Baby">New Baby</option>
                                         <option value="Condolence">Condolence</option>
                                     </select>
-                                    @error('reason') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    @error('reason')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label"><strong>Description *</strong></label>
-                                <textarea class="form-control @error('description') is-invalid @enderror"
-                                          wire:model="description" rows="4"></textarea>
-                                @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <textarea class="form-control @error('description') is-invalid @enderror" wire:model="description" rows="4"></textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Target Amount (₦) *</strong></label>
-                                    <input type="number" class="form-control @error('target_amount') is-invalid @enderror"
-                                           wire:model="target_amount" min="1" step="0.01">
-                                    @error('target_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <input type="number"
+                                        class="form-control @error('target_amount') is-invalid @enderror"
+                                        wire:model="target_amount" min="1" step="0.01">
+                                    @error('target_amount')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Deadline</strong></label>
                                     <input type="date" class="form-control @error('deadline') is-invalid @enderror"
-                                           wire:model="deadline" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
-                                    @error('deadline') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        wire:model="deadline" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                                    @error('deadline')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -309,8 +358,10 @@
                                 <label class="form-label"><strong>Image</strong></label>
                                 @if ($current_image && !$remove_image)
                                     <div class="mb-2">
-                                        <img src="{{ Storage::url($current_image) }}" class="img-thumbnail" style="max-height: 100px;">
-                                        <button type="button" class="btn btn-sm btn-danger ms-2" wire:click="$set('remove_image', true)">
+                                        <img src="{{ Storage::url($current_image) }}" class="img-thumbnail"
+                                            style="max-height: 100px;">
+                                        <button type="button" class="btn btn-sm btn-danger ms-2"
+                                            wire:click="$set('remove_image', true)">
                                             Remove Image
                                         </button>
                                     </div>
@@ -319,19 +370,23 @@
                                 @if ($remove_image)
                                     <div class="alert alert-warning">
                                         Image will be removed when you save.
-                                        <button type="button" class="btn btn-sm btn-link" wire:click="$set('remove_image', false)">
+                                        <button type="button" class="btn btn-sm btn-link"
+                                            wire:click="$set('remove_image', false)">
                                             Keep Image
                                         </button>
                                     </div>
                                 @endif
 
                                 <input type="file" class="form-control @error('gift_image') is-invalid @enderror"
-                                       wire:model="gift_image" accept="image/*">
-                                @error('gift_image') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    wire:model="gift_image" accept="image/*">
+                                @error('gift_image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
 
                                 @if ($gift_image)
                                     <div class="mt-2">
-                                        <img src="{{ $gift_image->temporaryUrl() }}" class="img-thumbnail" style="max-height: 100px;">
+                                        <img src="{{ $gift_image->temporaryUrl() }}" class="img-thumbnail"
+                                            style="max-height: 100px;">
                                     </div>
                                 @endif
                             </div>
@@ -339,9 +394,12 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Minimum Contribution (₦)</strong></label>
-                                    <input type="number" class="form-control @error('min_contribution') is-invalid @enderror"
-                                           wire:model="min_contribution" min="1" step="0.01">
-                                    @error('min_contribution') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <input type="number"
+                                        class="form-control @error('min_contribution') is-invalid @enderror"
+                                        wire:model="min_contribution" min="1" step="0.01">
+                                    @error('min_contribution')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -360,7 +418,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" wire:click="closeEditModal">Cancel</button>
+                            <button type="button" class="btn btn-secondary"
+                                wire:click="closeEditModal">Cancel</button>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-1"></i> Update Gift
                             </button>
@@ -384,7 +443,8 @@
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
                             <h5>Are you sure you want to delete this gift?</h5>
-                            <p class="text-muted">This action cannot be undone. All data associated with this gift will be permanently removed.</p>
+                            <p class="text-muted">This action cannot be undone. All data associated with this gift will
+                                be permanently removed.</p>
                             <div class="alert alert-info">
                                 <strong>{{ $gift->title }}</strong><br>
                                 Target: ₦{{ number_format($gift->target_amount, 2) }}<br>
@@ -393,7 +453,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeDeleteModal">Cancel</button>
+                        <button type="button" class="btn btn-secondary"
+                            wire:click="closeDeleteModal">Cancel</button>
                         <button type="button" class="btn btn-danger" wire:click="deleteGift">
                             <i class="fas fa-trash me-1"></i> Yes, Delete Gift
                         </button>

@@ -83,28 +83,23 @@ class GiftIndex extends Component
     {
         $gift = GiftRequest::findOrFail($giftId);
 
-        // Check if user owns this gift
-        if ($gift->user_id !== Auth::id()) {
-            session()->flash('error', 'You can only modify your own gifts.');
-            return;
-        }
+        // if ($gift->completedContributions()->count() > 0 && $this->gift->status === 'active') {
+        //     session()->flash('error', 'Cannot pause gift with existing contributions.');
+        //     return;
+        // }
 
-        $gift->status = $gift->status === 'active' ? 'cancelled' : 'active';
-        $gift->save();
+        $newStatus = $this->gift->is_public === true ? false : true;
+        $this->gift->update(['is_public' => $newStatus]);
 
-        session()->flash('message', 'Gift status updated successfully.');
+
+        session()->flash('message', "Gift Status Updated successfully.");
+        $this->loadGift();
+
     }
 
     public function render()
     {
-        $query = GiftRequest::with(['user', 'completedContributions'])->where('user_id', Auth::id());;
-
-        // Apply filters
-        // if ($this->showMyGifts && Auth::check()) {
-        //     $query->where('user_id', Auth::id());
-        // } elseif (!$this->showMyGifts) {
-        //     $query->where('is_public', true);
-        // }
+        $query = GiftRequest::with(['user', 'completedContributions'])->where('user_id', Auth::id());
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -144,7 +139,7 @@ class GiftIndex extends Component
                 'user_id',
                 Auth::id()
             )->count(),
-            
+
             'total_raised' => GiftRequest::where(
                 'user_id',
                 Auth::id()

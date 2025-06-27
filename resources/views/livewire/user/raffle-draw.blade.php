@@ -276,7 +276,7 @@
         @if ($showSetPinModal)
             <div class="modal fade show d-block" tabindex="-1" role="dialog"
                 style="background-color: rgba(0,0,0,0.5);">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveTransactionPin">
                             <div class="modal-header">

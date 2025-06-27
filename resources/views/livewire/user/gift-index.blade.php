@@ -222,8 +222,8 @@
                                             <button class="btn btn-secondary btn-sm w-100"
                                                 wire:click="toggleStatus({{ $gift->id }})" title="Toggle Status">
                                                 <i
-                                                    class="fas fa-{{ $gift->status === 'active' ? 'pause' : 'play' }}"></i>
-                                                {{ $gift->status === 'active' ? 'Pause' : 'Resume' }}
+                                                    class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }}"></i>
+                                                {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
                                             </button>
                                         </div>
                                         <div class="col">
@@ -241,7 +241,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -291,7 +290,6 @@
     <script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
-                // You could show a toast notification here
                 alert('Link copied to clipboard!');
             });
         }

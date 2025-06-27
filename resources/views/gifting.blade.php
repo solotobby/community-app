@@ -59,7 +59,7 @@
                     </p>
                     <p class="card-text">{{ $gift->description }}</p>
 
-                    @if (isset($gift->settings['min_contribution']))
+                    {{-- @if (isset($gift->settings['min_contribution']))
                         <div class="mb-2">
                             <small class="text-muted">Minimum Contribution:</small>
                             <div class="fw-bold">₦{{ number_format($gift->settings['min_contribution'], 2) }}</div>
@@ -71,7 +71,7 @@
                             <small class="text-muted">Maximum Contribution:</small>
                             <div class="fw-bold">₦{{ number_format($gift->settings['max_contribution'], 2) }}</div>
                         </div>
-                    @endif
+                    @endif --}}
 
                     <!-- Progress Section -->
                     <div class="mb-4">
@@ -159,7 +159,7 @@
         <!-- Sidebar Form -->
         <div class="col-lg-4">
             <div class="mt-4 p-4 border rounded bg-light">
-                <h5 class="mb-3">Make a Contribution</h5>
+                <h5 class="mb-3">Make a Donation</h5>
                 <form wire:submit.prevent="contribute">
                     <div class="row">
                         <div class="col-md-6 mb-3">

@@ -526,6 +526,20 @@
         Core libraries and functionality
         webpack is putting everything together at assets/_js/main/app.js
     -->
+      <script>
+        // Handle sharing windows
+        window.addEventListener('openWindow', event => {
+            window.open(event.detail, '_blank', 'width=600,height=400');
+        });
+
+        // Handle copy to clipboard
+        window.addEventListener('copyToClipboard', event => {
+            navigator.clipboard.writeText(event.detail).then(() => {
+                console.log('Link copied to clipboard');
+            });
+        });
+
+    </script>
     <script src="{{ asset('assets/js/codebase.app.min.js')}}"></script>
     <script src="{{ asset('assets/_js/main/app.js')}}"></script>
 
