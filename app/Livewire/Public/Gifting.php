@@ -81,11 +81,6 @@ use Illuminate\Support\Facades\Log;
         // Initialize Paystack payment
         $paymentUrl = $this->initializePaystackPayment($contribution);
 
-        // $contribution->markAsCompleted();
-
-        // Reset form
-        // $this->reset(['contributor_name', 'contributor_email', 'amount', 'message', 'is_anonymous']);
-
          if ($paymentUrl) {
             // Redirect to Paystack payment page
             return redirect()->away($paymentUrl);
@@ -127,7 +122,7 @@ use Illuminate\Support\Facades\Log;
     }
     public function shareGift($platform)
     {
-        $url = urlencode(request()->url());
+        $url = urlencode($this->gift->getPublicUrl());
         $text = urlencode("Help contribute to: " . $this->gift->title);
 
         $shareUrls = [
@@ -144,7 +139,7 @@ use Illuminate\Support\Facades\Log;
 
     public function copyLink()
     {
-        $this->dispatch('copyToClipboard', request()->url());
+        $this->dispatch('copyToClipboard', $this->gift->getPublicUrl() );
         session()->flash('message', 'Link copied to clipboard!');
     }
 

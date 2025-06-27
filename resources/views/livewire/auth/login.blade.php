@@ -106,9 +106,13 @@
                     </div>
 
                     <div class="mb-4">
-                        <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold">
+                        {{-- <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold">
                             Sign In
-                        </button>
+                        </button> --}}
+                         <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold" wire:loading.attr="disabled">
+                        <span wire:loading.remove>Sign In</span>
+                        <span wire:loading>Processing...</span>
+                    </button>
                         <div class="mt-4">
                             <a class="fs-sm fw-medium link-fx text-muted me-2 mb-1 d-inline-block"
                                 href="{{ route('register') }}">

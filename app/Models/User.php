@@ -42,7 +42,8 @@ class User extends Authenticatable
         'phone',
         'registration_draw',
         'recipient_code',
-        'welcome_modal'
+        'free_user',
+        'welcome_modal',
     ];
 
     /**
@@ -66,7 +67,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'welcome_modal' => 'boolean'
+            'welcome_modal' => 'boolean',
+            'free_user' => 'boolean',
         ];
     }
 

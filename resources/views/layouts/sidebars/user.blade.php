@@ -94,8 +94,6 @@
             </ul>
         </li>
 
-
-
          <!-- Settings -->
          <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('user.settings') ? 'active' : '' }}"

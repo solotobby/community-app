@@ -117,33 +117,6 @@
             });
         });
 
-        // Handle Paystack payment
-        window.addEventListener('initPayment', event => {
-            const {
-                email,
-                amount,
-                reference,
-                callback
-            } = event.detail;
-
-            let handler = PaystackPop.setup({
-                key: window.paystackKey, // You'll need to set this
-                email: email,
-                amount: amount * 100, // Convert to kobo
-                currency: 'NGN',
-                ref: reference,
-                callback: function(response) {
-                    // Payment successful
-                    window.livewire.emit('paymentSuccess', response.reference);
-                },
-                onClose: function() {
-                    // Payment cancelled
-                    window.livewire.emit('paymentCancelled');
-                }
-            });
-
-            handler.openIframe();
-        });
     </script>
 </body>
 

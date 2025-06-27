@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" class="remember-theme">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <!--
       Available classes for <html> element:
@@ -15,23 +16,28 @@
 
     <title>Dashbaord - Famlic | Support for every Family</title>
 
-    <meta name="description" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="description"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:title"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta property="og:site_name" content="Famlic">
-    <meta property="og:description" content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
+    <meta property="og:description"
+        content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="">
 
     <!-- Icons -->
     <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
-    <link rel="shortcut icon" href="{{ asset('assets/media/favicons/favicon.png')}}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/media/favicons/favicon-192x192.png')}}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/media/favicons/apple-touch-icon-180x180.png')}}">
+    <link rel="shortcut icon" href="{{ asset('assets/media/favicons/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"
+        href="{{ asset('assets/media/favicons/favicon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ asset('assets/media/favicons/apple-touch-icon-180x180.png') }}">
     <!-- END Icons -->
 
     <!-- Stylesheets -->
@@ -44,10 +50,10 @@
     <!-- END Stylesheets -->
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
-    <script src="{{ asset('assets/js/setTheme.js')}}"></script>
-  </head>
+    <script src="{{ asset('assets/js/setTheme.js') }}"></script>
+</head>
 
-  <body>
+<body>
     <!-- Page Container -->
     <!--
       Available classes for #page-container:
@@ -89,8 +95,8 @@
         'main-content-narrow'                       Full width Main Content with a percentage width (screen width > 1200px)
     -->
     <div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-modern main-content-boxed">
-      <!-- Side Overlay-->
-      {{-- <aside id="side-overlay">
+        <!-- Side Overlay-->
+        {{-- <aside id="side-overlay">
         <!-- Side Header -->
         <div class="content-header">
           <!-- User Avatar -->
@@ -392,10 +398,10 @@
         </div>
         <!-- END Side Content -->
       </aside> --}}
-      <!-- END Side Overlay -->
+        <!-- END Side Overlay -->
 
-      <!-- Sidebar -->
-      <!--
+        <!-- Sidebar -->
+        <!--
         Helper classes
 
         Adding .smini-hide to an element will make it invisible (opacity: 0) when the sidebar is in mini mode
@@ -406,117 +412,124 @@
         Adding .smini-visible to an element will show it only when the sidebar is in mini mode
         Adding 'smini-visible-block' to an element will show it (display: block) only when the sidebar is in mini mode
       -->
-      <nav id="sidebar">
-        <!-- Sidebar Content -->
-        <div class="sidebar-content">
-          <!-- Side Header -->
-          <div class="content-header justify-content-lg-center">
-            <!-- Logo -->
-            <div>
-              <span class="smini-visible fw-bold tracking-wide fs-lg">
-                c<span class="text-primary">b</span>
-              </span>
-              <a class="link-fx fw-bold tracking-wide mx-auto" href="{{ route('home') }}">
-                <span class="smini-hidden">
-                  <i class="fa fa-gift text-primary"></i>
-                  <span class="fs-4 text-dual">Fam</span><span class="fs-4 text-primary">lic</span>
-                </span>
-              </a>
-            </div>
-            <!-- END Logo -->
-
-            <!-- Options -->
-            <div>
-              <!-- Close Sidebar, Visible only on mobile screens -->
-              <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
-              <button type="button" class="btn btn-sm btn-alt-danger d-lg-none" data-toggle="layout" data-action="sidebar_close">
-                <i class="fa fa-fw fa-times"></i>
-              </button>
-              <!-- END Close Sidebar -->
-            </div>
-            <!-- END Options -->
-          </div>
-          <!-- END Side Header -->
-
-          <!-- Sidebar Scrolling -->
-          <div class="js-sidebar-scroll">
-            <!-- Side User -->
-            <div class="content-side content-side-user px-0 py-0">
-              <!-- Visible only in mini mode -->
-              <div class="smini-visible-block animated fadeIn px-3">
-                <img class="img-avatar img-avatar32" src="{{ asset('assets/media/avatars/avatar15.jpg')}}" alt="">
-              </div>
-              <!-- END Visible only in mini mode -->
-
-              <!-- Visible only in normal mode -->
-              <div class="smini-hidden text-center mx-auto">
-                <a class="img-link" href="javascript:void(0)">
-                  <img class="img-avatar" src="{{ asset('assets/media/avatars/avatar15.jpg')}}" alt="">
-                </a>
-                <ul class="list-inline mt-3 mb-0">
-                  <li class="list-inline-item">
-                    <a class="link-fx text-dual fs-sm fw-semibold text-uppercase" href="javascript:void(0)">{{auth()->user()->name}}</a>
-                  </li>
-                  <li class="list-inline-item">
-                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
-                    <a class="link-fx text-dual" data-toggle="layout" data-action="dark_mode_toggle" href="javascript:void(0)">
-                      <i class="far fa-fw fa-moon" data-dark-mode-icon></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item">
-                        <a class="link-fx text-dual" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
-                        <i class="fa fa-sign-out-alt"></i>
+        <nav id="sidebar">
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <!-- Side Header -->
+                <div class="content-header justify-content-lg-center">
+                    <!-- Logo -->
+                    <div>
+                        <span class="smini-visible fw-bold tracking-wide fs-lg">
+                            c<span class="text-primary">b</span>
+                        </span>
+                        <a class="link-fx fw-bold tracking-wide mx-auto" href="{{ route('home') }}">
+                            <span class="smini-hidden">
+                                <i class="fa fa-gift text-primary"></i>
+                                <span class="fs-4 text-dual">Fam</span><span class="fs-4 text-primary">lic</span>
+                            </span>
                         </a>
-                  </li>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
+                    </div>
+                    <!-- END Logo -->
 
-                </ul>
-              </div>
-              <!-- END Visible only in normal mode -->
+                    <!-- Options -->
+                    <div>
+                        <!-- Close Sidebar, Visible only on mobile screens -->
+                        <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                        <button type="button" class="btn btn-sm btn-alt-danger d-lg-none" data-toggle="layout"
+                            data-action="sidebar_close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                        <!-- END Close Sidebar -->
+                    </div>
+                    <!-- END Options -->
+                </div>
+                <!-- END Side Header -->
+
+                <!-- Sidebar Scrolling -->
+                <div class="js-sidebar-scroll">
+                    <!-- Side User -->
+                    <div class="content-side content-side-user px-0 py-0">
+                        <!-- Visible only in mini mode -->
+                        <div class="smini-visible-block animated fadeIn px-3">
+                            <img class="img-avatar img-avatar32" src="{{ asset('assets/media/avatars/avatar15.jpg') }}"
+                                alt="">
+                        </div>
+                        <!-- END Visible only in mini mode -->
+
+                        <!-- Visible only in normal mode -->
+                        <div class="smini-hidden text-center mx-auto">
+                            <a class="img-link" href="javascript:void(0)">
+                                <img class="img-avatar" src="{{ asset('assets/media/avatars/avatar15.jpg') }}"
+                                    alt="">
+                            </a>
+                            <ul class="list-inline mt-3 mb-0">
+                                <li class="list-inline-item">
+                                    <a class="link-fx text-dual fs-sm fw-semibold text-uppercase"
+                                        href="javascript:void(0)">{{ auth()->user()->name }}</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                                    <a class="link-fx text-dual" data-toggle="layout" data-action="dark_mode_toggle"
+                                        href="javascript:void(0)">
+                                        <i class="far fa-fw fa-moon" data-dark-mode-icon></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="link-fx text-dual" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">
+                                        <i class="fa fa-sign-out-alt"></i>
+                                    </a>
+                                </li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+
+                            </ul>
+                        </div>
+                        <!-- END Visible only in normal mode -->
+                    </div>
+                    <!-- END Side User -->
+
+                    @if (auth()->user()->hasRole('admin'))
+                        @include('layouts.sidebars.admin')
+                    @elseif(auth()->user()->hasRole('user') && auth()->user()->free_user)
+                        @include('layouts.sidebars.free')
+                    @elseif(auth()->user()->hasRole('user'))
+                        @include('layouts.sidebars.user')
+                    @endif
+
+                    <!-- END Side Navigation -->
+                </div>
+                <!-- END Sidebar Scrolling -->
             </div>
-            <!-- END Side User -->
+            <!-- Sidebar Content -->
+        </nav>
+        <!-- END Sidebar -->
 
-            @if(auth()->user()->hasRole('admin'))
-                @include('layouts.sidebars.admin')
-            @else
-            <!-- Side Navigation -->
-                @include('layouts.sidebars.user')
-            @endif
-            <!-- END Side Navigation -->
-          </div>
-          <!-- END Sidebar Scrolling -->
-        </div>
-        <!-- Sidebar Content -->
-      </nav>
-      <!-- END Sidebar -->
+        <!-- Header -->
+        <header id="page-header">
 
-      <!-- Header -->
-      <header id="page-header">
+            <!-- Header Content -->
+            @include('layouts.headers.header')
+            <!-- END Header Loader -->
 
-        <!-- Header Content -->
-        @include('layouts.headers.header')
-        <!-- END Header Loader -->
+        </header>
+        <!-- END Header -->
 
-      </header>
-      <!-- END Header -->
-
-      <!-- Main Container -->
-      <main id="main-container">
-        <!-- Page Content -->
-        {{ $slot }}
+        <!-- Main Container -->
+        <main id="main-container">
+            <!-- Page Content -->
+            {{ $slot }}
 
 
-        <!-- END Page Content -->
-      </main>
-      <!-- END Main Container -->
+            <!-- END Page Content -->
+        </main>
+        <!-- END Main Container -->
 
-      <!-- Footer -->
-     @include('layouts.footer')
-      <!-- END Footer -->
+        <!-- Footer -->
+        @include('layouts.footer')
+        <!-- END Footer -->
     </div>
     <!-- END Page Container -->
 
@@ -526,16 +539,29 @@
         Core libraries and functionality
         webpack is putting everything together at assets/_js/main/app.js
     -->
-    <script src="{{ asset('assets/js/codebase.app.min.js')}}"></script>
-    <script src="{{ asset('assets/_js/main/app.js')}}"></script>
+    <script>
+        // Handle sharing windows
+        window.addEventListener('openWindow', event => {
+            window.open(event.detail, '_blank', 'width=600,height=400');
+        });
+
+        // Handle copy to clipboard
+        window.addEventListener('copyToClipboard', event => {
+            navigator.clipboard.writeText(event.detail).then(() => {
+                console.log('Link copied to clipboard');
+            });
+        });
+    </script>
+    <script src="{{ asset('assets/js/codebase.app.min.js') }}"></script>
+    <script src="{{ asset('assets/_js/main/app.js') }}"></script>
 
     <!-- Page JS Plugins -->
-    <script src="{{ asset('assets/js/plugins/chart.js/chart.umd.js')}}"></script>
+    <script src="{{ asset('assets/js/plugins/chart.js/chart.umd.js') }}"></script>
 
     <!-- Page JS Code -->
-    <script src="{{ asset('assets/js/pages/be_pages_dashboard.min.js')}}"></script>
+    <script src="{{ asset('assets/js/pages/be_pages_dashboard.min.js') }}"></script>
 
 
-  </body>
+</body>
+
 </html>
-

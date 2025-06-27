@@ -17,6 +17,8 @@ class GiftDetail extends Component
     public $showEditModal = false;
     public $showDeleteModal = false;
 
+    public $platform;
+
     // Edit form properties
     public $title;
     public $reason;
@@ -76,17 +78,18 @@ class GiftDetail extends Component
 
     public function toggleStatus()
     {
-        // Check if gift has contributions
-        if ($this->gift->completedContributions()->count() > 0 && $this->gift->status === 'active') {
-            session()->flash('error', 'Cannot pause gift with existing contributions.');
-            return;
-        }
 
-        $newStatus = $this->gift->status === 'active' ? 'paused' : 'active';
-        $this->gift->update(['status' => $newStatus]);
+        // if ($this->gift->completedContributions()->count() > 0 && $this->gift->status === 'active') {
+        //     session()->flash('error', 'Cannot pause gift with existing contributions.');
+        //     return;
+        // }
 
-        session()->flash('message', "Gift {$newStatus} successfully.");
-        $this->loadGift(); // Refresh data
+        $newStatus = $this->gift->is_public === true ? false : true;
+        $this->gift->update(['is_public' => $newStatus]);
+
+
+        session()->flash('message', "Gift Status Updated successfully.");
+        $this->loadGift();
     }
 
     public function openEditModal()
@@ -120,15 +123,12 @@ class GiftDetail extends Component
             ]
         ];
 
-        // Handle image upload
         if ($this->gift_image) {
-            // Delete old image if exists
             if ($this->current_image) {
                 Storage::disk('public')->delete($this->current_image);
             }
             $updateData['gift_image'] = $this->gift_image->store('gift-images', 'public');
         } elseif ($this->remove_image && $this->current_image) {
-            // Remove existing image
             Storage::disk('public')->delete($this->current_image);
             $updateData['gift_image'] = null;
         }
@@ -152,14 +152,12 @@ class GiftDetail extends Component
 
     public function deleteGift()
     {
-        // Check if gift has contributions
         if ($this->gift->completedContributions()->count() > 0) {
             session()->flash('error', 'Cannot delete gift with existing contributions.');
             $this->closeDeleteModal();
             return;
         }
 
-        // Delete image if exists
         if ($this->gift->gift_image) {
             Storage::disk('public')->delete($this->gift->gift_image);
         }
@@ -170,10 +168,27 @@ class GiftDetail extends Component
         return redirect()->route('user.gift.index');
     }
 
-    public function copyGiftLink()
+    public function shareGift($platform)
     {
-        $this->dispatch('copy-to-clipboard', ['text' => $this->gift->getPublicUrl()]);
-        session()->flash('message', 'Gift link copied to clipboard!');
+        $url = urlencode($this->gift->getPublicUrl());
+        $text = urlencode("Help donate to: " . $this->gift->title);
+
+        $shareUrls = [
+            'facebook' => "https://www.facebook.com/sharer/sharer.php?u={$url}",
+            'twitter' => "https://twitter.com/intent/tweet?url={$url}&text={$text}",
+            'whatsapp' => "https://wa.me/?text={$text}%20{$url}",
+            'telegram' => "https://t.me/share/url?url={$url}&text={$text}",
+        ];
+
+        if (isset($shareUrls[$platform])) {
+            $this->dispatch('openWindow', $shareUrls[$platform]);
+        }
+    }
+
+    public function copyLink()
+    {
+        $this->dispatch('copyToClipboard', $this->gift->getPublicUrl() );
+        session()->flash('message', 'Link copied to clipboard!');
     }
 
     public function render()
