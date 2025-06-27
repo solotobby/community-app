@@ -249,7 +249,7 @@
         @if ($showUserModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="updateUserDetails">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -309,8 +309,8 @@
         {{-- Transaction PIN Modal --}}
         @if ($showPinModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-                <div class="modal-dialog modal-dialobag-centered">
-                    <div class="modal-content">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveTransactionPin">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -376,7 +376,7 @@
         @if ($showBankModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveBankDetails">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -459,7 +459,7 @@
         @if ($showContactModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveContactInfo">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -551,7 +551,7 @@
         @if ($showPhoneVerificationModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <div class="modal-header">
                             <h5 class="modal-title">
                                 <i class="fas fa-mobile-alt text-primary me-2"></i>
@@ -624,6 +624,47 @@
     </div>
 
     <style>
+    .theme-sensitive {
+        background-color: #ffffff;
+        color: #212529;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .theme-sensitive {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+        }
+
+        .theme-sensitive .form-control {
+            background-color: #2b2b2b;
+            color: #f1f1f1;
+            border-color: #444;
+        }
+
+        .theme-sensitive .form-control::placeholder {
+            color: #aaa;
+        }
+
+        .theme-sensitive .modal-header {
+            border-bottom-color: #333;
+        }
+
+        .theme-sensitive .modal-footer {
+            border-top-color: #333;
+        }
+
+        .theme-sensitive .btn-close {
+            filter: invert(1);
+        }
+
+        .theme-sensitive .invalid-feedback {
+            color: #ff8888;
+        }
+    }
+</style>
+
+
+    <style>
         .avatar {
             width: 60px;
             height: 60px;
@@ -671,6 +712,19 @@
 
         code {
             font-size: 0.9rem;
+        }
+
+
+        .theme-sensitive {
+            background-color: white;
+            color: #212529;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .theme-sensitive {
+                background-color: #2c2f33 !important;
+                color: #f1f1f1 !important;
+            }
         }
     </style>
 

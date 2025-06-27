@@ -204,14 +204,13 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-12">
                             @if ($gift->canReceiveContributions())
-                                <button type="submit" class="btn btn-success w-100" wire:loading.attr="disabled"
-                                    wire:target="submit">
-                                    <span wire:loading.remove wire:target="submit">
-                                        <i class="fas fa-heart me-2"></i>Gift Now
+                                <button type="submit" class="btn btn-success w-100" wire:loading.attr="disabled">
+                                    <span wire:loading.remove>
+                                        <i class="fas fa-heart me-2"></i> Gift Now
                                     </span>
-                                    <span wire:loading wire:target="submit">
+                                    <span wire:loading>
                                         <span class="spinner-border spinner-border-sm me-2" role="status"
                                             aria-hidden="true"></span>
                                         Processing...

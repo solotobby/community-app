@@ -256,7 +256,7 @@ class UserDashboard extends Component
                 'used_type' => $this->drawType,
                 'reward'    => json_encode($rewards),
                 'price'     => $amount,
-                'expired_at' => now()->addDays(3),
+                'expired_at' => now()->addDays(365),
                 'currency'  => 'NGN',
                 'status'    => 'pending',
             ]);
