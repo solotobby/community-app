@@ -91,7 +91,6 @@ class GiftIndex extends Component
         $newStatus = $this->gift->is_public === true ? false : true;
         $this->gift->update(['is_public' => $newStatus]);
 
-
         session()->flash('message', "Gift Status Updated successfully.");
         $this->loadGift();
 

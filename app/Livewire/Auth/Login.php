@@ -48,7 +48,7 @@ class Login extends Component
         $user = User::where('email', $this->email)->first();
 
 
-        if ($user->hasRole('admin') || $user->has_subscribed) {
+        if ($user->hasRole('admin') || $user->has_subscribed || $user->free_user) {
 
             RateLimiter::clear($this->throttleKey());
             Session::regenerate();
