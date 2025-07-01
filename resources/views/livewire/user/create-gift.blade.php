@@ -12,7 +12,7 @@
     <div class="container-fluid p-0 m-0">
         <div class="card border-0">
             <div class="card-header">
-                <h5 class="mb-0">Create Gift Request</h5>
+                <h5 class="mb-0">Raise Money</h5>
 
                 <!-- Progress Bar -->
                 <div class="progress mt-3" style="height: 8px;">
@@ -31,7 +31,7 @@
                     @if ($currentStep == 1)
                         <!-- Step 1: Basic Details -->
                         <div class="step-content">
-                            <h6 class="mb-3">Tell us about your gift</h6>
+                            <h6 class="mb-3">Tell us about your fund raising</h6>
 
                             <div class="mb-3">
                                 <label for="title" class="form-text"><strong>Title *</strong></label>
@@ -77,11 +77,11 @@
                     @if ($currentStep == 2)
                         <!-- Step 2: Gift Details -->
                         <div class="step-content">
-                            <h6 class="mb-3">Set your gift details</h6>
+                            <h6 class="mb-3">Tell us more about your fund raising</h6>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="target_amount" class="form-text"><strong> Amount (₦) *</strong></label>
+                                    <label for="target_amount" class="form-text"><strong> Amount To Raise (₦) *</strong></label>
                                     <input type="number"
                                         class="form-control @error('target_amount') is-invalid @enderror"
                                         id="target_amount" wire:model="target_amount" min="1" step="0.01">
@@ -91,7 +91,7 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="deadline" class="form-text"><strong> Deadline (Defaults to 60 days from today if not selected)</strong></label>
+                                    <label for="deadline" class="form-text"><strong> Deadline (Max of 60 days)</strong></label>
                                     <input type="date" class="form-control @error('deadline') is-invalid @enderror"
                                         id="deadline" wire:model="deadline"
                                         min="{{ date('Y-m-d', strtotime('+1 day')) }}"
@@ -110,7 +110,7 @@
                                 @error('gift_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <div class="form-text">Upload an image to make your gift more appealing (Max: 2MB)</div>
+                                <div class="form-text">Upload an image that will convince people to send you money (Max: 2MB)</div>
 
                                 @if ($gift_image)
                                     <div class="mt-2">
@@ -125,7 +125,7 @@
                     @if ($currentStep == 3)
                         <!-- Step 3: Settings & Preview -->
                         <div class="step-content">
-                            <h6 class="mb-3">Configure settings</h6>
+                            <h6 class="mb-3">Configure Settings</h6>
 
 
                             {{-- <div class="mb-3">
@@ -138,7 +138,7 @@
                                 </div>
                             </div> --}}
 
-                            <div class="col-md-6 mb-3">
+                            {{-- <div class="col-md-6 mb-3">
                                 <label for="min_contribution" class="form-text"><strong> Minimum Amount Accepted (₦)</strong></label>
                                 <input type="number"
                                 class="form-control @error('min_contribution') is-invalid @enderror"
@@ -148,17 +148,17 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <div class="form-text">Leave empty for no minimum</div>
-                            </div>
+                            </div> --}}
 
                             <div class="mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="is_public"
                                         wire:model="is_public">
                                     <label class="form-text" for="is_public">
-                                       <strong> Make this gift request public </strong>
+                                       <strong> Make this fund raising public </strong>
                                     </label>
                                 </div>
-                                <small class="form-text">Public gifts can be found by anyone with the link</small>
+                                <small class="form-text">The link is accessible only if made public</small>
                             </div>
 
                             <!-- Preview -->

@@ -8,6 +8,7 @@ use App\Models\Reward;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -119,7 +120,7 @@ class PaystackController extends Controller
 
             $wallet = $user->wallet()->firstOrCreate([], ['balance' => 0]);
 
-            $bonus = $contribution->amount * 0.95;
+            $bonus = $contribution->amount;
             $wallet->increment('balance', $bonus);
 
             return redirect()
@@ -273,5 +274,144 @@ class PaystackController extends Controller
                 'errors' => $response->json(),
             ];
         }
+    }
+
+     public function handleWebhook(Request $request)
+    {
+        $signature = $request->header('x-paystack-signature');
+        $computedSignature = hash_hmac('sha512', $request->getContent(), config('services.paystack.webhook_secret'));
+
+        if (!hash_equals($signature, $computedSignature)) {
+            Log::warning('Invalid Paystack webhook signature');
+            return response('Invalid signature', 400);
+        }
+
+        $event = $request->input('event');
+        $data = $request->input('data');
+
+        Log::info('Paystack webhook received', ['event' => $event, 'reference' => $data['reference'] ?? 'N/A']);
+
+        switch ($event) {
+            case 'charge.success':
+                $this->handleChargeSuccess($data);
+                break;
+            case 'transfer.success':
+                $this->handleTransferSuccess($data);
+                break;
+            case 'dedicatedaccount.credit':
+                $this->handleDedicatedAccountCredit($data);
+                break;
+            default:
+                Log::info('Unhandled Paystack webhook event', ['event' => $event]);
+        }
+
+        return response('Webhook handled', 200);
+    }
+
+    private function handleChargeSuccess($data)
+    {
+        $reference = $data['reference'];
+        $amount = $data['amount'] / 100;
+
+        $contribution = Contribution::where('payment_reference', $reference)->first();
+
+        if (!$contribution) {
+            Log::warning('Contribution not found for reference', ['reference' => $reference]);
+            return;
+        }
+
+        if ($contribution->status === 'completed') {
+            Log::info('Contribution already completed', ['reference' => $reference]);
+            return;
+        }
+
+        // Verify the amount matches
+        if ($contribution->amount != $amount) {
+            Log::warning('Amount mismatch for contribution', [
+                'reference' => $reference,
+                'expected' => $contribution->amount,
+                'received' => $amount
+            ]);
+            return;
+        }
+
+        // Update contribution status
+        $contribution->update([
+            'status' => 'completed',
+            'payment_verified_at' => now(),
+        ]);
+
+        Log::info('Contribution completed via webhook', ['reference' => $reference]);
+    }
+
+    private function handleDedicatedAccountCredit($data)
+    {
+        // This handles bank transfer payments to virtual accounts
+        $reference = $data['reference'] ?? null;
+        $amount = ($data['amount'] ?? 0) / 100; // Convert from kobo to naira
+        $account_number = $data['account']['account_number'] ?? null;
+
+        // Try to find contribution by various methods
+        $contribution = null;
+
+        // First, try to find by reference if available
+        if ($reference) {
+            $contribution = Contribution::where('payment_reference', $reference)->first();
+        }
+
+        // If not found by reference, try to find pending bank transfer contributions
+        // that match the amount and have virtual account details
+        if (!$contribution) {
+            $contributions = Contribution::where('status', 'pending')
+                ->where('payment_method', 'bank_transfer')
+                ->whereNotNull('virtual_account_details')
+                ->get();
+
+            foreach ($contributions as $pendingContribution) {
+                $virtualAccountDetails = $pendingContribution->virtual_account_details;
+
+                if (isset($virtualAccountDetails['account_number']) &&
+                    $virtualAccountDetails['account_number'] === $account_number &&
+                    abs($pendingContribution->amount - $amount) < 0.01) { // Allow small floating point differences
+                    $contribution = $pendingContribution;
+                    break;
+                }
+            }
+        }
+
+        if (!$contribution) {
+            Log::warning('No matching contribution found for dedicated account credit', [
+                'account_number' => $account_number,
+                'amount' => $amount,
+                'reference' => $reference
+            ]);
+            return;
+        }
+
+        if ($contribution->status === 'completed') {
+            Log::info('Contribution already completed', ['id' => $contribution->id]);
+            return;
+        }
+
+        // Update contribution status
+        $contribution->update([
+            'status' => 'completed',
+            'payment_verified_at' => now(),
+        ]);
+
+        // Clear cached virtual account details
+        Cache::forget("virtual_account_{$contribution->id}");
+
+        Log::info('Bank transfer contribution completed via webhook', [
+            'contribution_id' => $contribution->id,
+            'account_number' => $account_number,
+            'amount' => $amount
+        ]);
+    }
+
+    private function handleTransferSuccess($data)
+    {
+        // Handle successful transfers (if you implement payout functionality)
+        Log::info('Transfer success webhook received', $data);
     }
 }

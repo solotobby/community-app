@@ -26,7 +26,7 @@ class CreateGift extends Component
     // Settings
     public $is_public = true;
     public $allow_messages = true;
-    public $min_contribution = '';
+    public $min_contribution = 100;
 
     protected function rules()
     {
@@ -96,7 +96,7 @@ class CreateGift extends Component
             'reason' => $this->reason,
             'description' => $this->description,
             'target_amount' => $this->target_amount,
-            'deadline' => $deadline = $this->deadline ?? now()->addDays(60)->toDateString(),
+            'deadline' =>  $this->deadline ?? now()->addDays(60)->toDateString(),
             'gift_image' => $imagePath,
             'is_public' => $this->is_public,
             'settings' => $settings,
