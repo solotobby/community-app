@@ -3,6 +3,9 @@
     {{-- Header Section --}}
     <div class="row mb-4">
         <div class="col-12">
+            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+                          <i class="fas fa-arrow-left me-1"></i>Back to Users
+                      </a>
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -23,13 +26,6 @@
                             </div>
                         </div>
                         <div>
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i>Back to Users
-                            </a>
-                            {{-- <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
-                                <i class="fas fa-edit me-1"></i>Edit User
-                            </a> --}}
-
 
                             <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
                                 class="btn btn-primary" onclick="event.stopPropagation()">
@@ -44,7 +40,11 @@
                                 class="btn btn-primary" onclick="event.stopPropagation()">
                                 User Wallet
                             </a>
-                        </div>
+                            <a href="{{ route('admin.users.crowdfunding', $user) }}"
+                            class="btn btn-primary" onclick="event.stopPropagation()">
+                            User Crowdfunding
+                        </a>
+                    </div>
                     </div>
                 </div>
             </div>
