@@ -20,6 +20,9 @@ class HomeController extends Controller
         //     return redirect()->route('user.settings');
         // }
 
+        if ($user->free_user) {
+            return redirect()->route('user.gift.index');
+        }
         return redirect()->route('user.dashboard');
     }
 }

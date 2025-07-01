@@ -96,7 +96,7 @@
                     <div class="col-md-6 text-end">
                         @auth
                             <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success btn-sm">
-                                <i class="fas fa-plus me-1"></i>Create New Gift
+                                <i class="fas fa-plus me-1"></i>Raise Money
                             </a>
                         @endauth
                     </div>
@@ -274,7 +274,7 @@
 
                     @if (!$showMyGifts)
                         <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Create Your First Gift
+                            <i class="fas fa-plus me-2"></i>Raise Money
                         </a>
                     @else
                         <button class="btn btn-outline-secondary" wire:click="resetFilters">
