@@ -222,19 +222,17 @@
             </div>
 
             {{-- Enhanced Contribution Sidebar --}}
-
             <div class="col-lg-5">
                 <div class="sticky-top" style="top: 2rem;" id="contribution-section">
-                    @if (!$virtual_account || ($payment_method === 'bank_transfer' && $virtual_account))
-                        <div class="card shadow border-0 @if ($payment_method === 'bank_transfer' && $virtual_account) d-none @endif"
-                            id="contribution-form">
+                    {{--  --}}
+                    @if (!$virtual_account)
+                        <div class="card shadow border-0" id="contribution-form">
                             <div class="card-header bg-gradient text-white text-center py-3"
                                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                 <h5 class="mb-0">
                                     <i class="fas fa-heart me-2"></i>Make a Contribution
                                 </h5>
                             </div>
-
 
                             <div class="card-body p-4">
                                 {{-- Payment Method Selection --}}
@@ -284,8 +282,7 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="contributor_email" class="form-label">Email Address
-                                                *</label>
+                                            <label for="contributor_email" class="form-label">Email Address *</label>
                                             <input type="email"
                                                 class="form-control @error('contributor_email') is-invalid @enderror"
                                                 id="contributor_email" wire:model="contributor_email" required>
@@ -323,6 +320,7 @@
                                                 </label>
                                             </div>
                                         </div>
+
                                         <div class="col-12 mt-4">
                                             <button type="submit" class="btn btn-success btn-lg w-100"
                                                 wire:loading.attr="disabled"
@@ -343,9 +341,7 @@
                                                 </span>
                                             </button>
                                         </div>
-
                                     </div>
-
                                 </form>
 
                                 {{-- Security Notice --}}
@@ -360,82 +356,133 @@
                             </div>
                         </div>
 
-                        {{-- Bank Transfer Details Card --}}
-                        @if ($payment_method === 'bank_transfer' && $virtual_account)
-                            <div class="card shadow border-0" id="bank-details">
-                                <div class="card-header bg-gradient text-white text-center py-3"
-                                    style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
-                                    <h5 class="mb-0">
-                                        <i class="fas fa-university me-2"></i>Transfer Details
-                                    </h5>
+                        {{-- JavaScript for countdown and copy functionality --}}
+                        <script>
+                            // Countdown timer
+                            @if ($payment_method === 'bank_transfer' && $virtual_account)
+                                let expiresAt = new Date('{{ $virtual_account['expires_at'] ?? now()->addMinutes(30) }}');
+
+                                function updateCountdown() {
+                                    let now = new Date();
+                                    let timeLeft = expiresAt - now;
+
+                                    if (timeLeft <= 0) {
+                                        document.getElementById('countdown').textContent = '00:00';
+                                        // Call Livewire method to handle expiry
+                                        @this.checkVirtualAccountExpiry();
+                                        return;
+                                    }
+
+                                    let minutes = Math.floor(timeLeft / 60000);
+                                    let seconds = Math.floor((timeLeft % 60000) / 1000);
+
+                                    document.getElementById('countdown').textContent =
+                                        String(minutes).padStart(2, '0') + ':' +
+                                        String(seconds).padStart(2, '0');
+                                }
+
+                                // Update countdown every second
+                                setInterval(updateCountdown, 1000);
+                                updateCountdown(); // Initial call
+                            @endif
+
+                            // Copy to clipboard function
+                            function copyToClipboard(text, button) {
+                                navigator.clipboard.writeText(text).then(function() {
+                                    let originalIcon = button.innerHTML;
+                                    button.innerHTML = '<i class="fas fa-check"></i>';
+                                    button.classList.add('btn-success');
+                                    button.classList.remove('btn-outline-primary');
+
+                                    setTimeout(function() {
+                                        button.innerHTML = originalIcon;
+                                        button.classList.remove('btn-success');
+                                        button.classList.add('btn-outline-primary');
+                                    }, 2000);
+                                });
+                            }
+                        </script>
+                    @endif
+
+                    {{-- Bank Transfer Details Card - Show when virtual account is generated --}}
+                    @if ($payment_method === 'bank_transfer' && $virtual_account)
+                        <div class="card shadow border-0" id="bank-details">
+                            <div class="card-header bg-gradient text-white text-center py-3"
+                                style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-university me-2"></i>Transfer Details
+                                </h5>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <div class="alert alert-success border-0 mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <small><strong>Account Ready!</strong> Complete your transfer using the details
+                                            below.</small>
+                                    </div>
                                 </div>
 
-                                <div class="card-body p-4">
-                                    <div class="alert alert-success border-0 mb-4">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check-circle me-2"></i>
-                                            <small><strong>Account Ready!</strong> Complete your transfer using the
-                                                details below.</small>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Account Number</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control fw-bold"
+                                                value="{{ $virtual_account['account_number'] }}" readonly>
+                                            <button class="btn btn-outline-primary" type="button"
+                                                onclick="copyToClipboard('{{ $virtual_account['account_number'] }}', this)">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
                                         </div>
                                     </div>
 
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            <label class="form-label fw-bold">Account Number</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control fw-bold"
-                                                    value="{{ $virtual_account['account_number'] }}" readonly>
-                                                <button class="btn btn-outline-primary" type="button"
-                                                    onclick="copyToClipboard('{{ $virtual_account['account_number'] }}', this)">
-                                                    <i class="fas fa-copy"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label class="form-label fw-bold">Bank Name</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $virtual_account['bank_name'] }}" readonly>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label class="form-label fw-bold">Account Name</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $virtual_account['account_name'] }}" readonly>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label class="form-label fw-bold">Amount to Transfer</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">₦</span>
-                                                <input type="text" class="form-control fw-bold text-success"
-                                                    value="{{ number_format($amount, 2) }}" readonly>
-                                            </div>
-                                        </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Bank Name</label>
+                                        <input type="text" class="form-control"
+                                            value="{{ $virtual_account['bank_name'] }}" readonly>
                                     </div>
 
-                                    <div class="alert alert-warning border-0 my-4">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-clock me-2"></i>
-                                            <small><strong>Expires in:</strong> <span id="countdown"
-                                                    class="fw-bold">30:00</span> minutes</small>
-                                        </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Account Name</label>
+                                        <input type="text" class="form-control"
+                                            value="{{ $virtual_account['account_name'] }}" readonly>
                                     </div>
 
-                                    <div class="d-grid gap-2">
-                                        <button class="btn btn-success btn-lg" wire:click="verifyBankTransfer">
-                                            <i class="fas fa-check me-2"></i>I've Completed the Transfer
-                                        </button>
-                                        <button class="btn btn-outline-secondary" onclick="window.location.reload()">
-                                            <i class="fas fa-arrow-left me-2"></i>Back to Payment Options
-                                        </button>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Amount to Transfer</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₦</span>
+                                            <input type="text" class="form-control fw-bold text-success"
+                                                value="{{ number_format($amount, 2) }}" readonly>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="alert alert-warning border-0 my-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-clock me-2"></i>
+                                        <small><strong>Expires in:</strong> <span id="countdown"
+                                                class="fw-bold">30:00</span> minutes</small>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-lg" wire:click="verifyBankTransfer">
+                                        <i class="fas fa-check me-2"></i>I've Completed the Transfer
+                                    </button>
+                                    <button class="btn btn-outline-primary" wire:click="regenerateVirtualAccount">
+                                        <i class="fas fa-refresh me-2"></i>Generate New Account
+                                    </button>
+                                    <button class="btn btn-outline-secondary" wire:click="resetForm">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to Payment Options
+                                    </button>
                                 </div>
                             </div>
-                        @endif
+                        </div>
+                    @endif
                 </div>
             </div>
-    @endif
+        </div>
     @endif
 
 

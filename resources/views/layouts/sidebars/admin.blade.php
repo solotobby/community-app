@@ -47,7 +47,31 @@
                 </li>
             </ul>
         </li>
-
+  <!-- Crowdfunding -->
+        <li class="nav-main-item">
+            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.crowdfunding.*') ? 'active' : '' }}"
+                data-toggle="submenu" href="#">
+                <i class="nav-main-link-icon fa fa-gamepad"></i>
+                <span class="nav-main-link-name">Crowdfunding</span>
+            </a>
+            <ul class="nav-main-submenu">
+                  <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('admin.crowdfunding.all') }}">
+                        View Requested Gifts
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('admin.crowdfunding.reason') }}">
+                        Gift Reasons
+                    </a>
+                </li>
+                {{-- <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.gift.create-gift') }}">
+                        Offer Gift
+                    </a>
+                </li> --}}
+            </ul>
+        </li>
         <!-- Manage Games -->
         <li class="nav-main-item">
             <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}" data-toggle="submenu" href="#">

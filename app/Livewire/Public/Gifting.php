@@ -10,7 +10,6 @@ use App\Models\Contribution;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 
 #[Layout('components.layouts.public')]
 class Gifting extends Component
@@ -35,6 +34,43 @@ class Gifting extends Component
 
         if (!$this->gift) {
             $this->gift = null;
+        }
+
+        // Check for any pending bank transfer contributions and restore state
+        $this->restorePendingBankTransfer();
+    }
+
+    /**
+     * Restore pending bank transfer state from database
+     */
+    private function restorePendingBankTransfer()
+    {
+        // Look for recent pending bank transfer contribution for this gift
+        // You might want to also match by session or user if you have authentication
+        $pendingContribution = Contribution::where('gift_request_id', $this->gift?->id)
+            ->where('status', 'pending')
+            ->where('payment_method', 'bank_transfer')
+            ->whereNotNull('virtual_account_details')
+            ->where('created_at', '>=', now()->subHours(1)) // Only restore recent ones
+            ->latest()
+            ->first();
+
+        if ($pendingContribution && $pendingContribution->virtual_account_details) {
+            // Check if virtual account is still valid (not expired)
+            $accountDetails = $pendingContribution->virtual_account_details;
+            $expiresAt = isset($accountDetails['expires_at'])
+                ? \Carbon\Carbon::parse($accountDetails['expires_at'])
+                : null;
+
+            if (!$expiresAt || $expiresAt->isFuture()) {
+                $this->virtual_account = $accountDetails;
+                $this->pending_contribution_id = $pendingContribution->id;
+                $this->payment_method = 'bank_transfer';
+                $this->contributor_name = $pendingContribution->contributor_name;
+                $this->contributor_email = $pendingContribution->contributor_email;
+                $this->amount = $pendingContribution->amount;
+                $this->is_anonymous = $pendingContribution->is_anonymous;
+            }
         }
     }
 
@@ -89,26 +125,34 @@ class Gifting extends Component
         ]);
 
         if ($this->payment_method === 'card') {
-
             $paymentUrl = $this->initializePaystackPayment($contribution);
 
             if ($paymentUrl) {
                 return redirect()->away($paymentUrl);
             } else {
                 session()->flash('error', 'Failed to initialize payment. Please try again.');
+                return;
             }
-        } else {
+        } elseif ($this->payment_method === 'bank_transfer') {
             $virtualAccount = $this->generateVirtualAccount($contribution);
 
             if ($virtualAccount) {
+                // Save virtual account details to the contribution record
+                $contribution->update([
+                    'virtual_account_details' => $virtualAccount
+                ]);
+
                 $this->virtual_account = $virtualAccount;
                 $this->pending_contribution_id = $contribution->id;
 
-                  Cache::put("virtual_account_{$contribution->id}", $virtualAccount, 45 * 60);
-
                 session()->flash('message', 'Virtual account generated successfully. Please transfer the exact amount.');
+
+                // Force re-render to show bank transfer details
+                $this->dispatch('$refresh');
+                return;
             } else {
                 session()->flash('error', 'Failed to generate virtual account. Please try again.');
+                return;
             }
         }
     }
@@ -136,6 +180,7 @@ class Gifting extends Component
                 return $data['data']['authorization_url'] ?? null;
             }
 
+            Log::error('Paystack initialization failed', ['response' => $response->body()]);
             return null;
         } catch (Exception $e) {
             Log::error('Paystack initialization failed: ' . $e->getMessage());
@@ -166,7 +211,7 @@ class Gifting extends Component
             $response = Http::withToken(config('services.paystack.secret_key'))
                 ->post('https://api.paystack.co/dedicated_account', $payload);
 
-            Log::info('Virtual account', ['response' => $response]);
+            Log::info('Virtual account generation response', ['response' => $response->json()]);
 
             if (!$response->successful()) {
                 Log::error('Paystack dedicated_account error', [
@@ -194,26 +239,37 @@ class Gifting extends Component
 
     private function getOrCreatePaystackCustomer($contribution): ?string
     {
+        try {
+            // 1. Check if customer exists
+            $lookup = Http::withToken(config('services.paystack.secret_key'))
+                ->get('https://api.paystack.co/customer', [
+                    'email' => $contribution->contributor_email,
+                ]);
 
-        $lookup = Http::withToken(config('services.paystack.secret_key'))
-            ->get('https://api.paystack.co/customer', [
-                'email' => $contribution->contributor_email,
-            ]);
+            if ($lookup->successful() && !empty($lookup->json()['data']) && count($lookup->json()['data']) > 0) {
+                return $lookup->json()['data'][0]['customer_code'];
+            }
 
-        if ($lookup->successful() && !empty($lookup['data'][0]['customer_code'])) {
-            return $lookup['data'][0]['customer_code'];
+            // 2. Create new customer
+            $create = Http::withToken(config('services.paystack.secret_key'))
+                ->post('https://api.paystack.co/customer', [
+                    'email'      => $contribution->contributor_email,
+                    'first_name' => Str::before($contribution->contributor_name, ' ') ?? "Famlic",
+                    'last_name'  => Str::after($contribution->contributor_name, ' ') ?? "Donor",
+                ]);
+
+            if ($create->successful()) {
+                return $create->json()['data']['customer_code'];
+            }
+
+            Log::error('Failed to create Paystack customer', ['response' => $create->body()]);
+            return null;
+        } catch (\Throwable $e) {
+            Log::error('Error getting/creating Paystack customer', ['error' => $e->getMessage()]);
+            return null;
         }
-
-        // 2. Create new customer
-        $create = Http::withToken(config('services.paystack.secret_key'))
-            ->post('https://api.paystack.co/customer', [
-                'email'      => $contribution->contributor_email,
-                'first_name' => Str::before($contribution->contributor_name, ' ') ?? "Famlic",
-                'last_name'  => Str::after($contribution->contributor_name, ' ') ?? "Donor",
-            ]);
-
-        return $create->successful() ? $create['data']['customer_code'] : null;
     }
+
     public function verifyBankTransfer()
     {
         if (!$this->pending_contribution_id) {
@@ -249,14 +305,11 @@ class Gifting extends Component
                 $data = $response->json()['data'];
 
                 if ($data['status'] === 'success' && $data['amount'] == ($contribution->amount * 100)) {
-
                     $contribution->update([
                         'status' => 'completed',
                         'payment_verified_at' => now(),
+                        'payment_data' => $data, // Store full payment response
                     ]);
-
-                    // Clear cached virtual account
-                    Cache::forget("virtual_account_{$contribution->id}");
 
                     return true;
                 }
@@ -311,19 +364,75 @@ class Gifting extends Component
         $this->dispatch('copyToClipboard', $this->gift->getPublicUrl());
         session()->flash('message', 'Link copied to clipboard!');
     }
+
     public function updatedPaymentMethod()
     {
-
         if ($this->payment_method === 'card') {
             $this->virtual_account = null;
             $this->pending_contribution_id = null;
         }
     }
 
+    /**
+     * Check if the current virtual account has expired
+     */
+    public function checkVirtualAccountExpiry()
+    {
+        if ($this->virtual_account && isset($this->virtual_account['expires_at'])) {
+            $expiresAt = \Carbon\Carbon::parse($this->virtual_account['expires_at']);
+
+            if ($expiresAt->isPast()) {
+                // Mark contribution as expired and reset form
+                if ($this->pending_contribution_id) {
+                    $contribution = Contribution::find($this->pending_contribution_id);
+                    if ($contribution) {
+                        $contribution->update(['status' => 'expired']);
+                    }
+                }
+
+                $this->resetForm();
+                session()->flash('error', 'Virtual account has expired. Please generate a new one.');
+                $this->dispatch('$refresh');
+            }
+        }
+    }
+
+    /**
+     * Regenerate virtual account for existing contribution
+     */
+    public function regenerateVirtualAccount()
+    {
+        if (!$this->pending_contribution_id) {
+            session()->flash('error', 'No pending contribution found.');
+            return;
+        }
+
+        $contribution = Contribution::find($this->pending_contribution_id);
+        if (!$contribution) {
+            session()->flash('error', 'Contribution not found.');
+            return;
+        }
+
+        $virtualAccount = $this->generateVirtualAccount($contribution);
+
+        if ($virtualAccount) {
+            // Update the existing contribution with new virtual account details
+            $contribution->update([
+                'virtual_account_details' => $virtualAccount,
+                'status' => 'pending' // Reset status in case it was expired
+            ]);
+
+            $this->virtual_account = $virtualAccount;
+            session()->flash('message', 'New virtual account generated successfully.');
+            $this->dispatch('$refresh');
+        } else {
+            session()->flash('error', 'Failed to generate new virtual account. Please try again.');
+        }
+    }
+
     public function render()
     {
         $recentContributions = [];
-
 
         return view('gifting', [
             'recentContributions' => $recentContributions

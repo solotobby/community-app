@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Livewire\User;
+namespace App\Livewire\Admin\User;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\GiftRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class GiftIndex extends Component
+class UserCrowdfunding extends Component
 {
+
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
@@ -17,6 +19,7 @@ class GiftIndex extends Component
     public $statusFilter = 'all';
     public $sortBy = 'created_at';
     public $sortDirection = 'desc';
+    public $user;
     public $showMyGifts = false;
 
     protected $queryString = [
@@ -26,6 +29,11 @@ class GiftIndex extends Component
         'sortDirection' => ['except' => 'desc'],
         'showMyGifts' => ['except' => false],
     ];
+
+    public function mount($id)
+    {
+        $this->user = User::findOrFail($id);
+    }
 
     public function updatingSearch()
     {
@@ -63,8 +71,8 @@ class GiftIndex extends Component
     {
         $gift = GiftRequest::findOrFail($giftId);
 
-        // Check if user owns this gift
-        if ($gift->user_id !== Auth::id()) {
+
+        if ($gift->user_id !== $this->user->id()) {
             session()->flash('error', 'You can only delete your own gifts.');
             return;
         }
@@ -83,17 +91,20 @@ class GiftIndex extends Component
     {
         $gift = GiftRequest::findOrFail($giftId);
 
-        $newStatus = $this->gift->is_public === true ? false : true;
-        $this->gift->update(['is_public' => $newStatus]);
+        $newStatus = $gift->is_public === true ? false : true;
+        $gift->update(['is_public' => $newStatus]);
+
 
         session()->flash('message', "Gift Status Updated successfully.");
         $this->loadGift();
-
     }
 
     public function render()
     {
-        $query = GiftRequest::with(['user', 'completedContributions'])->where('user_id', Auth::id());
+        $query = GiftRequest::with(['user', 'completedContributions'])->where(
+            'user_id',
+            $this->user->id
+        );
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -115,7 +126,7 @@ class GiftIndex extends Component
         $stats = [
             'total' => GiftRequest::where(
                 'user_id',
-                Auth::id()
+                $this->user->id
             )->count(),
 
             'active' => GiftRequest::where(
@@ -123,7 +134,7 @@ class GiftIndex extends Component
                 'active'
             )->where(
                 'user_id',
-                Auth::id()
+                $this->user->id
             )->count(),
 
             'completed' => GiftRequest::where(
@@ -131,18 +142,18 @@ class GiftIndex extends Component
                 'completed'
             )->where(
                 'user_id',
-                Auth::id()
+                $this->user->id
             )->count(),
 
             'total_raised' => GiftRequest::where(
                 'user_id',
-                Auth::id()
+                $this->user->id
             )->sum(
                 'current_amount'
             ),
         ];
 
-        return view('livewire.user.gift-index', [
+        return view('livewire.admin.user.user-crowdfunding', [
             'gifts' => $gifts,
             'stats' => $stats
         ]);
