@@ -3,6 +3,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Http\Controllers\PaystackController;
 use App\Models\Level;
 use App\Models\Transaction;
 use App\Models\User;
@@ -21,11 +22,13 @@ class Register extends Component
 {
     public string $name = '';
     public string $email = '';
+    public $agreeTerms = false;
     public string $referral_code;
     public string $password = '';
     public string $password_confirmation = '';
     public string $level = '';
 
+    public $showTermsModal = false;
     /** @var \Illuminate\Database\Eloquent\Collection */
     public $levels;
     public $selectedLevelAmount = null;
@@ -51,12 +54,25 @@ class Register extends Component
         return $level ? $level->registration_amount : null;
     }
 
-    public function register(): void
+    public function openTermsModal()
+    {
+        $this->showTermsModal = true;
+    }
+
+    public function closeTermsModal()
+    {
+        $this->showTermsModal = false;
+    }
+
+
+
+    public function register()
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'level' => ['required', 'integer', 'exists:levels,id'],
             'referral_code' => ['nullable', 'string'],
+            'agreeTerms' => ['accepted'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -125,25 +141,19 @@ class Register extends Component
             'status' => 'pending',
         ]);
 
-        $response = Http::withToken(config('services.paystack.secret_key'))->post(
-            'https://api.paystack.co/transaction/initialize',
-            [
-                'email' => $user->email,
-                'amount' => $transaction->amount * 100,
-                'reference' => $transaction->reference,
-                'callback_url' => route('paystack.payment.callback'),
-            ]
-        )->json();
+        //Initiate Payment
+        $paymentUrl = app(PaystackController::class)->initializeFunding(
+            $user->email,
+            $transaction->amount,
+            $transaction->reference,
+            route('paystack.payment.callback'),
+            []
+        );
 
-        if (!$response['status']) {
+        if ($paymentUrl) {
+            return redirect()->away($paymentUrl);
+        } else {
             session()->flash('error', 'Payment initialization failed, try again.');
-            return;
         }
-
-        $this->js(<<<JS
-        window.location.href = "{$response['data']['authorization_url']}";
-    JS);
-
-        //$this->redirect(route('paystack.payment.init', ['reference' => $transaction->reference]), navigate: true);
     }
 }

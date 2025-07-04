@@ -470,9 +470,9 @@
                                     <button class="btn btn-success btn-lg" wire:click="verifyBankTransfer">
                                         <i class="fas fa-check me-2"></i>I've Completed the Transfer
                                     </button>
-                                    <button class="btn btn-outline-primary" wire:click="regenerateVirtualAccount">
+                                    {{-- <button class="btn btn-outline-primary" wire:click="regenerateVirtualAccount">
                                         <i class="fas fa-refresh me-2"></i>Generate New Account
-                                    </button>
+                                    </button> --}}
                                     <button class="btn btn-outline-secondary" wire:click="resetForm">
                                         <i class="fas fa-arrow-left me-2"></i>Back to Payment Options
                                     </button>

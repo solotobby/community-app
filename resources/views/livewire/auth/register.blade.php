@@ -54,56 +54,42 @@
 
                 <div id="amountToPay" class="mb-3 text-center" style="display:none;">
                     <div class="alert alert-info py-2">
-                        <strong>Get-In Fee:</strong> ₦<span id="amountValue"></span>
+                        <strong>Access Fee:</strong> ₦<span id="amountValue"></span>
                     </div>
                 </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const levels = window.levels || [];
-                        const select = document.getElementById('levelSelect');
-                        const amountDiv = document.getElementById('amountToPay');
-                        const amountSpan = document.getElementById('amountValue');
+                <div x-data="{ show: false }" class="form-floating mb-4 position-relative">
+                    <input :type="show ? 'text' : 'password'" wire:model.defer="password" class="form-control"
+                        placeholder="Enter your password" id="password">
+                    <label for="password">Password</label>
 
-                        select.addEventListener('change', () => {
-                            const selectedId = select.value;
-                            if (!selectedId) {
-                                amountDiv.style.display = 'none';
-                                amountSpan.textContent = '';
-                                return;
-                            }
+                    <span @click="show = !show" class="position-absolute top-50 end-0 translate-middle-y me-3"
+                        style="cursor: pointer;">
+                        <i :class="show ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                    </span>
 
-                            const level = levels.find(lvl => lvl.id == selectedId);
-                            if (level && level.amount) {
-                                amountSpan.textContent = Number(level.amount).toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                });
-                                amountDiv.style.display = 'block';
-                            } else {
-                                amountDiv.style.display = 'none';
-                                amountSpan.textContent = '';
-                            }
-                        });
-                    });
-                </script>
+                    {{-- <small class="text-muted">
+                        Must be at least 6 characters and include uppercase, lowercase, and a number.
+                    </small> --}}
 
-
-
-                <div class="form-floating mb-4">
-                    <input wire:model.defer="password" type="password" class="form-control"
-                        placeholder="Enter your password">
-                    <label>Password</label>
                     @error('password')
                         <span class="text-danger fs-sm">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <div class="form-floating mb-4">
-                    <input wire:model.defer="password_confirmation" type="password" class="form-control"
-                        placeholder="Confirm password">
-                    <label>Confirm Password</label>
+
+
+                <div x-data="{ show: false }" class="form-floating mb-4 position-relative">
+                    <input :type="show ? 'text' : 'password'" wire:model.defer="password_confirmation"
+                        class="form-control" placeholder="Confirm password" id="password_confirmation">
+                    <label for="password_confirmation">Confirm Password</label>
+
+                    <span @click="show = !show" class="position-absolute top-50 end-0 translate-middle-y me-3"
+                        style="cursor: pointer;">
+                        <i :class="show ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                    </span>
                 </div>
+
 
                 <div class="form-floating mb-4">
                     <input wire:model.defer="referral_code" type="text" class="form-control"
@@ -114,25 +100,32 @@
                     @enderror
                 </div>
 
+
                 <div class="mb-4">
                     <div class="form-check">
-                        <input wire:model="agreeTerms" type="checkbox" class="form-check-input" id="signup-terms">
-                        <label class="form-check-label" for="signup-terms">I agree to Terms and Conditions</label>
+                        <input wire:model.live="agreeTerms" type="checkbox" class="form-check-input" id="signup-terms">
+
+                        <label class="form-check-label" for="signup-terms">
+                            I agree to Terms and Conditions
+                        </label>
                     </div>
+
                     @error('agreeTerms')
                         <span class="text-danger fs-sm">{{ $message }}</span>
                     @enderror
                 </div>
 
+                <!-- Continue button -->
                 <div class="mb-4">
-                    <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold" wire:loading.attr="disabled">
+                    <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold" wire:loading.attr="disabled"
+                        @disabled(!$agreeTerms)>
                         <span wire:loading.remove>Continue</span>
                         <span wire:loading>Processing...</span>
                     </button>
 
                     <div class="mt-4">
                         <a class="fs-sm fw-medium link-fx text-muted me-2 mb-1 d-inline-block" href="#"
-                            data-bs-toggle="modal" data-bs-target="#modal-terms">
+                            data-bs-toggle="modal" wire:click="openTermsModal">
                             Read Terms
                         </a>
                         <a class="fs-sm fw-medium link-fx text-muted me-2 mb-1 d-inline-block"
@@ -146,10 +139,75 @@
     </div>
 
     <!-- Modal Terms (unchanged) -->
-    @include('partials.modal-terms')
+    @if ($showTermsModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content theme-sensitive">
+                    <div class="block block-rounded block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title text-white">Terms & Conditions</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option text-white" wire:click="closeTermsModal"
+                                    aria-label="Close">
+                                    <i class="fa fa-fw fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="block-content fs-sm">
+                            <p>
+                                By using this platform, you agree to our terms and conditions. These include abiding by our
+                                rules,
+                                not engaging in prohibited activities, and respecting the privacy of others.
+                            </p>
+                            <p>
+                                You also consent to the collection and use of your information as outlined in our Privacy
+                                Policy.
+                                Please read these documents carefully before registering.
+                            </p>
+                            <p>
+                                This agreement may be updated from time to time. It is your responsibility to stay informed
+                                about changes.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal"
+                                wire:click="closeTermsModal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <script>
         window.levels = @json($levels->map(fn($lvl) => ['id' => $lvl->id, 'amount' => $lvl->registration_amount]));
-    </script>
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const levels = window.levels || [];
+            const select = document.getElementById('levelSelect');
+            const amountDiv = document.getElementById('amountToPay');
+            const amountSpan = document.getElementById('amountValue');
+
+            select.addEventListener('change', () => {
+                const selectedId = select.value;
+                if (!selectedId) {
+                    amountDiv.style.display = 'none';
+                    amountSpan.textContent = '';
+                    return;
+                }
+
+                const level = levels.find(lvl => lvl.id == selectedId);
+                if (level && level.amount) {
+                    amountSpan.textContent = Number(level.amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    amountDiv.style.display = 'block';
+                } else {
+                    amountDiv.style.display = 'none';
+                    amountSpan.textContent = '';
+                }
+            });
+        });
+    </script>
 
 </div>

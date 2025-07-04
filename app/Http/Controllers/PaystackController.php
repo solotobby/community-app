@@ -6,6 +6,7 @@ use App\Models\Contribution;
 use App\Models\Level;
 use App\Models\Reward;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -14,67 +15,74 @@ use Illuminate\Support\Facades\Log;
 
 class PaystackController extends Controller
 {
-    public function initialize(Request $request)
+    public function initializeFunding($email, $amount, $reference, $route, $metadata)
     {
-        $transaction = Transaction::where('reference', $request->reference)->firstOrFail();
-
-        $paystackResponse = Http::withToken(config('services.paystack.secret_key'))->post(
-            'https://api.paystack.co/transaction/initialize',
-            [
-                'email' => $transaction->user->email,
-                'amount' => $transaction->amount * 100,
-                'reference' => $transaction->reference,
-                'callback_url' => route('paystack.payment.callback'),
-            ]
-        );
-
-        Log::info('Paystack Init Response', [
-            'status' => $paystackResponse->status(),
-            'body' => $paystackResponse->json(),
-        ]);
-
-        $response = $paystackResponse->json();
-
-        if (!$response['status']) {
-            Log::error('Paystack error', [
-                'response' => $response,
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
+                'Content-Type' => 'application/json',
+            ])->post('https://api.paystack.co/transaction/initialize', [
+                'email' => $email,
+                'amount' => $amount * 100,
+                'reference' => $reference,
+                'callback_url' => $route,
+                'metadata' => $metadata
             ]);
-            return back()->with('error', 'Payment failed: ' . $response['message']);
+
+            Log::info('Paystack Init Response', [
+                'request' => [$email, $amount, $reference, $route, $metadata],
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+            if ($response->successful()) {
+                $data = $response->json();
+                return $data['data']['authorization_url'] ?? null;
+            }
+
+            Log::error('Paystack initialization failed', ['response' => $response->body()]);
+            return null;
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
+            return null;
         }
-
-
-        return redirect($response['data']['authorization_url']);
     }
 
     public function callback(Request $request)
     {
         $reference = $request->query('reference');
+
         $response = Http::withToken(config('services.paystack.secret_key'))
-            ->get("https://api.paystack.co/transaction/verify/{$reference}")
-            ->json();
+            ->get("https://api.paystack.co/transaction/verify/{$reference}");
+
+        $responseData = $response->json();
+
+        Log::info('Paystack Callback Response', [
+            'reference' => $reference,
+            'status' => $response->status(),
+            'body' => $responseData,
+        ]);
 
         $transaction = Transaction::where('reference', $reference)->firstOrFail();
 
-        if ($response['status'] && $response['data']['status'] === 'success') {
+        if ($responseData['status'] && $responseData['data']['status'] === 'success') {
             $transaction->update(['status' => 'success']);
 
             $user = $transaction->user;
+
+            // Increment raffle_draw_count directly
+            $user->increment('raffle_draw_count');
             $user->update([
                 'registration_draw' => true,
                 'has_subscribed' => true,
                 'can_raffle' => true,
-                'raffle_draw_count' => $user->raffle_draw_count + 1
             ]);
 
             $user->load('level', 'referrer');
 
             if ($user->referrer_id && $user->level) {
                 $referrer = $user->referrer;
-
                 $levelId = $user->level;
                 $level =  Level::find($levelId);
-
-                $bonus = $level->referral_bonus;
 
                 Reward::create([
                     'user_id' => $referrer->id,
@@ -82,17 +90,17 @@ class PaystackController extends Controller
                     'reward_type' => 'referral',
                     'reward_status' => 'pending',
                     'is_claim' => false,
-                    'amount' => $bonus,
+                    'amount' => $level->referral_bonus,
                     'currency' => 'NGN',
                     'status' => 'active',
                 ]);
 
+                $referrer->increment('raffle_draw_count');
                 $referrer->update([
                     'can_raffle' => true,
-                    'raffle_draw_count' => $referrer->raffle_draw_count + 1
-
                 ]);
             }
+
             Auth::login($user);
 
             return redirect()->route('home')->with('success', 'Payment successful. Welcome!');
@@ -102,11 +110,10 @@ class PaystackController extends Controller
         }
     }
 
+
     public function giftingCallback(Request $request)
     {
         $reference = $request->query('reference');
-
-
         $response = Http::withToken(config('services.paystack.secret_key'))
             ->get("https://api.paystack.co/transaction/verify/{$reference}")
             ->json();
@@ -133,8 +140,6 @@ class PaystackController extends Controller
             ->route('gift.public', ['slug' => $contribution->giftRequest->slug])
             ->with('error', 'Payment unsuccessful. Please try again.');
     }
-
-
     public function upgradeCallback(Request $request)
     {
         $reference = $request->query('reference');
@@ -276,7 +281,7 @@ class PaystackController extends Controller
         }
     }
 
-     public function handleWebhook(Request $request)
+    public function handleWebhook(Request $request)
     {
         $signature = $request->header('x-paystack-signature');
         $computedSignature = hash_hmac('sha512', $request->getContent(), config('services.paystack.webhook_secret'));
@@ -370,9 +375,11 @@ class PaystackController extends Controller
             foreach ($contributions as $pendingContribution) {
                 $virtualAccountDetails = $pendingContribution->virtual_account_details;
 
-                if (isset($virtualAccountDetails['account_number']) &&
+                if (
+                    isset($virtualAccountDetails['account_number']) &&
                     $virtualAccountDetails['account_number'] === $account_number &&
-                    abs($pendingContribution->amount - $amount) < 0.01) { // Allow small floating point differences
+                    abs($pendingContribution->amount - $amount) < 0.01
+                ) { // Allow small floating point differences
                     $contribution = $pendingContribution;
                     break;
                 }
