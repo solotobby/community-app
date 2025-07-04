@@ -69,7 +69,6 @@ class PaystackController extends Controller
 
             $user = $transaction->user;
 
-            // Increment raffle_draw_count directly
             $user->increment('raffle_draw_count');
             $user->update([
                 'registration_draw' => true,
@@ -147,6 +146,12 @@ class PaystackController extends Controller
             ->get("https://api.paystack.co/transaction/verify/{$reference}")
             ->json();
 
+
+             Log::info('Paystack Callback Response', [
+            'reference' => $reference,
+            'status' => $response['status'],
+            'body' => $response,
+        ]);
         $transaction = Transaction::where('reference', $reference)->firstOrFail();
 
         if ($response['status'] && $response['data']['status'] === 'success') {

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User;
 
+use App\Http\Controllers\PaystackController;
 use App\Models\Level;
 use App\Models\LevelItem;
 use App\Models\RaffleDraw;
@@ -107,11 +108,16 @@ class UserDashboard extends Component
 
         $currentUser = Auth::user();
 
-        $currentAmount = $currentUser->level->registration_amount ?? 0;
         $upgradeAmount = $this->selectedLevel->registration_amount;
 
         if ($upgradeAmount <= 0) {
             session()->flash('error', 'Invalid upgrade selection.');
+            return;
+        }
+
+        if ($currentUser->registration_draw) {
+            $this->closeUpgradeModal();
+            session()->flash('error', 'You have a pending claim from your current level.');
             return;
         }
 
@@ -136,7 +142,6 @@ class UserDashboard extends Component
         $paymentUrl = $this->initializePaystackPayment($transaction, $upgradeAmount);
 
         if ($paymentUrl) {
-            // Redirect to Paystack payment page
             return redirect()->away($paymentUrl);
         } else {
             session()->flash('error', 'Failed to initialize payment. Please try again.');
@@ -149,15 +154,12 @@ class UserDashboard extends Component
         try {
             $currentUser = Auth::user();
 
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
-                'Content-Type' => 'application/json',
-            ])->post('https://api.paystack.co/transaction/initialize', [
-                'email' => $currentUser->email,
-                'amount' => $amount * 100,
-                'reference' => $transaction->reference,
-                'callback_url' => route('user.paystack.upgrade.callback'),
-                'metadata' => [
+            return app(PaystackController::class)->initializeFunding(
+                $currentUser->email,
+                $amount,
+                $transaction->reference,
+                route('user.paystack.upgrade.callback'),
+                [
                     'user_id' => $currentUser->id,
                     'transaction_id' => $transaction->id,
                     'type' => 'level_upgrade',
@@ -175,14 +177,7 @@ class UserDashboard extends Component
                         ]
                     ]
                 ]
-            ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                return $data['data']['authorization_url'] ?? null;
-            }
-
-            return null;
+            );
         } catch (Exception $e) {
             Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
