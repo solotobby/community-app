@@ -184,7 +184,6 @@ class UserDashboard extends Component
         }
     }
 
-    // Original Draw Methods
     public function selectItem($itemId)
     {
         if (in_array($itemId, $this->selectedItems)) {

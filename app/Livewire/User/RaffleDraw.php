@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
+use Throwable;
 
 class RaffleDraw extends Component
 {
@@ -80,91 +81,82 @@ class RaffleDraw extends Component
     {
         $this->user = Auth::user();
         $this->bankInfo = $this->user->bankInfo;
-        $this->banks =  $this->fetchBanks();
+        if (!$this->bankInfo) {
+            $this->fetchBanks();
+        }
     }
 
-    /**
-     * Get banks with caching for better performance
-     */
     public function fetchBanks()
     {
-        try {
-            $response = Http::withToken(config('services.paystack.secret_key'))
-                ->get('https://api.paystack.co/bank');
-
-            if ($response->ok()) {
-                $this->banks = $response->json('data');
-                return $this->banks;
-            } else {
-                session()->flash('error', 'Unable to fetch banks from Paystack.');
-            }
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error fetching banks.');
-        }
+        $this->banks = app(PaystackController::class)->fetchBankList() ?? [];
     }
 
-    public function validateAccount()
+    public function updatedBankCode($value)
     {
-        if (strlen($this->account_number) === 10 && $this->bank_code) {
-            $this->resolveAccountName();
-        } else {
-            session()->flash('error', 'Please select a bank and enter a valid 10-digit account number.');
-        }
+
+        $selected = collect($this->banks)->firstWhere('code', $value);
+        $this->bank_name = $selected['name'] ?? '';
     }
 
-    public function resolveAccountName()
+    public function validateAccount(): void
     {
-        try {
-            $response = Http::withToken(config('services.paystack.secret_key'))
-                ->get('https://api.paystack.co/bank/resolve', [
-                    'account_number' => $this->account_number,
-                    'bank_code' => $this->bank_code,
-                ]);
 
-            if ($response->ok()) {
-                $this->account_name = $response['data']['account_name'] ?? '';
+        Log::info('response', [
+            'account_number' => $this->account_number,
+            'bank_code' => $this->bank_code
+        ]);
+
+        if (strlen($this->account_number) !== 10 || empty($this->bank_code)) {
+            session()->flash('error', 'Please select a bank and enter a valid 10‑digit account number.');
+            return;
+        }
+
+        try {
+            $result = app(PaystackController::class)->resolveAccount(
+                $this->account_number,
+                $this->bank_code
+            );
+
+            if ($result['status'] ?? false) {
+                $this->account_name = $result['data']['account_name'] ?? '';
                 session()->flash('success', 'Account name fetched successfully.');
             } else {
                 $this->account_name = '';
-                session()->flash('error', 'Unable to resolve account name.');
+                session()->flash('error', $result['message'] ?? 'Unable to resolve account name.');
             }
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             $this->account_name = '';
-            session()->flash('error', 'An error occurred while resolving account.');
+            Log::error('Account resolution error: ' . $e->getMessage());
+            session()->flash('error', 'An unexpected error occurred while resolving account.');
         }
     }
 
-    /**
-     * Open claim modal and check prerequisites
-     */
+
     public function openClaimModal($drawId)
     {
         $this->selectedDraw = Raffle::findOrFail($drawId);
 
         Log::info('response', [$this->selectedDraw]);
-        // Check if draw is still valid
+
         if (!$this->isDrawValid($this->selectedDraw)) {
             session()->flash('error', 'This reward has expired or is already claimed.');
             return;
         }
 
-        // Refresh user data
+
         $this->user = $this->user->fresh();
         $this->bankInfo = $this->user->bankInfo;
 
-        // First check: Address information
         if (!$this->hasContactInfo()) {
             $this->openContactModal();
             return;
         }
 
-        // Second check: Bank information
         if (!$this->bankInfo) {
             $this->showBankModal = true;
             return;
         }
 
-        // Third check: Transaction PIN
         if (!$this->user->transaction_pin) {
             $this->showSetPinModal = true;
             return;
@@ -173,25 +165,17 @@ class RaffleDraw extends Component
         $this->showClaimModal = true;
     }
 
-    /**
-     * Check if user has required contact information
-     */
+
     private function hasContactInfo(): bool
     {
         return !empty($this->user->phone) && !empty($this->user->address);
     }
 
-    /**
-     * Check if draw is valid for claiming
-     */
     private function isDrawValid(Raffle $draw): bool
     {
         return $draw->status === 'pending' && now()->lte($draw->expired_at);
     }
 
-    /**
-     * Contact Information Methods
-     */
     public function openContactModal()
     {
         $user = $this->user;
@@ -223,7 +207,7 @@ class RaffleDraw extends Component
         ]);
 
         try {
-            // Check if phone number changed to reset verification
+
             if ($this->user->phone != $this->phone) {
                 $this->user->update([
                     'phone_verified' => false,
@@ -243,7 +227,6 @@ class RaffleDraw extends Component
             $this->user = $this->user->fresh();
             $this->closeContactModal();
 
-            // Continue with the claim process - check next requirement
             if (!$this->bankInfo) {
                 $this->showBankModal = true;
             } elseif (!$this->user->transaction_pin) {
@@ -275,7 +258,7 @@ class RaffleDraw extends Component
 
         DB::beginTransaction();
         try {
-            // Get available rewards for user's level
+
             $levelItems = LevelItem::where('level_id', $this->user->level)->get();
             if ($levelItems->isEmpty()) {
                 session()->flash('error', 'No rewards configured for your level.');
@@ -315,9 +298,6 @@ class RaffleDraw extends Component
         }
     }
 
-    /**
-     * Save bank details with validation
-     */
     public function saveBankDetails()
     {
         if ($this->bank_code) {
@@ -345,7 +325,6 @@ class RaffleDraw extends Component
             $this->bankInfo = $this->user->fresh()->bankInfo;
             $this->closeBankModal();
 
-            // Check transaction PIN after saving bank details
             if (!$this->user->transaction_pin) {
                 $this->showSetPinModal = true;
             } else {
@@ -362,9 +341,7 @@ class RaffleDraw extends Component
         }
     }
 
-    /**
-     * Save transaction PIN
-     */
+
     public function saveTransactionPin()
     {
         $this->validate([
@@ -390,9 +367,7 @@ class RaffleDraw extends Component
         }
     }
 
-    /**
-     * Confirm claim with PIN verification
-     */
+
     public function confirmClaim()
     {
         try {
@@ -437,9 +412,6 @@ class RaffleDraw extends Component
         }
     }
 
-    /**
-     * Process payment with improved error handling
-     */
     private function processPayment($draw): bool
     {
         DB::beginTransaction();
@@ -506,16 +478,13 @@ class RaffleDraw extends Component
         }
     }
 
-    /**
-     * Reset claim process states
-     */
+
     private function resetClaimProcess()
     {
         $this->showClaimModal = false;
         $this->pin = '';
     }
 
-    // Modal management methods
     public function closeBankModal()
     {
         $this->showBankModal = false;
@@ -528,7 +497,6 @@ class RaffleDraw extends Component
         $this->resetPinFields();
     }
 
-    // Field reset methods
     private function resetBankFields()
     {
         $this->reset(['bank_name', 'account_name', 'account_number', 'bank_code']);
@@ -541,15 +509,10 @@ class RaffleDraw extends Component
         $this->resetErrorBag(['new_transaction_pin', 'new_transaction_pin_confirmation']);
     }
 
-    /**
-     * Render component with optimized queries
-     */
     public function render()
     {
-        // Bulk expire old draws
-        $this->expireOldDraws();
+        // $this->expireOldDraws();
 
-        // Get user's draws with optimized query
         $draws = Raffle::where('user_id', $this->user->id)
             ->latest()
             ->paginate(10);
@@ -560,9 +523,6 @@ class RaffleDraw extends Component
         ]);
     }
 
-    /**
-     * Expire old draws efficiently
-     */
     private function expireOldDraws()
     {
         Raffle::where('user_id', $this->user->id)

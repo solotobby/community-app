@@ -260,11 +260,11 @@
 
                             {{-- <span wire:loading.remove>Update Password</span> --}}
                             <button wire:click="confirmClaim" class="btn btn-success w-100 mt-3">
-                                Confirm & Claim Reward
-                                <span wire:loading>
-                                    <span class="spinner-border spinner-border-sm me-2"></span>
-                                    Processing...
-                                </span>
+                                 <span wire:loading.remove>Confirm & Claim Reward</span>
+                                    <span wire:loading>
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        Processing Payment...
+                                    </span>
                             </button>
                         </div>
                     </div>
@@ -335,20 +335,19 @@
                                 <button type="button" class="btn-close" wire:click="closeBankModal"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <small>Sorry, As we do not have a collection point in your area at the moment,
-                                        an equivalent amount of your winnings will be made into the account details you
-                                        submit below.</small>
-                                </div>
                                 <div class="mb-3">
-                                    <label for="bank" class="form-label">Select Bank</label>
-                                    <select id="bank" class="form-select" wire:model="bank_code">
-                                        <option value="">-- Choose Bank --</option>
-                                        @foreach ($banks as $bank)
-                                            <option value="{{ $bank['code'] }}">{{ $bank['name'] }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Bank Name <span class="text-danger">*</span></label>
+                                   <select class="form-select @error('bank_code') is-invalid @enderror"
+        wire:model="bank_code">
+    <option value="">-- Select Bank --</option>
+    @foreach ($banks as $bank)
+        <option value="{{ $bank['code'] }}">{{ $bank['name'] }}</option>
+    @endforeach
+</select>
+
+                                    @error('bank_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-3">
@@ -370,15 +369,19 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                               <div class="mb-3">
                                     <label class="form-label">Account Name</label>
+
                                     <input type="text"
                                         class="form-control @error('account_name') is-invalid @enderror"
-                                        wire:model="account_name" readonly
-                                        placeholder="Will be auto-filled after validation">
+                                        wire:model.live="account_name"
+                                        readonly
+                                        placeholder="Will be auto‑filled after validation">
+
                                     @error('account_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+
                                     @if ($account_name)
                                         <div class="form-text text-success">
                                             <i class="fas fa-check-circle me-1"></i>

@@ -420,15 +420,19 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                               <div class="mb-3">
                                     <label class="form-label">Account Name</label>
+
                                     <input type="text"
                                         class="form-control @error('account_name') is-invalid @enderror"
-                                        wire:model="account_name" readonly
-                                        placeholder="Will be auto-filled after validation">
+                                        wire:model="account_name"
+                                        readonly
+                                        placeholder="Will be auto‑filled after validation">
+
                                     @error('account_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+
                                     @if ($account_name)
                                         <div class="form-text text-success">
                                             <i class="fas fa-check-circle me-1"></i>
@@ -436,6 +440,7 @@
                                         </div>
                                     @endif
                                 </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
@@ -445,7 +450,7 @@
                                     <span wire:loading.remove>Save Bank Details</span>
                                     <span wire:loading>
                                         <span class="spinner-border spinner-border-sm me-2"></span>
-                                        Saving...
+                                        Processing...
                                     </span>
                                 </button>
                             </div>
@@ -534,7 +539,7 @@
                                 <button type="button" class="btn btn-secondary"
                                     wire:click="closeContactModal">Cancel</button>
                                 <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                                    <span wire:loading.remove">Save Contact Info</span>
+                                    <span wire:loading.remove>Save Contact Info</span>
                                     <span wire:loading>
                                         <span class="spinner-border spinner-border-sm me-2"></span>
                                         Saving...

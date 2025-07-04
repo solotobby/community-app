@@ -15,6 +15,25 @@ use Illuminate\Support\Facades\Log;
 
 class PaystackController extends Controller
 {
+
+    public function fetchBankList()
+    {
+        try {
+            $response = Http::withToken(config('services.paystack.secret_key'))
+                ->get('https://api.paystack.co/bank');
+
+            Log::info('Paystack bankList Response', [
+                'status' => $response->status(),
+                'body'   => $response->json(),
+            ]);
+           return $response->successful()
+            ? $response->json('data')
+            : null;
+        } catch (Exception $e) {
+            Log::error('Error fetching banks: ' . $e->getMessage());
+            return null;
+        }
+    }
     public function initializeFunding($email, $amount, $reference, $route, $metadata)
     {
         try {
@@ -109,7 +128,6 @@ class PaystackController extends Controller
         }
     }
 
-
     public function giftingCallback(Request $request)
     {
         $reference = $request->query('reference');
@@ -147,7 +165,7 @@ class PaystackController extends Controller
             ->json();
 
 
-             Log::info('Paystack Callback Response', [
+        Log::info('Paystack Callback Response', [
             'reference' => $reference,
             'status' => $response['status'],
             'body' => $response,
@@ -205,29 +223,32 @@ class PaystackController extends Controller
         }
     }
 
-    public function resolveAccount($account_number, $bank_code)
-    {
-        $paystackSecretKey = config('services.paystack.secret_key');
+  public function resolveAccount(string $account_number, string $bank_code): array
+{
+    $paystackSecretKey = config('services.paystack.secret_key');
 
-        $response = Http::withToken($paystackSecretKey)
-            ->get('https://api.paystack.co/bank/resolve', [
-                'account_number' => $account_number,
-                'bank_code' => $bank_code,
-            ]);
+    $response = Http::withToken($paystackSecretKey)->get(
+        'https://api.paystack.co/bank/resolve',
+        [
+            'account_number' => $account_number,
+            'bank_code'      => $bank_code,
+        ]
+    );
 
-        if ($response->successful() && $response->json('status')) {
-            return [
-                'status' => true,
-                'recipient_code' => $response->json('data.recipient_code'),
-                'data' => $response->json('data'),
-            ];
-        }
-
+    if ($response->successful() && $response->json('status')) {
         return [
-            'status' => false,
-            'message' => $response->json('message') ?? 'Recipient creation failed',
+            'status'         => true,
+            'recipient_code' => $response->json('data.recipient_code'),
+            'data'           => $response->json('data'),
         ];
     }
+
+    return [
+        'status'  => false,
+        'message' => $response->json('message') ?? 'Account resolution failed',
+    ];
+}
+
 
     public function createRecipient($name, $account_number, $bank_code, $currency)
     {
