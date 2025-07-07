@@ -44,6 +44,7 @@ class LevelItemsManager extends Component
             $this->reset(['itemname', 'price', 'image']);
             $this->loadItems();
             $this->closeModal();
+            return;
         }
         $this->reset(['itemname', 'price']);
         $this->showModal = true;
