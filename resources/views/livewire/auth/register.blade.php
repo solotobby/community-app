@@ -89,6 +89,22 @@
                         <i :class="show ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
                     </span>
                 </div>
+                <div class="form-floating mb-4">
+                    <select wire:model.defer="hear_us" class="form-control" id="hear_us">
+                        <option value="" selected disabled>-- Select an option --</option>
+                        <option value="social_media">Social Media (Instagram, Twitter, etc.)</option>
+                        <option value="friend_family">Friend or Family</option>
+                        <option value="online_search">Online Search (Google, etc.)</option>
+                        <option value="advertisement">Advertisement</option>
+                        <option value="blog_article">Blog or Article</option>
+                        <option value="event">Event or Seminar</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <label for="hear_us">How did you hear about us?</label>
+                    @error('hear_us')
+                        <span class="text-danger fs-sm">{{ $message }}</span>
+                    @enderror
+                </div>
 
 
                 <div class="form-floating mb-4">

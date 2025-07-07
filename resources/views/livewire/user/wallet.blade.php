@@ -18,7 +18,7 @@
     <!-- Wallet Stats Section -->
     <div class="container-fluid p-0 m-0 mb-4">
         <div class="row">
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-primary text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
@@ -34,39 +34,39 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-success text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title mb-0">Completed</h6>
-                                <h4 class="mb-0">{{ $completedTransactions }}</h4>
+                                <h6 class="card-title mb-0">Withdrawable Balance</h6>
+                                <h4 class="mb-0">#{{ $completedTransactions }}</h4>
                             </div>
                             <div class="align-self-center">
-                                <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                                <i class="fas fa-wallet fa-2x opacity-75"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-warning text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title mb-0">Pending</h6>
-                                <h4 class="mb-0">{{ $pendingTransactions }}</h4>
+                                <h6 class="card-title mb-0">Processing Balance</h6>
+                                <h4 class="mb-0">#{{ $pendingTransactions }}</h4>
                             </div>
                             <div class="align-self-center">
-                                <i class="fas fa-clock fa-2x opacity-75"></i>
+                                <i class="fas fa-wallet fa-2x opacity-75"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-info text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">

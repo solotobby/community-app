@@ -26,6 +26,9 @@
                         <a href="{{ route('homepage') }}" class="btn btn-primary">
                             <i class="fas fa-home me-2"></i>Go to Homepage
                         </a>
+                         <a href="{{ route('register') }}" class="btn btn-primary">
+                            <i class="fas fa-add me-2"></i>Raise Money Now
+                        </a>
                     </div>
                 </div>
             </div>
@@ -331,7 +334,7 @@
                                                     @if ($payment_method === 'bank_transfer')
                                                         Generate Transfer Details
                                                     @else
-                                                        Gift Now
+                                                        Continue to Make Payment
                                                     @endif
                                                 </span>
 

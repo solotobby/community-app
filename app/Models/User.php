@@ -43,6 +43,7 @@ class User extends Authenticatable
         'registration_draw',
         'recipient_code',
         'free_user',
+        'hear_us',
         'welcome_modal',
     ];
 

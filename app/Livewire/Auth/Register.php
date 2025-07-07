@@ -27,6 +27,7 @@ class Register extends Component
     public string $password = '';
     public string $password_confirmation = '';
     public string $level = '';
+    public string $hear_us = '';
 
     public $showTermsModal = false;
     /** @var \Illuminate\Database\Eloquent\Collection */
@@ -38,6 +39,7 @@ class Register extends Component
     {
         $this->levels = Level::orderBy('registration_amount')->get();
         $this->referral_code = request()->query('ref', '');
+
     }
 
     public function updatedLevel($value)
@@ -72,6 +74,7 @@ class Register extends Component
             'name' => ['required', 'string', 'max:255'],
             'level' => ['required', 'integer', 'exists:levels,id'],
             'referral_code' => ['nullable', 'string'],
+            'hear_us' => ['nullable', 'string'],
             'agreeTerms' => ['accepted'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
@@ -104,6 +107,7 @@ class Register extends Component
                 'name' => $validated['name'],
                 'password' => $validated['password'],
                 'level' => $validated['level'],
+                'hear_us' => $validated['hear_us'],
             ]);
         } else {
             // New user
@@ -112,6 +116,7 @@ class Register extends Component
                 'email' => $validated['email'],
                 'password' => $validated['password'],
                 'level' => $validated['level'],
+                'hear_us' => $validated['hear_us'],
                 'referrer_id' => $referrerId,
             ]);
 
