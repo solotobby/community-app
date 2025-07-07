@@ -125,8 +125,8 @@ class UserDashboard extends Component
         $transaction = Transaction::create([
             'user_id' => $currentUser->id,
             'level_id' => $this->selectedLevel->id,
-            'transaction_type' => 'debit',
-            'transaction_reason' => 'level_upgrade',
+            'transaction_type' => 'level_upgrade',
+            'transaction_reason' => 'Level Upgrade',
             'amount' => $upgradeAmount,
             'status' => 'pending',
             'reference' => 'TXN_' . Str::upper(Str::random(15)),

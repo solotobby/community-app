@@ -62,6 +62,7 @@
                 </div>
             </div>
 
+            @if(auth()->user()->hasRole('super_admin'))
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card border-0 bg-warning text-white">
                     <div class="card-body">
@@ -77,6 +78,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 

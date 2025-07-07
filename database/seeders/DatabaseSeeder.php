@@ -20,13 +20,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
 
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt(env('ADMIN_PASSWORD'))
-        ]);
-
-        $role = Role::where('name', 'user')->first();
-        $user->assignRole($role->id);
+    
     }
 }

@@ -15,16 +15,34 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = [
-            ['id' => 1, 'name'=>'Oluwatobi Solomon', 'email' => 'solotob3@gmail.com',  'password' => bcrypt(env('ADMIN_PASSWORD'))],
-            ['id' => 2, 'name'=>'Samuel Farohunbi', 'email' => 'samuelfa@gmail.com', 'password' => bcrypt(env('ADMIN_PASSWORD'))],
-            ['id' => 3, 'name'=>'Victor', 'email' => 'vic@gmail.com', 'password' => bcrypt(env('ADMIN_PASSWORD'))],
+            ['name' => 'Oluwatobi Solomon', 'email' => 'solotob3@gmail.com'],
+            ['name' => 'Samuel Farohunbi',  'email' => 'samuelfa@gmail.com'],
+            ['name' => 'Victor',            'email' => 'vic@gmail.com'],
         ];
 
-        $role = Role::where('name', 'admin')->first();
+        $adminRole = Role::where('name', 'admin')->first();
+        $password  = bcrypt(env('ADMIN_PASSWORD'));
 
-        foreach($users as $user){
-            $regUser = User::create($user);
-            $regUser->assignRole($role->id);
+        foreach ($users as $u) {
+            $regUser = User::firstOrCreate(
+                ['email' => $u['email']],
+                [
+                    'name'  => $u['name'],
+                    'password' => $password
+                ]
+            );
+            $regUser->assignRole($adminRole->id);
         }
+
+        $superUser = User::firstOrCreate(
+            ['email' => 'super@gmail.com'],
+            [
+                'name'  => 'Super Admin',
+                'password' => $password
+            ]
+        );
+
+        $superRole = Role::where('name', 'super_admin')->first();
+        $superUser->assignRole($superRole->id);
     }
 }
