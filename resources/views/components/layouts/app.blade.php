@@ -827,7 +827,7 @@
                     </div>
                     <!-- END Side User -->
 
-                    @if (auth()->user()->hasRole('admin'))
+                    @if (auth()->user()->hasAnyRole(['admin','super_admin']))
                         @include('layouts.sidebars.admin')
                     @elseif(auth()->user()->hasRole('user') && auth()->user()->free_user)
                         @include('layouts.sidebars.free')

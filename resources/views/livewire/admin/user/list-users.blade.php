@@ -7,22 +7,41 @@
     <div class="block block-rounded">
         <div class="block-header block-header-default">
             <h3 class="block-title">Users</h3>
+
+            <!-- Per‑page selector -->
+                <div class="d-flex align-items-center">
+                    <label class="me-2 mb-0 small text-muted">Per Page:</label>
+                    <select wire:model.live="perPage" class="form-select form-select-sm w-auto">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
         </div>
 
         <div class="block-content">
 
             <!-- Search -->
             <div class="block pull-t pull-x">
-                <div class="block-content block-content-full block-content-sm bg-body-light">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search users by name or email...">
-                        <button type="submit" wire:model.debounce.500ms="search" class="btn btn-secondary">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <div class="block-content block-content-full block-content-sm bg-body-light">
+        <div class="input-group">
+            <!-- Livewire search binding -->
+            <input type="text"
+                   wire:model.debounce.500ms="search"
+                   class="form-control"
+                   placeholder="Search users by name or email..." />
+
+            <!-- Optional icon button; no submit -->
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
             <!-- END Search -->
+
 
             <table class="table table-borderless table-vcenter">
                 <thead>
@@ -62,9 +81,14 @@
                 </tbody>
             </table>
 
-            <div class="mt-3">
-                {{ $users->links() }}
-            </div>
+             @if ($users->hasPages())
+                <div class="mt-3 d-flex justify-content-between align-items-center px-3">
+                    <small class="text-muted">
+                        Page {{ $users->currentPage() }} of {{ $users->lastPage() }}
+                    </small>
+                    {{ $users->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@ class HomeController extends Controller
 
         $user = Auth::user();
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasAnyRole('admin','super_admin')) {
             return redirect()->route('admin');
         }
 

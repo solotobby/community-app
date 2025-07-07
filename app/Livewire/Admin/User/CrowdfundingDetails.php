@@ -199,8 +199,11 @@ class CrowdfundingDetails extends Component
         session()->flash('message', 'Link copied to clipboard!');
     }
 
+   
+
     public function render()
     {
+        $this->expireGift();
         return view('livewire.admin.user.crowdfunding-details', [
             'gift' => $this->gift,
             'contributions' => $this->gift->completedContributions()->latest()->take(10)->get(),

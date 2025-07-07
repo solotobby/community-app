@@ -12,7 +12,7 @@ class ListTransactions extends Component
     use WithPagination;
 
     public $search   = '';
-    public $perPage  = 10;          // NEW
+    public $perPage  = 10;    
     protected $paginationTheme = 'bootstrap';
 
     /** Persist query in URL */

@@ -261,11 +261,11 @@
                                                 </div>
                                                 <div>
                                                     <div class="fw-bold">
-                                                        {{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_name }}
+                                                        {{ $contribution->contributor_name }}
                                                     </div>
 
                                                     <small
-                                                        class="text-muted">{{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_email }}</small>
+                                                        class="text-muted">{{ $contribution->contributor_email }}</small>
                                                 </div>
                                             </div>
                                         </td>
@@ -274,7 +274,7 @@
                                                 class="badge bg-success">₦{{ number_format($contribution->amount, 2) }}</span>
                                         </td>
                                         <td>{{ $contribution->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $contribution->message ?: '-' }}</td>
+                                        <td>{{ $contribution->is_anonymous ? 'Anonymous' : '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

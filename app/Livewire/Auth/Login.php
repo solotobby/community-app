@@ -47,7 +47,10 @@ class Login extends Component
         }
 
         // If user is already subscribed or free
-        if ($user->hasRole('admin') || $user->has_subscribed || $user->free_user) {
+        if (
+            $user->hasAnyRole('admin','super_admin')
+            || $user->has_subscribed || $user->free_user
+        ) {
             RateLimiter::clear($this->throttleKey());
             Session::regenerate();
 
@@ -56,7 +59,7 @@ class Login extends Component
             return;
         }
 
-        // Not subscribed yet — initiate payment
+
         $level = Level::find($user->level);
         $transaction = Transaction::create([
             'reference' => 'TXN_' . Str::upper(Str::random(15)),

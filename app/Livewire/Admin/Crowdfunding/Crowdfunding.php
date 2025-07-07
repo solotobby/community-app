@@ -26,8 +26,14 @@ class Crowdfunding extends Component
         'sortDirection' => ['except' => 'desc'],
     ];
 
-    public function updatingSearch() { $this->resetPage(); }
-    public function updatingStatusFilter() { $this->resetPage(); }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingStatusFilter()
+    {
+        $this->resetPage();
+    }
 
     public function sortBy($field)
     {
@@ -68,14 +74,25 @@ class Crowdfunding extends Component
         session()->flash('message', "Gift Status Updated successfully.");
     }
 
+    public function expireGift()
+    {
+        GiftRequest::where('status', 'active')
+            ->where('deadline', '<', now())
+            ->update([
+                'status'    => 'expired',
+                'is_public' => false,
+            ]);
+    }
+
     public function render()
     {
+        $this->expireGift();
         $query = GiftRequest::with(['user', 'completedContributions']);
 
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('description', 'like', '%' . $this->search . '%');
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
             });
         }
 

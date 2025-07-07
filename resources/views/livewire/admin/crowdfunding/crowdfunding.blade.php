@@ -1,12 +1,14 @@
 <div class="content">
     @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success">
             {{ session('message') }}
         </div>
     @endif
 
     @if (session()->has('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
@@ -62,22 +64,22 @@
                 </div>
             </div>
 
-            @if(auth()->user()->hasRole('super_admin'))
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="card border-0 bg-warning text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6 class="card-title mb-0">Total Raised</h6>
-                                <h4 class="mb-0">₦{{ number_format($stats['total_raised'], 2) }}</h4>
-                            </div>
-                            <div class="align-self-center">
-                                <i class="fas fa-money-bill-wave fa-2x opacity-75"></i>
+            @if(auth()->user()->hasAnyRole('super_admin'))
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card border-0 bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="card-title mb-0">Total Raised</h6>
+                                    <h4 class="mb-0">₦{{ number_format($stats['total_raised'], 2) }}</h4>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-money-bill-wave fa-2x opacity-75"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @endif
         </div>
     </div>
@@ -173,12 +175,11 @@
                                     <div class="d-flex justify-content-between mb-1">
                                         <small
                                             class="text-success fw-bold">₦{{ number_format($gift->current_amount, 2) }}</small>
-                                        <small
-                                            class="text-muted">₦{{ number_format($gift->target_amount, 2) }}</small>
+                                        <small class="text-muted">₦{{ number_format($gift->target_amount, 2) }}</small>
                                     </div>
                                     <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar bg-success"
-                                            style="width: {{ $gift->progress_percentage }}%"></div>
+                                        <div class="progress-bar bg-success" style="width: {{ $gift->progress_percentage }}%">
+                                        </div>
                                     </div>
                                     <div class="d-flex justify-content-between mt-1">
                                         <small class="text-muted">{{ round($gift->progress_percentage) }}%
@@ -208,32 +209,30 @@
                                 <div class="mt-auto">
                                     <div class="row row-cols-2 g-2">
                                         <div class="col">
-                                            <a href="{{ $gift->getPublicUrl() }}"
-                                                class="btn btn-primary btn-sm w-100">
+                                            <a href="{{ $gift->getPublicUrl() }}" class="btn btn-primary btn-sm w-100">
                                                 <i class="fas fa-eye me-1"></i> Preview
                                             </a>
                                         </div>
-                                        <div class="col">
-                                             <button
-                                        class="btn btn-{{ $gift->is_public === true ? 'warning' : 'success' }} w-100"
-                                        wire:click="toggleStatus">
-                                        <i class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }} me-1"></i>
-                                        {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
-                                    </button>
-                                        </div>
+                                        {{-- <div class="col">
+                                            <button
+                                                class="btn btn-{{ $gift->is_public === true ? 'warning' : 'success' }} w-100"
+                                                wire:click="toggleStatus">
+                                                <i class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }} me-1"></i>
+                                                {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
+                                            </button>
+                                        </div> --}}
                                         <div class="col">
                                             <button class="btn btn-primary btn-sm w-100"
                                                 onclick="window.location='{{ route('admin.users.crowdfunding.detail', $gift->id) }}'">
                                                 <i class="fas fa-edit me-1"></i> Gift Details
                                             </button>
                                         </div>
-                                        <div class="col">
+                                        {{-- <div class="col">
                                             <button class="btn btn-info btn-sm w-100"
-                                                onclick="copyToClipboard('{{ $gift->getPublicUrl() }}')"
-                                                title="Copy Link">
+                                                onclick="copyToClipboard('{{ $gift->getPublicUrl() }}')" title="Copy Link">
                                                 <i class="fas fa-share me-1"></i> Share
                                             </button>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -261,9 +260,9 @@
                     <h5 class="text-muted mb-3">No gifts found</h5>
                     <p class="text-muted">
                         {{-- @if ($showMyGifts)
-                            You haven't created any gifts yet.
+                        You haven't created any gifts yet.
                         @else
-                            No gifts match your current filters.
+                        No gifts match your current filters.
                         @endif --}}
                     </p>
 
@@ -284,7 +283,7 @@
 
     <script>
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
+            navigator.clipboard.writeText(text).then(function () {
                 alert('Link copied to clipboard!');
             });
         }
@@ -306,4 +305,3 @@
     </style>
 
 </div>
-

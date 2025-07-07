@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware([
     'auth',
-    'role:admin'
+    'role:admin|super_admin'
 ])->prefix(
     'admin'
 )->group(function () {
