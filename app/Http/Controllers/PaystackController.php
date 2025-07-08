@@ -86,7 +86,6 @@ class PaystackController extends Controller
         if ($responseData['status'] && $responseData['data']['status'] === 'success') {
             $transaction->update(['status' => 'success']);
 
-
             $user = $transaction->user;
 
             $user->increment('raffle_draw_count');
@@ -103,15 +102,7 @@ class PaystackController extends Controller
 
             $entryGift = $level->entry_gift ?? 0;
             $referralBonus = $level->referral_bonus ?? 0;
-
-            $amount = $level->registration_amount - ($entryGift + $referralBonus);
-
-            if ($amount > 0) {
-                app(AdminController::class)->fundAdminWallet(
-                    $amount,
-                    'User Subscription for: ' . $level->name
-                );
-            }
+            $amount = $level->registration_amount - ($entryGift);
 
             if ($user->referrer_id && $user->level) {
                 $referrer = $user->referrer;
@@ -131,6 +122,15 @@ class PaystackController extends Controller
                 $referrer->update([
                     'can_raffle' => true,
                 ]);
+
+                $amount = $level->registration_amount - ($entryGift + $referralBonus);
+            }
+
+            if ($amount > 0) {
+                app(AdminController::class)->fundAdminWallet(
+                    $amount,
+                    'User Subscription for: ' . $level->name
+                );
             }
 
             Auth::login($user);
@@ -195,12 +195,12 @@ class PaystackController extends Controller
                 'registration_draw' => true,
                 'has_subscribed' => true,
                 'can_raffle' => true,
+                'free_user' => false,
                 'level' => $metadata->to_level_id,
                 'raffle_draw_count' => $user->raffle_draw_count + 1
             ]);
 
-
-            $user->load('level', 'referrer');
+            $user->load('level');
 
             $levelId = $user->level;
             $level =  Level::find($levelId);
@@ -208,7 +208,7 @@ class PaystackController extends Controller
             $entryGift = $level->entry_gift ?? 0;
             $referralBonus = $level->referral_bonus ?? 0;
 
-            $amount = $level->registration_amount - ($entryGift + $referralBonus);
+            $amount = $level->registration_amount - ($entryGift);
 
             if ($amount > 0) {
                 app(AdminController::class)->fundAdminWallet(
@@ -217,32 +217,7 @@ class PaystackController extends Controller
                 );
             }
 
-            // if ($user->referrer_id && $user->level) {
-            //     $referrer = $user->referrer;
-
-            //     $levelId = $user->level;
-            //     $level =  Level::find($levelId);
-
-            //     $bonus = $level->referral_bonus;
-
-            //     Reward::create([
-            //         'user_id' => $referrer->id,
-            //         'referrer_id' => $user->id,
-            //         'reward_type' => 'referral',
-            //         'reward_status' => 'pending',
-            //         'is_claim' => false,
-            //         'amount' => $bonus,
-            //         'currency' => 'NGN',
-            //         'status' => 'active',
-            //     ]);
-
-            //     $referrer->update([
-            //         'can_raffle' => true,
-            //         'raffle_draw_count' => $referrer->raffle_draw_count + 1
-
-            //     ]);
-            // }
-            Auth::login($user);
+            $user->refresh();
 
             return redirect()->route('home')->with('success', 'Payment successful. Welcome!');
         } else {
