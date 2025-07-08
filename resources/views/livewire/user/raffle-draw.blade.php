@@ -18,16 +18,6 @@
                 </div>
             @endif
 
-            {{-- Raffle Draw Button --}}
-            {{-- <div class="mb-4">
-            <button wire:click="performDraw"
-                class="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded {{ $user->raffle_draw_count < 1 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                {{ $user->raffle_draw_count < 1 ? 'disabled' : '' }}>
-                Play Raffle Draw
-            </button>
-            <p class="text-sm text-gray-600 mt-1">You have {{ $user->raffle_draw_count }} raffle draw(s) left</p>
-        </div> --}}
-
             <div class="container-fluid p-0 m-0">
                 <div class="card border-0">
                     <div class="card-header bg-grey d-flex justify-content-between align-items-center">
@@ -260,11 +250,11 @@
 
                             {{-- <span wire:loading.remove>Update Password</span> --}}
                             <button wire:click="confirmClaim" class="btn btn-success w-100 mt-3">
-                                Confirm & Claim Reward
-                                <span wire:loading>
-                                    <span class="spinner-border spinner-border-sm me-2"></span>
-                                    Processing...
-                                </span>
+                                 <span wire:loading.remove>Confirm & Claim Reward</span>
+                                    <span wire:loading>
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        Processing Payment...
+                                    </span>
                             </button>
                         </div>
                     </div>
@@ -335,20 +325,19 @@
                                 <button type="button" class="btn-close" wire:click="closeBankModal"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <small>Sorry, As we do not have a collection point in your area at the moment,
-                                        an equivalent amount of your winnings will be made into the account details you
-                                        submit below.</small>
-                                </div>
                                 <div class="mb-3">
-                                    <label for="bank" class="form-label">Select Bank</label>
-                                    <select id="bank" class="form-select" wire:model="bank_code">
-                                        <option value="">-- Choose Bank --</option>
+                                    <label class="form-label">Bank Name <span class="text-danger">*</span></label>
+                                   <select class="form-select @error('bank_code') is-invalid @enderror"
+                                            wire:model="bank_code">
+                                        <option value="">-- Select Bank --</option>
                                         @foreach ($banks as $bank)
                                             <option value="{{ $bank['code'] }}">{{ $bank['name'] }}</option>
                                         @endforeach
                                     </select>
+
+                                    @error('bank_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-3">
@@ -370,23 +359,30 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Account Name</label>
-                                    <input type="text"
+                               <div class="mb-3">
+                                
+                                   @error('account_name')
+                                   <div class="invalid-feedback">{{ $message }}</div>
+                                   @enderror
+
+                                   @if ($account_name)
+                                   <label class="form-label">Account Name</label>
+                                    <input
+                                        type="text"
                                         class="form-control @error('account_name') is-invalid @enderror"
-                                        wire:model="account_name" readonly
-                                        placeholder="Will be auto-filled after validation">
-                                    @error('account_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    @if ($account_name)
-                                        <div class="form-text text-success">
+                                        wire:model.live="account_name"
+                                        readonly
+                                        placeholder="Will be auto‑filled after validation"
+                                    >
+                                        <div class="form-text text-success d-flex align-items-center mt-1">
                                             <i class="fas fa-check-circle me-1"></i>
-                                            Account validated successfully
+                                            <span>Account validated successfully</span>
+                                            {{-- @dump($account_name) --}}
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+
+                            {{-- </div> --}}
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     wire:click="closeBankModal">Cancel</button>
@@ -405,45 +401,5 @@
             </div>
         @endif
     </div>
-
-      <style>
-    .theme-sensitive {
-        background-color: #ffffff;
-        color: #212529;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .theme-sensitive {
-            background-color: #1e1e1e !important;
-            color: #f1f1f1 !important;
-        }
-
-        .theme-sensitive .form-control {
-            background-color: #2b2b2b;
-            color: #f1f1f1;
-            border-color: #444;
-        }
-
-        .theme-sensitive .form-control::placeholder {
-            color: #aaa;
-        }
-
-        .theme-sensitive .modal-header {
-            border-bottom-color: #333;
-        }
-
-        .theme-sensitive .modal-footer {
-            border-top-color: #333;
-        }
-
-        .theme-sensitive .btn-close {
-            filter: invert(1);
-        }
-
-        .theme-sensitive .invalid-feedback {
-            color: #ff8888;
-        }
-    }
-</style>
 
 </div>

@@ -11,12 +11,24 @@
         </li>
 
         <!-- Wallet -->
-        <li class="nav-main-item">
-            <a class="nav-main-link {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
-               href="{{ route('user.wallet') }}">
+       <li class="nav-main-item">
+            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
+                data-toggle="submenu" href="{{ route('user.wallet') }}">
                 <i class="nav-main-link-icon fa fa-wallet"></i>
                 <span class="nav-main-link-name">My Wallet</span>
             </a>
+            <ul class="nav-main-submenu">
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.wallet') }}">
+                        View Wallet
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.wallet.withdrawal') }}">
+                        Withdrawal
+                    </a>
+                </li>
+            </ul>
         </li>
 
         <!-- Crowdfunding -->

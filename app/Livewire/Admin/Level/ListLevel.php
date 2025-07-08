@@ -24,6 +24,7 @@ class ListLevel extends Component
     public function editLevel($id)
     {
         $level = Level::findOrFail($id);
+
         $this->edit = [
             'id' => $level->id,
             'name' => $level->name,
@@ -32,6 +33,14 @@ class ListLevel extends Component
             'referral_bonus' => $level->registration_amount == 0 ? 0 : ($level->referral_bonus / $level->registration_amount) * 100,
             'currency' => $level->currency,
         ];
+
+        // Dispatch event to show modal
+        $this->dispatch('show-edit-modal');
+    }
+
+    public function resetEditData()
+    {
+        $this->reset('edit');
     }
 
     public function updateLevel()

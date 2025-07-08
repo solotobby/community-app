@@ -82,14 +82,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-info-circle me-1"></i>How it Works
-                        </a>
-                    </li> --}}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('register') }}">
-                            <i class="fas fa-user-plus me-1"></i>Create Your Link
+                            <i class="fas fa-user-plus me-1"></i>Raise Money
                         </a>
                     </li>
                 </ul>

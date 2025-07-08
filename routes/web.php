@@ -24,6 +24,7 @@ use App\Livewire\Public\Gifting;
 use App\Livewire\User\CreateGift;
 use App\Livewire\User\GiftDetail;
 use App\Livewire\User\GiftIndex;
+use App\Livewire\User\MakeWithdrawal;
 use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
@@ -49,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware([
     'auth',
-    'role:admin'
+    'role:admin|super_admin'
 ])->prefix(
     'admin'
 )->group(function () {
@@ -95,6 +96,7 @@ Route::middleware([
     Route::get('gift/draw', RaffleDraw::class)->name('raffle.draw');
     Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
     Route::get('wallet', Wallet::class)->name('wallet');
+    Route::get('wallet/request-withdrawal', MakeWithdrawal::class)->name('wallet.withdrawal');
     Route::get('crowdfund/gifts', GiftIndex::class)->name('gift.index');
     Route::get('crowdfund/gift-details/{giftId}', GiftDetail::class)->name('gift.detail');
     Route::get('crowdfund/request-gift', CreateGift::class)->name('gift.create-gift');

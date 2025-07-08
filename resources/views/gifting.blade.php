@@ -21,10 +21,13 @@
                         <h2 class="h3 mb-3">Crowdfunding Not Available</h2>
                         <p class="text-muted mb-4">
                             This crowdfunding campaign cannot be found or has been cancelled by the owner.
-                            The campaign may have been removed, made private, or the link may be incorrect.
+                            The funding may have expired, made private, or the link may be incorrect.
                         </p>
                         <a href="{{ route('homepage') }}" class="btn btn-primary">
                             <i class="fas fa-home me-2"></i>Go to Homepage
+                        </a>
+                         <a href="{{ route('register') }}" class="btn btn-primary">
+                            <i class="fas fa-add me-2"></i>Raise Money Now
                         </a>
                     </div>
                 </div>
@@ -331,7 +334,7 @@
                                                     @if ($payment_method === 'bank_transfer')
                                                         Generate Transfer Details
                                                     @else
-                                                        Gift Now
+                                                        Continue to Make Payment
                                                     @endif
                                                 </span>
 
@@ -470,9 +473,9 @@
                                     <button class="btn btn-success btn-lg" wire:click="verifyBankTransfer">
                                         <i class="fas fa-check me-2"></i>I've Completed the Transfer
                                     </button>
-                                    <button class="btn btn-outline-primary" wire:click="regenerateVirtualAccount">
+                                    {{-- <button class="btn btn-outline-primary" wire:click="regenerateVirtualAccount">
                                         <i class="fas fa-refresh me-2"></i>Generate New Account
-                                    </button>
+                                    </button> --}}
                                     <button class="btn btn-outline-secondary" wire:click="resetForm">
                                         <i class="fas fa-arrow-left me-2"></i>Back to Payment Options
                                     </button>

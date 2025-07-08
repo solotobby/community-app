@@ -69,6 +69,309 @@
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
     <script src="assets/js/setTheme.js"></script>
+     <style>
+        .theme-sensitive {
+            background-color: #ffffff;
+            color: #212529;
+        }
+
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e9ecef;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+        }
+
+        code {
+            font-size: 0.9rem;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .level-card {
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .level-card.border-primary {
+            border-width: 2px;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Celebration Ribbon Styles */
+        .celebration-ribbon-overlay {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .ribbon-container {
+            position: relative;
+            width: 100%;
+            height: 100px;
+        }
+
+        .ribbon {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #f0932b);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            opacity: 0.9;
+        }
+
+        .ribbon-left {
+            transform: rotate(-3deg);
+            transform-origin: center;
+        }
+
+        .ribbon-right {
+            transform: rotate(3deg);
+            transform-origin: center;
+            animation-delay: 0.5s;
+        }
+
+        .ribbon::before {
+            content: '🎉 CONGRATULATIONS! 🎉';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Confetti Animation */
+        .confetti-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confettiFall 3s infinite linear;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #4ecdc4;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #f9ca24;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #45b7d1;
+        }
+
+        .confetti:nth-child(5n) {
+            background: #f0932b;
+        }
+
+        /* Modal Animations */
+        .modal.show {
+            animation: modalSlideIn 0.5s ease-out;
+        }
+
+        .winner-item {
+            animation: bounceIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        .claim-button {
+            animation: pulse 2s infinite;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            border: none;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .claim-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Keyframe Animations */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ribbon::before {
+                font-size: 1rem;
+            }
+
+            .modal-dialog {
+                margin: 1rem;
+            }
+
+            .winner-item {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Dark Mode Overrides */
+        @media (prefers-color-scheme: dark) {
+            .theme-sensitive {
+                background-color: #2c2f33;
+                color: #f1f1f1;
+            }
+
+            .theme-sensitive .form-control {
+                background-color: #2b2b2b;
+                color: #f1f1f1;
+                border-color: #444;
+            }
+
+            .theme-sensitive .form-control::placeholder {
+                color: #aaa;
+            }
+
+            .theme-sensitive .modal-header {
+                border-bottom-color: #333;
+            }
+
+            .theme-sensitive .modal-footer {
+                border-top-color: #333;
+            }
+
+            .theme-sensitive .btn-close {
+                filter: invert(1);
+            }
+
+            .theme-sensitive .invalid-feedback {
+                color: #ff8888;
+            }
+        }
+    </style>
   </head>
 
   <body>

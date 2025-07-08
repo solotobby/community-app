@@ -4,13 +4,15 @@
 
 <div class="content">
     @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success">
             {{ session('message') }}
         </div>
     @endif
 
     @if (session()->has('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
@@ -18,7 +20,7 @@
     <!-- Wallet Stats Section -->
     <div class="container-fluid p-0 m-0 mb-4">
         <div class="row">
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-primary text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
@@ -34,39 +36,39 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-success text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title mb-0">Completed</h6>
-                                <h4 class="mb-0">{{ $completedTransactions }}</h4>
+                                <h6 class="card-title mb-0">Withdrawable Balance</h6>
+                                <h4 class="mb-0">#{{ number_format($withdrawableBalance, 2) }}</h4>
                             </div>
                             <div class="align-self-center">
-                                <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                                <i class="fas fa-wallet fa-2x opacity-75"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-warning text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title mb-0">Pending</h6>
-                                <h4 class="mb-0">{{ $pendingTransactions }}</h4>
+                                <h6 class="card-title mb-0">Processing Balance</h6>
+                                <h4 class="mb-0">#{{ number_format($processingBalance, 2) }}</h4>
                             </div>
                             <div class="align-self-center">
-                                <i class="fas fa-clock fa-2x opacity-75"></i>
+                                <i class="fas fa-wallet fa-2x opacity-75"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="col-md-6 col-sm-6 mb-3">
                 <div class="card border-0 bg-info text-white">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
@@ -87,16 +89,21 @@
     <!-- Transactions Table Section -->
     <div class="container-fluid p-0 m-0">
         <div class="card border-0">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">My Transaction(s)</h5>
+
+                <a href="{{ route('user.wallet.withdrawal') }}" class="btn btn-success btn-sm">
+                    <i class="fas fa-plus me-1"></i> Request Withdrawal
+                </a>
             </div>
+
             <div class="card-body p-2 table-responsive">
                 <table class="table table-bordered table-hover" style="background-color: transparent;">
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 50px;">S/N</th>
                             <th>Reference</th>
-                            <th>Type</th>
+                            {{-- <th>Type</th> --}}
                             <th>Reason</th>
                             <th>Level</th>
                             <th>Amount</th>
@@ -111,7 +118,7 @@
                                     {{ $loop->iteration + ($transactions->currentPage() - 1) * $transactions->perPage() }}
                                 </th>
                                 <td>{{ $transaction->reference ?? '-' }}</td>
-                                <td>{{ ucfirst($transaction->transaction_type) }}</td>
+                                {{-- <td>{{ ucfirst($transaction->transaction_type) }}</td> --}}
                                 <td>{{ ucwords(str_replace('_', ' ', $transaction->transaction_reason)) }}</td>
                                 <td>
                                     @if ($transaction->level)

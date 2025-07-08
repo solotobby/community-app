@@ -6,6 +6,7 @@ use App\Models\Contribution;
 use App\Models\Level;
 use App\Models\Reward;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -14,67 +15,97 @@ use Illuminate\Support\Facades\Log;
 
 class PaystackController extends Controller
 {
-    public function initialize(Request $request)
+
+    public function fetchBankList()
     {
-        $transaction = Transaction::where('reference', $request->reference)->firstOrFail();
+        try {
+            $response = Http::withToken(config('services.paystack.secret_key'))
+                ->get('https://api.paystack.co/bank');
 
-        $paystackResponse = Http::withToken(config('services.paystack.secret_key'))->post(
-            'https://api.paystack.co/transaction/initialize',
-            [
-                'email' => $transaction->user->email,
-                'amount' => $transaction->amount * 100,
-                'reference' => $transaction->reference,
-                'callback_url' => route('paystack.payment.callback'),
-            ]
-        );
-
-        Log::info('Paystack Init Response', [
-            'status' => $paystackResponse->status(),
-            'body' => $paystackResponse->json(),
-        ]);
-
-        $response = $paystackResponse->json();
-
-        if (!$response['status']) {
-            Log::error('Paystack error', [
-                'response' => $response,
-            ]);
-            return back()->with('error', 'Payment failed: ' . $response['message']);
+            // Log::info('Paystack bankList Response', [
+            //     'status' => $response->status(),
+            //     'body'   => $response->json(),
+            // ]);
+            return $response->successful()
+                ? $response->json('data')
+                : null;
+        } catch (Exception $e) {
+            Log::error('Error fetching banks: ' . $e->getMessage());
+            return null;
         }
+    }
+    public function initializeFunding($email, $amount, $reference, $route, $metadata)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
+                'Content-Type' => 'application/json',
+            ])->post('https://api.paystack.co/transaction/initialize', [
+                'email' => $email,
+                'amount' => $amount * 100,
+                'reference' => $reference,
+                'callback_url' => $route,
+                'metadata' => $metadata
+            ]);
 
+            Log::info('Paystack Init Response', [
+                'request' => [$email, $amount, $reference, $route, $metadata],
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+            if ($response->successful()) {
+                $data = $response->json();
+                return $data['data']['authorization_url'] ?? null;
+            }
 
-        return redirect($response['data']['authorization_url']);
+            Log::error('Paystack initialization failed', ['response' => $response->body()]);
+            return null;
+        } catch (Exception $e) {
+            Log::error('Paystack initialization failed: ' . $e->getMessage());
+            return null;
+        }
     }
 
     public function callback(Request $request)
     {
         $reference = $request->query('reference');
+
         $response = Http::withToken(config('services.paystack.secret_key'))
-            ->get("https://api.paystack.co/transaction/verify/{$reference}")
-            ->json();
+            ->get("https://api.paystack.co/transaction/verify/{$reference}");
+
+        $responseData = $response->json();
+
+        Log::info('Paystack Callback Response', [
+            'reference' => $reference,
+            'status' => $response->status(),
+            'body' => $responseData,
+        ]);
 
         $transaction = Transaction::where('reference', $reference)->firstOrFail();
 
-        if ($response['status'] && $response['data']['status'] === 'success') {
+        if ($responseData['status'] && $responseData['data']['status'] === 'success') {
             $transaction->update(['status' => 'success']);
 
             $user = $transaction->user;
+
+            $user->increment('raffle_draw_count');
             $user->update([
                 'registration_draw' => true,
                 'has_subscribed' => true,
                 'can_raffle' => true,
-                'raffle_draw_count' => $user->raffle_draw_count + 1
             ]);
 
             $user->load('level', 'referrer');
 
+            $levelId = $user->level;
+            $level =  Level::find($levelId);
+
+            $entryGift = $level->entry_gift ?? 0;
+            $referralBonus = $level->referral_bonus ?? 0;
+            $amount = $level->registration_amount - ($entryGift);
+
             if ($user->referrer_id && $user->level) {
                 $referrer = $user->referrer;
-
-                $levelId = $user->level;
-                $level =  Level::find($levelId);
-
-                $bonus = $level->referral_bonus;
 
                 Reward::create([
                     'user_id' => $referrer->id,
@@ -82,17 +113,26 @@ class PaystackController extends Controller
                     'reward_type' => 'referral',
                     'reward_status' => 'pending',
                     'is_claim' => false,
-                    'amount' => $bonus,
+                    'amount' => $referralBonus,
                     'currency' => 'NGN',
                     'status' => 'active',
                 ]);
 
+                $referrer->increment('raffle_draw_count');
                 $referrer->update([
                     'can_raffle' => true,
-                    'raffle_draw_count' => $referrer->raffle_draw_count + 1
-
                 ]);
+
+                $amount = $level->registration_amount - ($entryGift + $referralBonus);
             }
+
+            if ($amount > 0) {
+                app(AdminController::class)->fundAdminWallet(
+                    $amount,
+                    'User Subscription for: ' . $level->name
+                );
+            }
+
             Auth::login($user);
 
             return redirect()->route('home')->with('success', 'Payment successful. Welcome!');
@@ -105,8 +145,6 @@ class PaystackController extends Controller
     public function giftingCallback(Request $request)
     {
         $reference = $request->query('reference');
-
-
         $response = Http::withToken(config('services.paystack.secret_key'))
             ->get("https://api.paystack.co/transaction/verify/{$reference}")
             ->json();
@@ -133,8 +171,6 @@ class PaystackController extends Controller
             ->route('gift.public', ['slug' => $contribution->giftRequest->slug])
             ->with('error', 'Payment unsuccessful. Please try again.');
     }
-
-
     public function upgradeCallback(Request $request)
     {
         $reference = $request->query('reference');
@@ -142,6 +178,11 @@ class PaystackController extends Controller
             ->get("https://api.paystack.co/transaction/verify/{$reference}")
             ->json();
 
+        Log::info('Paystack Callback Response', [
+            'reference' => $reference,
+            'status' => $response['status'],
+            'body' => $response,
+        ]);
         $transaction = Transaction::where('reference', $reference)->firstOrFail();
 
         if ($response['status'] && $response['data']['status'] === 'success') {
@@ -154,39 +195,29 @@ class PaystackController extends Controller
                 'registration_draw' => true,
                 'has_subscribed' => true,
                 'can_raffle' => true,
+                'free_user' => false,
                 'level' => $metadata->to_level_id,
                 'raffle_draw_count' => $user->raffle_draw_count + 1
             ]);
 
+            $user->load('level');
 
-            $user->load('level', 'referrer');
+            $levelId = $user->level;
+            $level =  Level::find($levelId);
 
-            // if ($user->referrer_id && $user->level) {
-            //     $referrer = $user->referrer;
+            $entryGift = $level->entry_gift ?? 0;
+            $referralBonus = $level->referral_bonus ?? 0;
 
-            //     $levelId = $user->level;
-            //     $level =  Level::find($levelId);
+            $amount = $level->registration_amount - ($entryGift);
 
-            //     $bonus = $level->referral_bonus;
+            if ($amount > 0) {
+                app(AdminController::class)->fundAdminWallet(
+                    $amount,
+                    'User Level Upgrade for: ' . $level->name
+                );
+            }
 
-            //     Reward::create([
-            //         'user_id' => $referrer->id,
-            //         'referrer_id' => $user->id,
-            //         'reward_type' => 'referral',
-            //         'reward_status' => 'pending',
-            //         'is_claim' => false,
-            //         'amount' => $bonus,
-            //         'currency' => 'NGN',
-            //         'status' => 'active',
-            //     ]);
-
-            //     $referrer->update([
-            //         'can_raffle' => true,
-            //         'raffle_draw_count' => $referrer->raffle_draw_count + 1
-
-            //     ]);
-            // }
-            Auth::login($user);
+            $user->refresh();
 
             return redirect()->route('home')->with('success', 'Payment successful. Welcome!');
         } else {
@@ -195,29 +226,32 @@ class PaystackController extends Controller
         }
     }
 
-    public function resolveAccount($account_number, $bank_code)
+    public function resolveAccount(string $account_number, string $bank_code): array
     {
         $paystackSecretKey = config('services.paystack.secret_key');
 
-        $response = Http::withToken($paystackSecretKey)
-            ->get('https://api.paystack.co/bank/resolve', [
+        $response = Http::withToken($paystackSecretKey)->get(
+            'https://api.paystack.co/bank/resolve',
+            [
                 'account_number' => $account_number,
-                'bank_code' => $bank_code,
-            ]);
+                'bank_code'      => $bank_code,
+            ]
+        );
 
         if ($response->successful() && $response->json('status')) {
             return [
-                'status' => true,
+                'status'         => true,
                 'recipient_code' => $response->json('data.recipient_code'),
-                'data' => $response->json('data'),
+                'data'           => $response->json('data'),
             ];
         }
 
         return [
-            'status' => false,
-            'message' => $response->json('message') ?? 'Recipient creation failed',
+            'status'  => false,
+            'message' => $response->json('message') ?? 'Account resolution failed',
         ];
     }
+
 
     public function createRecipient($name, $account_number, $bank_code, $currency)
     {
@@ -276,7 +310,7 @@ class PaystackController extends Controller
         }
     }
 
-     public function handleWebhook(Request $request)
+    public function handleWebhook(Request $request)
     {
         $signature = $request->header('x-paystack-signature');
         $computedSignature = hash_hmac('sha512', $request->getContent(), config('services.paystack.webhook_secret'));
@@ -370,9 +404,11 @@ class PaystackController extends Controller
             foreach ($contributions as $pendingContribution) {
                 $virtualAccountDetails = $pendingContribution->virtual_account_details;
 
-                if (isset($virtualAccountDetails['account_number']) &&
+                if (
+                    isset($virtualAccountDetails['account_number']) &&
                     $virtualAccountDetails['account_number'] === $account_number &&
-                    abs($pendingContribution->amount - $amount) < 0.01) { // Allow small floating point differences
+                    abs($pendingContribution->amount - $amount) < 0.01
+                ) { // Allow small floating point differences
                     $contribution = $pendingContribution;
                     break;
                 }

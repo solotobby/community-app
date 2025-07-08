@@ -53,6 +53,7 @@ class GiftIndex extends Component
         $this->resetPage();
     }
 
+
     public function resetFilters()
     {
         $this->reset(['search', 'statusFilter', 'sortBy', 'sortDirection', 'showMyGifts']);
@@ -63,13 +64,11 @@ class GiftIndex extends Component
     {
         $gift = GiftRequest::findOrFail($giftId);
 
-        // Check if user owns this gift
         if ($gift->user_id !== Auth::id()) {
             session()->flash('error', 'You can only delete your own gifts.');
             return;
         }
 
-        // Check if gift has contributions
         if ($gift->completedContributions()->count() > 0) {
             session()->flash('error', 'Cannot delete gift with existing contributions.');
             return;
@@ -78,6 +77,17 @@ class GiftIndex extends Component
         $gift->delete();
         session()->flash('message', 'Gift deleted successfully.');
     }
+    private function expirePastGifts(): void
+    {
+        GiftRequest::where('user_id', Auth::id())
+            ->where('status', 'active')
+            ->where('deadline', '<', now())
+            ->update([
+                'status'    => 'expired',
+                'is_public' => false,
+            ]);
+    }
+
 
     public function toggleStatus($giftId)
     {
@@ -88,12 +98,18 @@ class GiftIndex extends Component
 
         session()->flash('message', "Gift Status Updated successfully.");
         $this->loadGift();
-
     }
 
     public function render()
     {
-        $query = GiftRequest::with(['user', 'completedContributions'])->where('user_id', Auth::id());
+        $this->expirePastGifts();
+        $query = GiftRequest::with([
+            'user',
+            'completedContributions'
+        ])->where(
+            'user_id',
+            Auth::id()
+        );
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -106,12 +122,12 @@ class GiftIndex extends Component
             $query->where('status', $this->statusFilter);
         }
 
-        // Apply sorting
+
         $query->orderBy($this->sortBy, $this->sortDirection);
 
         $gifts = $query->paginate(12);
 
-        // Calculate stats
+
         $stats = [
             'total' => GiftRequest::where(
                 'user_id',

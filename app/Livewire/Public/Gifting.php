@@ -2,21 +2,21 @@
 
 namespace App\Livewire\Public;
 
-use Illuminate\Support\Str;
-use Livewire\Component;
-use App\Models\GiftRequest;
-use Livewire\Attributes\Layout;
 use App\Models\Contribution;
-use Exception;
+use App\Models\GiftRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Exception;
 
 #[Layout('components.layouts.public')]
 class Gifting extends Component
 {
     public $gift;
     public $showContributeForm = false;
-
+    public $resetForm = false;
     public $contributor_name = '';
     public $contributor_email = '';
     public $amount = '';
@@ -51,7 +51,7 @@ class Gifting extends Component
             ->where('status', 'pending')
             ->where('payment_method', 'bank_transfer')
             ->whereNotNull('virtual_account_details')
-            ->where('created_at', '>=', now()->subHours(1)) // Only restore recent ones
+            ->where('created_at', '>=', now()->subHours(1))  // Only restore recent ones
             ->latest()
             ->first();
 
@@ -199,13 +199,13 @@ class Gifting extends Component
             }
 
             $payload = [
-                'customer'       => $customerCode,
+                'customer' => $customerCode,
                 'preferred_bank' => app()->environment('production') ? 'wema-bank' : 'test-bank',
-                'country'        => 'NG',
-                'type'           => 'nuban',
-                'first_name' => Str::before($contribution->contributor_name, ' ') ?? "Famlic",
-                'last_name'  => Str::after($contribution->contributor_name, ' ') ?? "Donor",
-                'account_name'   => $contribution->contributor_name,
+                'country' => 'NG',
+                'type' => 'nuban',
+                'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
+                'last_name' => Str::after($contribution->contributor_name, ' ') ?? 'Donor',
+                'account_name' => $contribution->contributor_name,
             ];
 
             $response = Http::withToken(config('services.paystack.secret_key'))
@@ -215,8 +215,8 @@ class Gifting extends Component
 
             if (!$response->successful()) {
                 Log::error('Paystack dedicated_account error', [
-                    'status'  => $response->status(),
-                    'body'    => $response->body(),
+                    'status' => $response->status(),
+                    'body' => $response->body(),
                 ]);
                 return null;
             }
@@ -225,11 +225,11 @@ class Gifting extends Component
 
             return [
                 'account_number' => $data['account_number'],
-                'account_name'   => $data['account_name'],
-                'bank_name'      => $data['bank']['name'],
-                'bank_code'      => $data['bank']['slug'],
-                'created_at'     => now(),
-                'expires_at'     => now()->addMinutes(30),
+                'account_name' => $data['account_name'],
+                'bank_name' => $data['bank']['name'],
+                'bank_code' => $data['bank']['slug'],
+                'created_at' => now(),
+                'expires_at' => now()->addMinutes(30),
             ];
         } catch (\Throwable $e) {
             Log::error('Virtual account generation failed', ['error' => $e->getMessage()]);
@@ -253,9 +253,9 @@ class Gifting extends Component
             // 2. Create new customer
             $create = Http::withToken(config('services.paystack.secret_key'))
                 ->post('https://api.paystack.co/customer', [
-                    'email'      => $contribution->contributor_email,
-                    'first_name' => Str::before($contribution->contributor_name, ' ') ?? "Famlic",
-                    'last_name'  => Str::after($contribution->contributor_name, ' ') ?? "Donor",
+                    'email' => $contribution->contributor_email,
+                    'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
+                    'last_name' => Str::after($contribution->contributor_name, ' ') ?? 'Donor',
                 ]);
 
             if ($create->successful()) {
@@ -308,7 +308,7 @@ class Gifting extends Component
                     $contribution->update([
                         'status' => 'completed',
                         'payment_verified_at' => now(),
-                        'payment_data' => $data, // Store full payment response
+                        'payment_data' => $data,  // Store full payment response
                     ]);
 
                     return true;
@@ -341,7 +341,7 @@ class Gifting extends Component
         }
 
         $url = urlencode($this->gift->getPublicUrl());
-        $text = urlencode("Help contribute to: " . $this->gift->title);
+        $text = urlencode('Help contribute to: ' . $this->gift->title);
 
         $shareUrls = [
             'facebook' => "https://www.facebook.com/sharer/sharer.php?u={$url}",
@@ -419,7 +419,7 @@ class Gifting extends Component
             // Update the existing contribution with new virtual account details
             $contribution->update([
                 'virtual_account_details' => $virtualAccount,
-                'status' => 'pending' // Reset status in case it was expired
+                'status' => 'pending'  // Reset status in case it was expired
             ]);
 
             $this->virtual_account = $virtualAccount;

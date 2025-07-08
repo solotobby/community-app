@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User;
 
+use App\Http\Controllers\PaystackController;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -69,31 +70,19 @@ class Profile extends Component
             $this->bank_code = $bank->bank_code;
             $this->account_number = $bank->account_number;
             $this->account_name = $bank->account_name;
+        } else {
+            $this->fetchBanks();
         }
     }
 
-    // Bank Methods
     public function fetchBanks()
     {
-        try {
-            $response = Http::withToken(config('services.paystack.secret_key'))
-                ->get('https://api.paystack.co/bank');
-
-            if ($response->ok()) {
-                $this->banks = $response->json('data');
-                return $this->banks;
-            } else {
-                session()->flash('error', 'Unable to fetch banks from Paystack.');
-            }
-        } catch (\Exception $e) {
-            session()->flash('error', 'Error fetching banks.');
-        }
+        $this->banks = app(PaystackController::class)->fetchBankList() ?? [];
     }
 
     public function openBankModal()
     {
         $this->reset(['bank_name', 'bank_code', 'account_number', 'account_name']);
-        $this->fetchBanks();
         $this->showBankModal = true;
     }
 
@@ -110,7 +99,7 @@ class Profile extends Component
         $this->account_name = '';
 
         if (strlen($this->account_number) === 10 && $this->bank_code) {
-            $this->resolveAccountName();
+            $this->validateAccount();
         }
     }
 
@@ -118,40 +107,38 @@ class Profile extends Component
     {
         $this->account_name = '';
         if (strlen($value) === 10 && $this->bank_code) {
-            $this->resolveAccountName();
+            $this->validateAccount();
         }
     }
 
-    public function validateAccount()
-    {
-        if (strlen($this->account_number) === 10 && $this->bank_code) {
-            $this->resolveAccountName();
-        } else {
-            session()->flash('error', 'Please select a bank and enter a valid 10-digit account number.');
-        }
-    }
 
-    public function resolveAccountName()
+    public function validateAccount(): void
     {
+        if (strlen($this->account_number) !== 10 || empty($this->bank_code)) {
+            session()->flash('error', 'Please select a bank and enter a valid 10‑digit account number.');
+            return;
+        }
+
         try {
-            $response = Http::withToken(config('services.paystack.secret_key'))
-                ->get('https://api.paystack.co/bank/resolve', [
-                    'account_number' => $this->account_number,
-                    'bank_code' => $this->bank_code,
-                ]);
+            $result = app(PaystackController::class)->resolveAccount(
+                $this->account_number,
+                $this->bank_code
+            );
 
-            if ($response->ok()) {
-                $this->account_name = $response['data']['account_name'] ?? '';
+            if ($result['status'] ?? false) {
+                $this->account_name = $result['data']['account_name'] ?? '';
                 session()->flash('success', 'Account name fetched successfully.');
             } else {
                 $this->account_name = '';
-                session()->flash('error', 'Unable to resolve account name.');
+                session()->flash('error', $result['message'] ?? 'Unable to resolve account name.');
             }
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             $this->account_name = '';
-            session()->flash('error', 'An error occurred while resolving account.');
+            Log::error('Account resolution error: ' . $e->getMessage());
+            session()->flash('error', 'An unexpected error occurred while resolving account.');
         }
     }
+
 
     public function saveBankDetails()
     {
