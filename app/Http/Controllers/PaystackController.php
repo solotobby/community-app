@@ -22,13 +22,13 @@ class PaystackController extends Controller
             $response = Http::withToken(config('services.paystack.secret_key'))
                 ->get('https://api.paystack.co/bank');
 
-            Log::info('Paystack bankList Response', [
-                'status' => $response->status(),
-                'body'   => $response->json(),
-            ]);
-           return $response->successful()
-            ? $response->json('data')
-            : null;
+            // Log::info('Paystack bankList Response', [
+            //     'status' => $response->status(),
+            //     'body'   => $response->json(),
+            // ]);
+            return $response->successful()
+                ? $response->json('data')
+                : null;
         } catch (Exception $e) {
             Log::error('Error fetching banks: ' . $e->getMessage());
             return null;
@@ -86,6 +86,7 @@ class PaystackController extends Controller
         if ($responseData['status'] && $responseData['data']['status'] === 'success') {
             $transaction->update(['status' => 'success']);
 
+
             $user = $transaction->user;
 
             $user->increment('raffle_draw_count');
@@ -97,10 +98,23 @@ class PaystackController extends Controller
 
             $user->load('level', 'referrer');
 
+            $levelId = $user->level;
+            $level =  Level::find($levelId);
+
+            $entryGift = $level->entry_gift ?? 0;
+            $referralBonus = $level->referral_bonus ?? 0;
+
+            $amount = $level->registration_amount - ($entryGift + $referralBonus);
+
+            if ($amount > 0) {
+                app(AdminController::class)->fundAdminWallet(
+                    $amount,
+                    'User Subscription for: ' . $level->name
+                );
+            }
+
             if ($user->referrer_id && $user->level) {
                 $referrer = $user->referrer;
-                $levelId = $user->level;
-                $level =  Level::find($levelId);
 
                 Reward::create([
                     'user_id' => $referrer->id,
@@ -108,7 +122,7 @@ class PaystackController extends Controller
                     'reward_type' => 'referral',
                     'reward_status' => 'pending',
                     'is_claim' => false,
-                    'amount' => $level->referral_bonus,
+                    'amount' => $referralBonus,
                     'currency' => 'NGN',
                     'status' => 'active',
                 ]);
@@ -164,7 +178,6 @@ class PaystackController extends Controller
             ->get("https://api.paystack.co/transaction/verify/{$reference}")
             ->json();
 
-
         Log::info('Paystack Callback Response', [
             'reference' => $reference,
             'status' => $response['status'],
@@ -188,6 +201,21 @@ class PaystackController extends Controller
 
 
             $user->load('level', 'referrer');
+
+            $levelId = $user->level;
+            $level =  Level::find($levelId);
+
+            $entryGift = $level->entry_gift ?? 0;
+            $referralBonus = $level->referral_bonus ?? 0;
+
+            $amount = $level->registration_amount - ($entryGift + $referralBonus);
+
+            if ($amount > 0) {
+                app(AdminController::class)->fundAdminWallet(
+                    $amount,
+                    'User Level Upgrade for: ' . $level->name
+                );
+            }
 
             // if ($user->referrer_id && $user->level) {
             //     $referrer = $user->referrer;
@@ -223,31 +251,31 @@ class PaystackController extends Controller
         }
     }
 
-  public function resolveAccount(string $account_number, string $bank_code): array
-{
-    $paystackSecretKey = config('services.paystack.secret_key');
+    public function resolveAccount(string $account_number, string $bank_code): array
+    {
+        $paystackSecretKey = config('services.paystack.secret_key');
 
-    $response = Http::withToken($paystackSecretKey)->get(
-        'https://api.paystack.co/bank/resolve',
-        [
-            'account_number' => $account_number,
-            'bank_code'      => $bank_code,
-        ]
-    );
+        $response = Http::withToken($paystackSecretKey)->get(
+            'https://api.paystack.co/bank/resolve',
+            [
+                'account_number' => $account_number,
+                'bank_code'      => $bank_code,
+            ]
+        );
 
-    if ($response->successful() && $response->json('status')) {
+        if ($response->successful() && $response->json('status')) {
+            return [
+                'status'         => true,
+                'recipient_code' => $response->json('data.recipient_code'),
+                'data'           => $response->json('data'),
+            ];
+        }
+
         return [
-            'status'         => true,
-            'recipient_code' => $response->json('data.recipient_code'),
-            'data'           => $response->json('data'),
+            'status'  => false,
+            'message' => $response->json('message') ?? 'Account resolution failed',
         ];
     }
-
-    return [
-        'status'  => false,
-        'message' => $response->json('message') ?? 'Account resolution failed',
-    ];
-}
 
 
     public function createRecipient($name, $account_number, $bank_code, $currency)

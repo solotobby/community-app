@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User;
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaystackController;
 use App\Models\LevelItem;
 use App\Models\BankInfo;
@@ -11,9 +12,7 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
 use Throwable;
@@ -119,6 +118,9 @@ class RaffleDraw extends Component
 
             if ($result['status'] ?? false) {
                 $this->account_name = $result['data']['account_name'] ?? '';
+                Log::info('Paystack bankList Response', [
+                   'response' => $this->account_name
+               ]);
                 session()->flash('success', 'Account name fetched successfully.');
             } else {
                 $this->account_name = '';
@@ -245,58 +247,6 @@ class RaffleDraw extends Component
         }
     }
 
-    /**
-     * Perform raffle draw with better error handling
-     */
-    public function performDraw()
-    {
-        // Check user eligibility
-        if (!$this->user->can_raffle || $this->user->raffle_draw_count < 1) {
-            session()->flash('error', 'No draw available.');
-            return;
-        }
-
-        DB::beginTransaction();
-        try {
-
-            $levelItems = LevelItem::where('level_id', $this->user->level)->get();
-            if ($levelItems->isEmpty()) {
-                session()->flash('error', 'No rewards configured for your level.');
-                return;
-            }
-
-            // Create draw record
-            $rewardItem = $levelItems->random();
-            $draw = Raffle::create([
-                'user_id' => $this->user->id,
-                'reward' => $rewardItem->item_name,
-                'price' => $rewardItem->price,
-                'currency' => $rewardItem->currency,
-                'used_type' => 'draw',
-                'status' => 'pending',
-                'expired_at' => now()->addHours(24),
-            ]);
-
-            // Update user's draw count
-            $newCount = $this->user->raffle_draw_count - 1;
-            $this->user->update([
-                'raffle_draw_count' => $newCount,
-                'can_raffle' => $newCount > 0,
-            ]);
-
-            DB::commit();
-
-            $this->user = $this->user->fresh();
-            session()->flash('success', 'Congratulations! You won a reward! Claim within 24 hours.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error('Draw creation failed', [
-                'user_id' => $this->user->id,
-                'error' => $e->getMessage()
-            ]);
-            session()->flash('error', 'An error occurred while processing your draw.');
-        }
-    }
 
     public function saveBankDetails()
     {
@@ -417,11 +367,12 @@ class RaffleDraw extends Component
         DB::beginTransaction();
         try {
             $feePercentage = 2;
-            $amount = $draw->price * (1 - ($feePercentage / 100));
+            $feeAmount = ($feePercentage / 100) * $draw->price;
+            $amount = $draw->price - $feeAmount;
 
-            $txnReference = 'TXN_' . Str::uuid();
 
-            // Create transaction record
+            $txnReference = 'TXN_' . Str::random(15);
+
             Transaction::create([
                 'reference' => $txnReference,
                 'user_id' => $this->user->id,
@@ -432,9 +383,9 @@ class RaffleDraw extends Component
                 'status' => 'pending',
             ]);
 
+
             $paystack = new PaystackController();
 
-            // Create recipient if not exists
             $response = $paystack->createRecipient(
                 $this->user->bankInfo->account_name,
                 $this->user->bankInfo->account_number,
@@ -456,7 +407,18 @@ class RaffleDraw extends Component
             );
 
             if ($transferResult['status']) {
-                Transaction::where('reference', $txnReference)->update(['status' => 'success']);
+                Transaction::where(
+                    'reference',
+                    $txnReference
+                )->update([
+                    'status' => 'success'
+                ]);
+
+                app(AdminController::class)->fundAdminWallet(
+                    $feeAmount,
+                    'Payout for Gift: ' . $draw->name
+                );
+
                 DB::commit();
                 return true;
             } else {

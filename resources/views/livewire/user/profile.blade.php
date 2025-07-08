@@ -421,19 +421,19 @@
                                 </div>
 
                                <div class="mb-3">
-                                    <label class="form-label">Account Name</label>
 
-                                    <input type="text"
-                                        class="form-control @error('account_name') is-invalid @enderror"
-                                        wire:model="account_name"
-                                        readonly
-                                        placeholder="Will be auto‑filled after validation">
+                                   @error('account_name')
+                                   <div class="invalid-feedback">{{ $message }}</div>
+                                   @enderror
 
-                                    @error('account_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                   @if ($account_name)
+                                   <label class="form-label">Account Name</label>
 
-                                    @if ($account_name)
+                                   <input type="text"
+                                       class="form-control @error('account_name') is-invalid @enderror"
+                                       wire:model="account_name"
+                                       readonly
+                                       placeholder="Will be auto‑filled after validation">
                                         <div class="form-text text-success">
                                             <i class="fas fa-check-circle me-1"></i>
                                             Account validated successfully

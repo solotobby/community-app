@@ -18,16 +18,6 @@
                 </div>
             @endif
 
-            {{-- Raffle Draw Button --}}
-            {{-- <div class="mb-4">
-            <button wire:click="performDraw"
-                class="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded {{ $user->raffle_draw_count < 1 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                {{ $user->raffle_draw_count < 1 ? 'disabled' : '' }}>
-                Play Raffle Draw
-            </button>
-            <p class="text-sm text-gray-600 mt-1">You have {{ $user->raffle_draw_count }} raffle draw(s) left</p>
-        </div> --}}
-
             <div class="container-fluid p-0 m-0">
                 <div class="card border-0">
                     <div class="card-header bg-grey d-flex justify-content-between align-items-center">
@@ -338,12 +328,12 @@
                                 <div class="mb-3">
                                     <label class="form-label">Bank Name <span class="text-danger">*</span></label>
                                    <select class="form-select @error('bank_code') is-invalid @enderror"
-        wire:model="bank_code">
-    <option value="">-- Select Bank --</option>
-    @foreach ($banks as $bank)
-        <option value="{{ $bank['code'] }}">{{ $bank['name'] }}</option>
-    @endforeach
-</select>
+                                            wire:model="bank_code">
+                                        <option value="">-- Select Bank --</option>
+                                        @foreach ($banks as $bank)
+                                            <option value="{{ $bank['code'] }}">{{ $bank['name'] }}</option>
+                                        @endforeach
+                                    </select>
 
                                     @error('bank_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -370,26 +360,29 @@
                                 </div>
 
                                <div class="mb-3">
-                                    <label class="form-label">Account Name</label>
+                                
+                                   @error('account_name')
+                                   <div class="invalid-feedback">{{ $message }}</div>
+                                   @enderror
 
-                                    <input type="text"
+                                   @if ($account_name)
+                                   <label class="form-label">Account Name</label>
+                                    <input
+                                        type="text"
                                         class="form-control @error('account_name') is-invalid @enderror"
                                         wire:model.live="account_name"
                                         readonly
-                                        placeholder="Will be auto‑filled after validation">
-
-                                    @error('account_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-
-                                    @if ($account_name)
-                                        <div class="form-text text-success">
+                                        placeholder="Will be auto‑filled after validation"
+                                    >
+                                        <div class="form-text text-success d-flex align-items-center mt-1">
                                             <i class="fas fa-check-circle me-1"></i>
-                                            Account validated successfully
+                                            <span>Account validated successfully</span>
+                                            {{-- @dump($account_name) --}}
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+
+                            {{-- </div> --}}
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     wire:click="closeBankModal">Cancel</button>

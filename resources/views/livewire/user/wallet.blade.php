@@ -4,13 +4,15 @@
 
 <div class="content">
     @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success">
             {{ session('message') }}
         </div>
     @endif
 
     @if (session()->has('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
@@ -87,16 +89,21 @@
     <!-- Transactions Table Section -->
     <div class="container-fluid p-0 m-0">
         <div class="card border-0">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">My Transaction(s)</h5>
+
+                <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success btn-sm">
+                    <i class="fas fa-plus me-1"></i> Request Withdrawal
+                </a>
             </div>
+
             <div class="card-body p-2 table-responsive">
                 <table class="table table-bordered table-hover" style="background-color: transparent;">
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 50px;">S/N</th>
                             <th>Reference</th>
-                            <th>Type</th>
+                            {{-- <th>Type</th> --}}
                             <th>Reason</th>
                             <th>Level</th>
                             <th>Amount</th>
@@ -111,7 +118,7 @@
                                     {{ $loop->iteration + ($transactions->currentPage() - 1) * $transactions->perPage() }}
                                 </th>
                                 <td>{{ $transaction->reference ?? '-' }}</td>
-                                <td>{{ ucfirst($transaction->transaction_type) }}</td>
+                                {{-- <td>{{ ucfirst($transaction->transaction_type) }}</td> --}}
                                 <td>{{ ucwords(str_replace('_', ' ', $transaction->transaction_reason)) }}</td>
                                 <td>
                                     @if ($transaction->level)
