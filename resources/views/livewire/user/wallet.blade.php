@@ -92,7 +92,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">My Transaction(s)</h5>
 
-                <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success btn-sm">
+                <a href="{{ route('user.wallet.withdrawal') }}" class="btn btn-success btn-sm">
                     <i class="fas fa-plus me-1"></i> Request Withdrawal
                 </a>
             </div>
