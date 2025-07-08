@@ -40,7 +40,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title mb-0">Withdrawable Balance</h6>
-                                <h4 class="mb-0">#{{ $completedTransactions }}</h4>
+                                <h4 class="mb-0">#{{ number_format($withdrawableBalance, 2) }}</h4>
                             </div>
                             <div class="align-self-center">
                                 <i class="fas fa-wallet fa-2x opacity-75"></i>
@@ -56,7 +56,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h6 class="card-title mb-0">Processing Balance</h6>
-                                <h4 class="mb-0">#{{ $pendingTransactions }}</h4>
+                                <h4 class="mb-0">#{{ number_format($processingBalance, 2) }}</h4>
                             </div>
                             <div class="align-self-center">
                                 <i class="fas fa-wallet fa-2x opacity-75"></i>

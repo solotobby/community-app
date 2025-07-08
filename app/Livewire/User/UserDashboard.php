@@ -57,7 +57,7 @@ class UserDashboard extends Component
         $user = Auth::user();
         $userLevel = Level::findOrFail($user->level);
 
-        $items = LevelItem::with('level')->get();
+        $items = LevelItem::with('level')->where('status', true)->inRandomOrder()->get();
 
         $this->availableItems = $items->map(function ($item) use ($userLevel) {
             return [
