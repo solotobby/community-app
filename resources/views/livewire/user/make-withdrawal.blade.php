@@ -46,7 +46,7 @@
                             </div>
                             <div class="text-end">
                                 <h4 class="mb-0 text-success">₦{{ number_format($balance, 2) }}</h4>
-                                <small class="text-muted">Available Balance</small>
+                                <small class="text-muted">Withdrawable Balance</small>
                             </div>
                         </div>
                     </div>
@@ -226,12 +226,14 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Account Number <span class="text-danger">*</span></label>
-                                    <div class="input-group">
+                               <div class="mb-3">
+                                    <label class="form-label">Account Number <span class="text-danger">*</label>
+                                    <div class="input-group" x-data="{ number: @entangle('account_number') }"
+                                        x-effect="if(number.length === 10) { $wire.validateAccount() }">
                                         <input type="text" maxlength="10"
                                             class="form-control @error('account_number') is-invalid @enderror"
-                                            wire:model="account_number" placeholder="Enter 10-digit account number">
+                                            x-model="number" placeholder="Enter 10-digit account number">
+
                                         <button type="button" class="btn btn-outline-secondary"
                                             wire:click="validateAccount" wire:loading.attr="disabled"
                                             wire:target="validateAccount">
@@ -241,27 +243,26 @@
                                             </span>
                                         </button>
                                     </div>
-                                    @error('account_number')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    @if ($account_name)
-                                        <label class="form-label">Account Name</label>
-                                        <input type="text"
-                                            class="form-control @error('account_name') is-invalid @enderror"
-                                            wire:model="account_name"
-                                            readonly
-                                            placeholder="Will be auto-filled after validation">
+                               <div class="mb-3">
+                                   @error('account_name')
+                                   <div class="invalid-feedback">{{ $message }}</div>
+                                   @enderror
+
+                                   @if ($account_name)
+                                   <label class="form-label">Account Name</label>
+
+                                   <input type="text"
+                                       class="form-control @error('account_name') is-invalid @enderror"
+                                       wire:model="account_name"
+                                       readonly
+                                       placeholder="Will be auto‑filled after validation">
                                         <div class="form-text text-success">
                                             <i class="fas fa-check-circle me-1"></i>
                                             Account validated successfully
                                         </div>
                                     @endif
-                                    @error('account_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
                                 </div>
                             </div>
                             <div class="modal-footer">

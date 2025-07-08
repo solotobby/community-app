@@ -421,7 +421,6 @@
                                 </div>
 
                                <div class="mb-3">
-
                                    @error('account_name')
                                    <div class="invalid-feedback">{{ $message }}</div>
                                    @enderror
