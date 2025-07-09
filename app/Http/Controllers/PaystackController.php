@@ -160,6 +160,8 @@ class PaystackController extends Controller
 
             $bonus = $contribution->amount;
             $wallet->increment('balance', $bonus);
+            $wallet->increment('processing_balance', $bonus);
+           
 
             return redirect()
                 ->route('gift.public', ['slug' => $contribution->giftRequest->slug])

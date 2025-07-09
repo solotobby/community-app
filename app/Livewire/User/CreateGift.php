@@ -22,6 +22,8 @@ class CreateGift extends Component
     public $target_amount = '';
     public $deadline = '';
     public $gift_image;
+    public $include_fee = false;
+    public $finalTargetAmount = 0;
 
     // Settings
     public $is_public = true;
@@ -35,7 +37,7 @@ class CreateGift extends Component
             'reason' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'target_amount' => 'required|numeric|min:1',
-            'deadline' => 'nullable|date|after:today',
+            'deadline' => 'required|date|after:today',
             'gift_image' => 'nullable|image|max:2048',
             'is_public' => 'boolean',
             'allow_messages' => 'boolean',
@@ -76,6 +78,34 @@ class CreateGift extends Component
         }
     }
 
+    public function updatedTargetAmount()
+    {
+        $this->calculateFinalTarget();
+    }
+
+    public function updatedIncludeFee()
+    {
+        $this->calculateFinalTarget();
+    }
+
+    public function calculateFinalTarget()
+    {
+        if ($this->include_fee && is_numeric($this->target_amount)) {
+            $this->finalTargetAmount = round($this->target_amount / 0.95, 2); // adds 5% correctly
+        } else {
+            $this->finalTargetAmount = $this->target_amount;
+        }
+    }
+
+    public function submitForm()
+    {
+        if ($this->currentStep < $this->totalSteps) {
+            $this->nextStep();
+        } else {
+            $this->createGift();
+        }
+    }
+
     public function createGift()
     {
         $this->validate();
@@ -90,13 +120,16 @@ class CreateGift extends Component
             'min_contribution' => $this->min_contribution ?: null,
         ];
 
+        // Use the final target amount for creation
+        $targetAmount = $this->include_fee ? $this->finalTargetAmount : $this->target_amount;
+
         $giftRequest = GiftRequest::create([
             'user_id' => Auth::id(),
             'title' => $this->title,
             'reason' => $this->reason,
             'description' => $this->description,
-            'target_amount' => $this->target_amount,
-            'deadline' =>  $this->deadline ?? now()->addDays(60)->toDateString(),
+            'target_amount' => $targetAmount,
+            'deadline' => $this->deadline ?? now()->addDays(60)->toDateString(),
             'gift_image' => $imagePath,
             'is_public' => $this->is_public,
             'settings' => $settings,
