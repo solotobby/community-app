@@ -216,25 +216,25 @@
                                                 <i class="fas fa-eye me-1"></i> Preview
                                             </a>
                                         </div>
-                                        <div class="col">
+                                        {{-- <div class="col">
                                             <button class="btn btn-secondary btn-sm w-100"
                                                 wire:click="toggleStatus({{ $gift->id }})" title="Toggle Status">
                                                 <i class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }}"></i>
                                                 {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
                                             </button>
-                                        </div>
+                                        </div> --}}
                                         <div class="col">
                                             <button class="btn btn-primary btn-sm w-100"
                                                 onclick="window.location='{{ route('user.gift.detail', $gift->id) }}'">
                                                 <i class="fas fa-edit me-1"></i> Gift Details
                                             </button>
                                         </div>
-                                        <div class="col">
+                                        {{-- <div class="col">
                                             <button class="btn btn-info btn-sm w-100"
                                                 onclick="copyToClipboard('{{ $gift->getPublicUrl() }}')" title="Copy Link">
                                                 <i class="fas fa-share me-1"></i> Share
                                             </button>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

@@ -15,7 +15,7 @@ class GiftDetail extends Component
     public $gift;
     public $giftId;
     public $showEditModal = false;
-    public $showDeleteModal = false;
+    public $showEndModal = false;
 
     public $platform;
 
@@ -79,11 +79,6 @@ class GiftDetail extends Component
     public function toggleStatus()
     {
 
-        // if ($this->gift->completedContributions()->count() > 0 && $this->gift->status === 'active') {
-        //     session()->flash('error', 'Cannot pause gift with existing contributions.');
-        //     return;
-        // }
-
         $newStatus = $this->gift->is_public === true ? false : true;
         $this->gift->update(['is_public' => $newStatus]);
 
@@ -140,33 +135,34 @@ class GiftDetail extends Component
         $this->loadGift();
     }
 
-    public function openDeleteModal()
+    public function openEndModal()
     {
-        $this->showDeleteModal = true;
+        $this->showEndModal = true;
     }
 
-    public function closeDeleteModal()
+    public function closeEndModal()
     {
-        $this->showDeleteModal = false;
+        $this->showEndModal = false;
     }
 
-    public function deleteGift()
+    public function endGift()
     {
-        if ($this->gift->completedContributions()->count() > 0) {
-            session()->flash('error', 'Cannot delete gift with existing contributions.');
-            $this->closeDeleteModal();
-            return;
+        $user = auth()->user();
+        $update = $this->gift->update([
+            'is_public' => false,
+            'status' => 'completed'
+        ]);
+
+        if ($update) {
+            $user->wallet->decrement('processing_balance', $this->gift->current_amount);
+            $user->wallet->increment('withdrawable_balance', $this->gift->current_amount);
         }
 
-        if ($this->gift->gift_image) {
-            Storage::disk('public')->delete($this->gift->gift_image);
-        }
-
-        $this->gift->delete();
-
-        session()->flash('message', 'Gift deleted successfully.');
-        return redirect()->route('user.gift.index');
+        session()->flash('message', 'Gift ended successfully.');
+        $this->closeEndModal();
+        $this->loadGift();
     }
+
 
     public function shareGift($platform)
     {
@@ -187,7 +183,7 @@ class GiftDetail extends Component
 
     public function copyLink()
     {
-        $this->dispatch('copyToClipboard', $this->gift->getPublicUrl() );
+        $this->dispatch('copyToClipboard', $this->gift->getPublicUrl());
         session()->flash('message', 'Link copied to clipboard!');
     }
 

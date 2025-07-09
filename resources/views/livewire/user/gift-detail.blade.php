@@ -1,12 +1,14 @@
 <div class="content">
     @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success mb-4">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success mb-4">
             {{ session('message') }}
         </div>
     @endif
 
     @if (session()->has('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger mb-4">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-danger mb-4">
             {{ session('error') }}
         </div>
     @endif
@@ -20,14 +22,13 @@
                 </a>
             </div>
             <div>
-                <span
-                    class="badge fs-6 {{ $gift->status === 'active'
-                        ? 'bg-success'
-                        : ($gift->status === 'completed'
-                            ? 'bg-primary'
-                            : ($gift->status === 'paused'
-                                ? 'bg-warning text-dark'
-                                : 'bg-secondary')) }}">
+                <span class="badge fs-6 {{ $gift->status === 'active'
+    ? 'bg-success'
+    : ($gift->status === 'completed'
+        ? 'bg-primary'
+        : ($gift->status === 'paused'
+            ? 'bg-warning text-dark'
+            : 'bg-secondary')) }}">
                     {{ ucfirst($gift->status) }}
                 </span>
             </div>
@@ -60,7 +61,7 @@
                                 <i class="fas fa-calendar-alt me-1"></i>
                                 {{ ucfirst($gift->reason) }}
                             </h6>
-                            <p class="card-text mb-4">{{ $gift->description }}</p>
+                            <p class="text-muted">{{ $gift->description }}</p>
 
                             <!-- Progress Section -->
                             <div class="mb-4">
@@ -81,81 +82,78 @@
 
                             <!-- Gift Meta Info -->
                             <div class="row mb-4">
-                                <div class="col-sm-6 mb-2">
+                                <div class="col-sm-6 text-muted mb-2">
                                     <strong>Created:</strong> {{ $gift->created_at->format('M d, Y') }}
                                 </div>
                                 @if ($gift->deadline)
-                                    <div class="col-sm-6 mb-2">
+                                    <div class="col-sm-6 text-muted mb-2">
                                         <strong>Deadline:</strong> {{ $gift->deadline->format('M d, Y') }}
                                         @if ($gift->deadline->isPast())
                                             <span class="badge bg-danger ms-1">Expired</span>
                                         @endif
                                     </div>
                                 @endif
-                                <div class="col-sm-6 mb-2">
+                                <div class="col-sm-6 text-muted mb-2">
                                     <strong>Visibility:</strong> {{ $gift->is_public ? 'Public' : 'Private' }}
                                 </div>
-                                <div class="col-sm-6 mb-2">
+                                <div class="col-sm-6 text-muted mb-2">
                                     <strong>Total Contributions:</strong> {{ $stats['total_contributions'] }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
+                        @php
+                            $isDisabled = in_array($gift->status, ['completed', 'expired', 'canceled']);
+                        @endphp
+
                         <div class="mt-auto">
                             <div class="row g-2">
                                 <div class="col-md-3 col-6">
-                                    <button class="btn btn-primary w-100" wire:click="openEditModal">
-                                        <i class="fas fa-edit me-1"></i> Edit
+                                    <button class="btn btn-primary w-100" wire:click="openEditModal"
+                                        @disabled($isDisabled)>
+                                        <i class="fa-solid fa-pen-to-square me-1"></i> Edit
                                     </button>
                                 </div>
                                 <div class="col-md-3 col-6">
-                                    <button
-                                        class="btn btn-{{ $gift->is_public === true ? 'warning' : 'success' }} w-100"
-                                        wire:click="toggleStatus">
-                                        <i class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }} me-1"></i>
-                                        {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
+                                    <button class="btn btn-{{ $gift->is_public ? 'warning' : 'success' }} w-100"
+                                        wire:click="toggleStatus" @disabled($isDisabled)>
+                                        <i class="fa-solid fa-{{ $gift->is_public ? 'pause' : 'play' }} me-1"></i>
+                                        {{ $gift->is_public ? 'Pause' : 'Resume' }}
                                     </button>
                                 </div>
                                 <div class="col-md-3 mb-6">
                                     <div class="dropdown">
                                         <button class="btn btn-primary btn-lg w-100 dropdown-toggle" type="button"
-                                            data-bs-toggle="dropdown">
-                                            <i class="fas fa-share me-2"></i>Share
+                                            data-bs-toggle="dropdown" @disabled($isDisabled)>
+                                            <i class="fa-solid fa-share me-2"></i>Share
                                         </button>
                                         <ul class="dropdown-menu w-100">
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('facebook')">
-                                                    <i class="fab fa-facebook me-2"></i>Facebook
-                                                </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('twitter')">
-                                                    <i class="fab fa-twitter me-2"></i>Twitter
-                                                </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('whatsapp')">
-                                                    <i class="fab fa-whatsapp me-2"></i>WhatsApp
-                                                </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('telegram')">
-                                                    <i class="fab fa-telegram me-2"></i>Telegram
-                                                </a></li>
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('facebook')"><i
+                                                        class="fab fa-facebook me-2"></i>Facebook</a></li>
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('twitter')"><i
+                                                        class="fab fa-twitter me-2"></i>Twitter</a></li>
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('whatsapp')"><i
+                                                        class="fab fa-whatsapp me-2"></i>WhatsApp</a></li>
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('telegram')"><i
+                                                        class="fab fa-telegram me-2"></i>Telegram</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
-                                            <li><a class="dropdown-item" href="#" wire:click="copyLink">
-                                                    <i class="fas fa-copy me-2"></i>Copy Link
-                                                </a></li>
+                                            <li><a class="dropdown-item" href="#" wire:click="copyLink"><i
+                                                        class="fa-solid fa-copy me-2"></i>Copy Link</a></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-6">
-                                    <button class="btn btn-danger w-100" wire:click="openDeleteModal">
-                                        <i class="fas fa-trash me-1"></i> Delete
+                                    <button class="btn btn-danger w-100" wire:click="openEndModal"
+                                        @disabled($isDisabled)>
+                                        <i class="fa-solid fa-stop me-2"></i> End
                                     </button>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -269,8 +267,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span
-                                                class="badge bg-success">₦{{ number_format($contribution->amount, 2) }}</span>
+                                            <span class="badge bg-success">₦{{ number_format($contribution->amount, 2) }}</span>
                                         </td>
                                         <td>{{ $contribution->created_at->format('M d, Y') }}</td>
                                         <td>{{ $contribution->message ?: '-' }}</td>
@@ -286,9 +283,9 @@
 
     <!-- Edit Modal -->
     @if ($showEditModal)
-        <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Gift</h5>
                         <button type="button" class="btn-close" wire:click="closeEditModal"></button>
@@ -307,8 +304,7 @@
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Reason *</strong></label>
-                                    <select class="form-select @error('reason') is-invalid @enderror"
-                                        wire:model="reason">
+                                    <select class="form-select @error('reason') is-invalid @enderror" wire:model="reason">
                                         <option value="">Select Reason</option>
                                         <option value="Birthday">Birthday</option>
                                         <option value="Anniversary">Anniversary</option>
@@ -327,7 +323,8 @@
 
                             <div class="mb-3">
                                 <label class="form-label"><strong>Description *</strong></label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" wire:model="description" rows="4"></textarea>
+                                <textarea class="form-control @error('description') is-invalid @enderror"
+                                    wire:model="description" rows="4"></textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -336,8 +333,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label"><strong>Target Amount (₦) *</strong></label>
-                                    <input type="number"
-                                        class="form-control @error('target_amount') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('target_amount') is-invalid @enderror"
                                         wire:model="target_amount" min="1" step="0.01">
                                     @error('target_amount')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -418,8 +414,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                wire:click="closeEditModal">Cancel</button>
+                            <button type="button" class="btn btn-secondary" wire:click="closeEditModal">Cancel</button>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-1"></i> Update Gift
                             </button>
@@ -430,21 +425,21 @@
         </div>
     @endif
 
-    <!-- Delete Confirmation Modal -->
-    @if ($showDeleteModal)
-        <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <!-- End Confirmation Modal -->
+    @if ($showEndModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
                     <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="btn-close" wire:click="closeDeleteModal"></button>
+                        <h5 class="modal-title">Confirm Gift Ending</h5>
+                        <button type="button" class="btn-close" wire:click="closeEndModal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                            <h5>Are you sure you want to delete this gift?</h5>
-                            <p class="text-muted">This action cannot be undone. All data associated with this gift will
-                                be permanently removed.</p>
+                            <h5>Are you sure you want to end this gift?</h5>
+                            <p class="text-muted">This action cannot be undo. As your link will no long be public and amount
+                                raised will be moved to your withdrawable balance</p>
                             <div class="alert alert-info">
                                 <strong>{{ $gift->title }}</strong><br>
                                 Target: ₦{{ number_format($gift->target_amount, 2) }}<br>
@@ -453,10 +448,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            wire:click="closeDeleteModal">Cancel</button>
-                        <button type="button" class="btn btn-danger" wire:click="deleteGift">
-                            <i class="fas fa-trash me-1"></i> Yes, Delete Gift
+                        <button type="button" class="btn btn-secondary" wire:click="closeEndModal">Cancel</button>
+                        <button type="button" class="btn btn-danger" wire:click="endGift">
+                            <i class="fas fa-stop me-1"></i> Yes, End Gift
                         </button>
                     </div>
                 </div>
