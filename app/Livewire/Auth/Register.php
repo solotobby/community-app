@@ -3,6 +3,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Http\Controllers\PaystackController;
+use App\Models\Level;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -20,11 +22,14 @@ class Register extends Component
 {
     public string $name = '';
     public string $email = '';
+    public $agreeTerms = false;
     public string $referral_code;
     public string $password = '';
     public string $password_confirmation = '';
     public string $level = '';
+    public string $hear_us = '';
 
+    public $showTermsModal = false;
     /** @var \Illuminate\Database\Eloquent\Collection */
     public $levels;
     public $selectedLevelAmount = null;
@@ -32,8 +37,9 @@ class Register extends Component
 
     public function mount()
     {
-        $this->levels = \App\Models\Level::all();
-         $this->referral_code = request()->query('ref', '');
+        $this->levels = Level::orderBy('registration_amount')->get();
+        $this->referral_code = request()->query('ref', '');
+
     }
 
     public function updatedLevel($value)
@@ -50,12 +56,26 @@ class Register extends Component
         return $level ? $level->registration_amount : null;
     }
 
-    public function register(): void
+    public function openTermsModal()
+    {
+        $this->showTermsModal = true;
+    }
+
+    public function closeTermsModal()
+    {
+        $this->showTermsModal = false;
+    }
+
+
+
+    public function register()
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'level' => ['required', 'integer', 'exists:levels,id'],
             'referral_code' => ['nullable', 'string'],
+            'hear_us' => ['nullable', 'string'],
+            'agreeTerms' => ['accepted'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -75,7 +95,7 @@ class Register extends Component
         }
 
         if ($user) {
-            if ($user->has_subscribed) {
+            if ($user->has_subscribed && !$user->free_user) {
                 // Already subscribed, log them in and redirect
                 Auth::login($user);
                 $this->redirect(route('home'), navigate: true);
@@ -87,6 +107,7 @@ class Register extends Component
                 'name' => $validated['name'],
                 'password' => $validated['password'],
                 'level' => $validated['level'],
+                'hear_us' => $validated['hear_us'],
             ]);
         } else {
             // New user
@@ -95,6 +116,7 @@ class Register extends Component
                 'email' => $validated['email'],
                 'password' => $validated['password'],
                 'level' => $validated['level'],
+                'hear_us' => $validated['hear_us'],
                 'referrer_id' => $referrerId,
             ]);
 
@@ -102,8 +124,16 @@ class Register extends Component
             $user->assignRole($role?->id);
             event(new Registered($user));
         }
+        $level = $this->levels->find($validated['level']);
 
-        // Auth::login($user);
+        if ($level->registration_amount == 0) {
+            $user->update([
+                'free_user' => true,
+            ]);
+            Auth::login($user);
+            $this->redirect(route('home'), navigate: true);
+            return;
+        }
 
         // Create transaction
         $transaction = Transaction::create([
@@ -112,29 +142,23 @@ class Register extends Component
             'transaction_type' => 'subscription',
             'transaction_reason' => 'Registration Level Payment',
             'level_id' => $validated['level'],
-            'amount' => $this->levels->find($validated['level'])->registration_amount,
+            'amount' => $level->registration_amount,
             'status' => 'pending',
         ]);
 
-        $response = Http::withToken(config('services.paystack.secret_key'))->post(
-            'https://api.paystack.co/transaction/initialize',
-            [
-                'email' => $user->email,
-                'amount' => $transaction->amount * 100,
-                'reference' => $transaction->reference,
-                'callback_url' => route('paystack.payment.callback'),
-            ]
-        )->json();
+        //Initiate Payment
+        $paymentUrl = app(PaystackController::class)->initializeFunding(
+            $user->email,
+            $transaction->amount,
+            $transaction->reference,
+            route('paystack.payment.callback'),
+            []
+        );
 
-        if (!$response['status']) {
+        if ($paymentUrl) {
+            return redirect()->away($paymentUrl);
+        } else {
             session()->flash('error', 'Payment initialization failed, try again.');
-            return;
         }
-
-        $this->js(<<<JS
-        window.location.href = "{$response['data']['authorization_url']}";
-    JS);
-
-        //$this->redirect(route('paystack.payment.init', ['reference' => $transaction->reference]), navigate: true);
     }
 }

@@ -17,7 +17,7 @@ Route::middleware('guest')->group(function () {
     Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
 
     Route::get('/payment/initialize/{reference}', [PaystackController::class, 'initialize'])->name('paystack.payment.init');
-    Route::get('/paystack/callback', [PaystackController::class, 'callback'])->name('paystack.payment.callback');
+    Route::get('payment/callback', [PaystackController::class, 'callback'])->name('paystack.payment.callback');
     Route::get('/paystack/gift/callback', [PaystackController::class, 'giftingCallback'])->name('payment.gifting.callback');
 });
 

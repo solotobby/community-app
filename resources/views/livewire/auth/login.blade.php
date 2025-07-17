@@ -1,37 +1,24 @@
 {{-- <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+    <x-auth-header :title="__('Log in to your account')"
+        :description="__('Enter your email and password below to log in')" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form wire:submit="login" class="flex flex-col gap-6">
         <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autofocus
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
+        <flux:input wire:model="email" :label="__('Email address')" type="email" required autofocus autocomplete="email"
+            placeholder="email@example.com" />
 
         <!-- Password -->
         <div class="relative">
-            <flux:input
-                wire:model="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                :placeholder="__('Password')"
-                viewable
-            />
+            <flux:input wire:model="password" :label="__('Password')" type="password" required
+                autocomplete="current-password" :placeholder="__('Password')" viewable />
 
             @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </flux:link>
+            <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
+                {{ __('Forgot your password?') }}
+            </flux:link>
             @endif
         </div>
 
@@ -44,10 +31,10 @@
     </form>
 
     @if (Route::has('register'))
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            {{ __('Don\'t have an account?') }}
-            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
-        </div>
+    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+        {{ __('Don\'t have an account?') }}
+        <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+    </div>
     @endif
 </div> --}}
 
@@ -87,15 +74,23 @@
                         @enderror
                     </div>
 
-                    <div class="form-floating mb-4">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror"
-                            id="login-password" placeholder="Enter your password" wire:model.defer="password" required
+                    <div x-data="{ show: false }" class="form-floating mb-4 position-relative">
+                        <input :type="show ? 'text' : 'password'"
+                            class="form-control @error('password') is-invalid @enderror" id="login-password"
+                            placeholder="Enter your password" wire:model.defer="password" required
                             autocomplete="current-password">
                         <label class="form-label" for="login-password">Password</label>
+
+                        <span @click="show = !show" class="position-absolute top-50 end-0 translate-middle-y me-3"
+                            style="cursor: pointer; z-index: 10;">
+                            <i :class="show ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                        </span>
+
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
 
                     <div class="mb-4">
                         <div class="form-check">
@@ -106,8 +101,13 @@
                     </div>
 
                     <div class="mb-4">
-                        <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold">
+                        {{-- <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold">
                             Sign In
+                        </button> --}}
+                        <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold"
+                            wire:loading.attr="disabled">
+                            <span wire:loading.remove>Sign In</span>
+                            <span wire:loading>Processing...</span>
                         </button>
                         <div class="mt-4">
                             <a class="fs-sm fw-medium link-fx text-muted me-2 mb-1 d-inline-block"

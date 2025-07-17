@@ -12,12 +12,12 @@ if (rememberDarkMode) {
   let darkModePreference = localStorage.getItem("codebaseDarkMode");
 
   if (darkModePreference === "on") {
-    lHtml.classList.add("dark");
+    lHtml.classList.remove("dark");
   } else if (darkModePreference === "off") {
     lHtml.classList.remove("dark");
   } else if (darkModePreference === "system") {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      lHtml.classList.add("dark");
+      lHtml.classList.remove("dark");
     } else {
       lHtml.classList.remove("dark");
     }

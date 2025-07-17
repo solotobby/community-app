@@ -27,6 +27,9 @@ class Wallet extends Component
         );
 
         $totalBalance = $wallet ? $wallet->balance : 0;
+        $withdrawableBalance = $wallet ? $wallet->withdrawable_balance : 0;
+        $processingBalance = $wallet ? $wallet->processing_balance : 0;
+
         $totalTransactions = Transaction::where('user_id', $user->id)->count();
         $completedTransactions = Transaction::where('user_id', $user->id)
             ->where('status', 'success')
@@ -44,6 +47,8 @@ class Wallet extends Component
         return view('livewire.user.wallet', [
             'wallet' => $wallet,
             'totalBalance' => $totalBalance,
+            'withdrawableBalance' => $withdrawableBalance,
+            'processingBalance' => $processingBalance,
             'totalTransactions' => $totalTransactions,
             'completedTransactions' => $completedTransactions,
             'pendingTransactions' => $pendingTransactions,

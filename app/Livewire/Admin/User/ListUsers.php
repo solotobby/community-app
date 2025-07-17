@@ -11,27 +11,42 @@ class ListUsers extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage  = 10;
     protected $paginationTheme = 'bootstrap';
+
+    protected $queryString = [
+        'search'   => ['except' => ''],
+        'perPage'  => ['except' => 10],
+        'page'     => ['except' => 1],
+    ];
+
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
 
 
     public function render()
     {
-        $users = User::when($this->search, function ($query) {
-            return $query->where('name', 'like', '%' . $this->search . '%')
-                ->orWhere('email', 'like', '%' . $this->search . '%');
-        })
-            ->paginate(10);
+        $users = User::role('user')
+            ->with('levelInfo')
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%');
+            })
+            ->latest()
+            ->paginate($this->perPage);
 
-        return view(
-            'livewire.admin.user.list-users',
-            [
-               'users' => User::role('user')->with('levelInfo')->latest()->paginate(10)
-            ]
-        );
+        return view('livewire.admin.user.list-users', compact('users'));
     }
 }

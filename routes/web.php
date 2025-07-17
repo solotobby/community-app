@@ -6,20 +6,25 @@ use App\Http\Controllers\PaystackController;
 use App\Livewire\User\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\AdminDashboard;
+use App\Livewire\Admin\Crowdfunding\Crowdfunding;
+use App\Livewire\Admin\Crowdfunding\GiftReason;
 use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
 use App\Livewire\Admin\Transaction\ListTransactions;
+use App\Livewire\Admin\User\CrowdfundingDetails;
 use App\Livewire\Admin\User\ListUsers;
 use App\Livewire\Admin\User\RaffleDraw as UserRaffleDraw;
 use App\Livewire\Admin\User\Reffaral;
+use App\Livewire\Admin\User\UserCrowdfunding;
 use App\Livewire\Admin\User\UserDetails;
 use App\Livewire\Admin\User\UserWallet;
 use App\Livewire\Public\Gifting;
 use App\Livewire\User\CreateGift;
 use App\Livewire\User\GiftDetail;
 use App\Livewire\User\GiftIndex;
+use App\Livewire\User\MakeWithdrawal;
 use App\Livewire\User\RaffleClaim;
 use App\Livewire\User\RaffleDraw;
 use App\Livewire\User\Rewards;
@@ -31,7 +36,7 @@ use App\Livewire\User\Wallet;
 // })->name('welcome');
 
 
-Route::get('/', [GeneralController::class, 'index']);
+Route::get('/', [GeneralController::class, 'index'])->name('homepage');
 Route::get('about-us', [GeneralController::class, 'aboutUs']);
 Route::get('blog', [GeneralController::class, 'blog']);
 Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
@@ -45,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware([
     'auth',
-    'role:admin'
+    'role:admin|super_admin'
 ])->prefix(
     'admin'
 )->group(function () {
@@ -63,9 +68,16 @@ Route::middleware([
     Route::get('user-raffle-draw/{id}', UserRaffleDraw::class)->name('admin.users.raffle');
     Route::get('user-referral/{id}', Reffaral::class)->name('admin.users.referral');
     Route::get('user-wallet/{id}', UserWallet::class)->name('admin.users.wallet');
+    Route::get('user-crowdfunding/{id}', UserCrowdfunding::class)->name('admin.users.crowdfunding');
+    Route::get('user-crowdfund/gift-details/{giftId}', CrowdfundingDetails::class)->name('admin.users.crowdfunding.detail');
 
     //Transactions
     Route::get('transactions', ListTransactions::class)->name('admin.transactions.all');
+
+     //Crowdfunding
+    Route::get('crowdfunding', Crowdfunding::class)->name('admin.crowdfunding.all');
+    Route::get('crowdfunding-reason', GiftReason::class)->name('admin.crowdfunding.reason');
+
 });
 
 Route::middleware([
@@ -84,6 +96,7 @@ Route::middleware([
     Route::get('gift/draw', RaffleDraw::class)->name('raffle.draw');
     Route::post('claim/gift', RaffleDraw::class)->name('claim.draw');
     Route::get('wallet', Wallet::class)->name('wallet');
+    Route::get('wallet/request-withdrawal', MakeWithdrawal::class)->name('wallet.withdrawal');
     Route::get('crowdfund/gifts', GiftIndex::class)->name('gift.index');
     Route::get('crowdfund/gift-details/{giftId}', GiftDetail::class)->name('gift.detail');
     Route::get('crowdfund/request-gift', CreateGift::class)->name('gift.create-gift');

@@ -14,41 +14,38 @@
 
     {{-- Draw Section --}}
     <div class="card mb-4">
-       <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-    <!-- Left Section: Title & Badge -->
-    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
-        <h5 class="mb-1 mb-md-0">
-            🎁 Claim Available Gifts (
-            @if ($drawType === 'registration')
-                <strong>Sign Up</strong>
-            @else
-                <strong>{{ ucfirst($drawType) }}</strong>
-            @endif
-            )
-        </h5>
-        <span class="badge bg-info ms-0 ms-md-3 mt-1 mt-md-0">Select up to 7 items</span>
-    </div>
+        <div
+            class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+            <!-- Left Section: Title & Badge -->
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                <h5 class="mb-1 mb-md-0">
+                    🎁Claim Available Gifts (@if ($drawType === 'registration')
+                        <strong>Sign Up</strong>
+                    @else
+                        <strong>{{ucfirst($drawType)}}</strong>
+                    @endif)
+                </h5>
+                <span class="badge bg-info ms-0 ms-md-3 mt-1 mt-md-0">Select up to 7 items</span>
+            </div>
 
-    <!-- Right Section: Level & Upgrade Side-by-Side -->
-    <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
-        <!-- Current Level Display -->
-        <div>
-            <small class="text-muted d-block">Current Level</small>
-            <span class="badge bg-secondary">
-                {{ $userLevel->name ?? 'No Level' }}
-            </span>
+            <!-- Right Section: Level & Upgrade Side-by-Side -->
+            <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                <!-- Current Level Display -->
+                <div>
+                    <small class="text-muted d-block">Current Level</small>
+                    <span class="badge bg-secondary">
+                        {{ $userLevel->name ?? 'No Level' }}
+                    </span>
+                </div>
+
+                <!-- Upgrade Account Button -->
+                <button type="button" class="btn btn-success btn-sm" wire:click="openUpgradeModal"
+                    title="Upgrade your account to access higher levels">
+                    <i class="fas fa-arrow-up me-1"></i>
+                    Upgrade Account
+                </button>
+            </div>
         </div>
-
-        <!-- Upgrade Account Button -->
-        <button type="button" class="btn btn-success btn-sm" wire:click="openUpgradeModal"
-            title="Upgrade your account to access higher levels">
-            <i class="fas fa-arrow-up me-1"></i>
-            Upgrade Account
-        </button>
-    </div>
-</div>
-
-
 
         <div class="card-body">
             <div class="row">
@@ -98,20 +95,18 @@
 </div>
 </div>
 
-
-
-
+</div>
 
 {{-- Welcome Modal --}}
 @if ($showWelcomeModal)
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content theme-sensitive">
                 <div class="modal-header">
                     <h5 class="modal-title">🎉 Welcome to Famlic!</h5>
                     <button type="button" class="btn-close" wire:click="$set('showWelcomeModal', false)"></button>
                 </div>
-                <div class="modal-body text-light">
+                <div class="modal-body">
                     <p class="fs-5">
                         🎁 Your sign up gift is ready, claim it now!
                     </p>
@@ -130,12 +125,12 @@
 @if ($showConfirmation)
     <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content shadow theme-sensitive">
                 <div class="modal-header">
                     <h5 class="modal-title">🎁 Confirm Your Gift Items</h5>
                     <button type="button" class="btn-close" wire:click="$set('showConfirmation', false)"></button>
                 </div>
-                <div class="modal-body text-light">
+                <div class="modal-body">
                     <p>You selected {{ count($selectedItems) }} items. Items from your selection will be picked
                         randomly as your gift.</p>
                     <ul>
@@ -153,7 +148,6 @@
                             @endif
                         </strong>
                     </p>
-
                 </div>
                 <div class="modal-footer">
                     <button wire:click="processRaffleDraw" class="btn btn-primary" wire:loading.attr="disabled"
@@ -176,7 +170,7 @@
 @if ($showUpgradeModal)
     <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
+            <div class="modal-content theme-sensitive shadow">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-arrow-up me-2"></i>
@@ -191,8 +185,7 @@
                         <div class="d-flex align-items-center">
                             <i class="fas fa-info-circle me-2"></i>
                             <div>
-                                <strong>Current Level:</strong> {{ $userLevel->name ?? 'No Level' }}
-                                <br>
+                                <strong>Current Level:</strong> {{ $userLevel->name ?? 'No Level' }}<br>
                                 <small>Registration Amount: NGN
                                     {{ number_format($userLevel->registration_amount ?? 0, 2) }}</small>
                             </div>
@@ -219,13 +212,6 @@
                                                     <i class="fas fa-check-circle text-primary"></i>
                                                 @endif
                                             </div>
-
-                                            {{-- <div class="mb-2">
-                                                    <small class="text-muted">Level Amount:</small>
-                                                    <div class="fw-bold text-light">NGN
-                                                        {{ number_format($level->registration_amount, 2) }}</div>
-                                                </div> --}}
-
                                             <div class="mb-3">
                                                 <small class="text-muted">Upgrade Cost:</small>
                                                 <div
@@ -265,8 +251,7 @@
                     @else
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            You are already at the highest level available, or no higher levels are available
-                            for
+                            You are already at the highest level available, or no higher levels are available for
                             upgrade.
                         </div>
                     @endif
@@ -274,8 +259,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" wire:click="closeUpgradeModal">
-                        <i class="fas fa-times me-1"></i>
-                        Cancel
+                        <i class="fas fa-times me-1"></i> Cancel
                     </button>
 
                     @if ($selectedLevel)
@@ -283,12 +267,10 @@
                             wire:loading.attr="disabled" wire:target="initiateUpgrade">
                             <span wire:loading.remove wire:target="initiateUpgrade">
                                 <i class="fas fa-credit-card me-1"></i>
-                                Pay NGN
-                                {{ number_format($selectedLevel->registration_amount, 2) }}
+                                Pay NGN {{ number_format($selectedLevel->registration_amount, 2) }}
                             </span>
                             <span wire:loading wire:target="initiateUpgrade">
-                                <i class="spinner-border spinner-border-sm me-1"></i>
-                                Processing...
+                                <i class="spinner-border spinner-border-sm me-1"></i> Processing...
                             </span>
                         </button>
                     @endif
@@ -297,6 +279,8 @@
         </div>
     </div>
     <div class="modal-backdrop fade show"></div>
+
+
 @endif
 
 {{-- Success Message --}}
@@ -320,7 +304,7 @@
         style="display: block; background-color: rgba(0,0,0,0.5);" aria-labelledby="raffleSuccessModalLabel"
         aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg">
+            <div class="modal-content theme-sensitive border-0 shadow-lg">
                 <div
                     class="modal-header bg-gradient-success text-white text-center border-0 position-relative overflow-hidden">
                     <div class="w-100">
@@ -329,7 +313,6 @@
                         </h4>
                         <p class="mb-0 mt-2 opacity-90">Gift Draw Complete!</p>
                     </div>
-                    <!-- Decorative elements -->
                     <div class="position-absolute top-0 start-0 w-100 h-100 opacity-10">
                         <div class="d-flex justify-content-around align-items-center h-100">
                             <span style="font-size: 3rem;">🎊</span>
@@ -349,7 +332,7 @@
                         </h5>
                     </div>
 
-                    <div class="winner-list bg-light rounded-3 p-4 mb-4">
+                    <div class="winner-list bg-light rounded-3 p-4 mb-4 theme-sensitive-card">
                         <h6 class="text-muted mb-3">🎁 Winning Items:</h6>
                         <div class="row g-2">
                             @foreach (json_decode($raffleDraw->reward, true) as $index => $reward)
@@ -382,225 +365,7 @@
         </div>
     </div>
 
-    <style>
-        .level-card {
-            transition: all 0.3s ease;
-        }
-
-        .level-card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .level-card.border-primary {
-            border-width: 2px !important;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-    </style>
 @endif
-<style>
-    /* Celebration Ribbon Styles */
-    .celebration-ribbon-overlay {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .ribbon-container {
-        position: relative;
-        width: 100%;
-        height: 100px;
-    }
-
-    .ribbon {
-        position: absolute;
-        top: 20px;
-        width: 100%;
-        height: 60px;
-        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #f0932b);
-        background-size: 400% 400%;
-        animation: gradientShift 3s ease infinite;
-        opacity: 0.9;
-    }
-
-    .ribbon-left {
-        transform: rotate(-3deg);
-        transform-origin: center;
-    }
-
-    .ribbon-right {
-        transform: rotate(3deg);
-        transform-origin: center;
-        animation-delay: 0.5s;
-    }
-
-    .ribbon::before {
-        content: '🎉 CONGRATULATIONS! 🎉';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-weight: bold;
-        font-size: 1.5rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        white-space: nowrap;
-    }
-
-    /* Confetti Animation */
-    .confetti-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .confetti {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: #ff6b6b;
-        animation: confettiFall 3s infinite linear;
-    }
-
-    .confetti:nth-child(odd) {
-        background: #4ecdc4;
-    }
-
-    .confetti:nth-child(3n) {
-        background: #f9ca24;
-    }
-
-    .confetti:nth-child(4n) {
-        background: #45b7d1;
-    }
-
-    .confetti:nth-child(5n) {
-        background: #f0932b;
-    }
-
-    /* Individual confetti positioning will be set by JavaScript */
-
-    /* Modal Animations */
-    .modal.show {
-        animation: modalSlideIn 0.5s ease-out;
-    }
-
-    .winner-item {
-        animation: bounceIn 0.8s ease-out forwards;
-        opacity: 0;
-        transform: scale(0.3);
-    }
-
-    .claim-button {
-        animation: pulse 2s infinite;
-        background: linear-gradient(45deg, #28a745, #20c997);
-        border: none;
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        transition: all 0.3s ease;
-    }
-
-    .claim-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
-    }
-
-    /* Keyframe Animations */
-    @keyframes gradientShift {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    @keyframes confettiFall {
-        0% {
-            transform: translateY(-100vh) rotate(0deg);
-            opacity: 1;
-        }
-
-        100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-        }
-    }
-
-    @keyframes modalSlideIn {
-        from {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes bounceIn {
-        0% {
-            opacity: 0;
-            transform: scale(0.3);
-        }
-
-        50% {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-
-        70% {
-            transform: scale(0.9);
-        }
-
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        50% {
-            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
-        }
-
-        100% {
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .ribbon::before {
-            font-size: 1rem;
-        }
-
-        .modal-dialog {
-            margin: 1rem;
-        }
-
-        .winner-item {
-            margin-bottom: 0.5rem;
-        }
-    }
-</style>
 
 <script>
     // Auto-show modal and handle backdrop clicks

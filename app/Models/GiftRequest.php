@@ -66,7 +66,7 @@ class GiftRequest extends Model
 
     public function wallet()
     {
-        return $this->belongsTo(Wallet::class,'user_id', 'user_id');
+        return $this->belongsTo(Wallet::class, 'user_id', 'user_id');
     }
 
 
@@ -107,8 +107,43 @@ class GiftRequest extends Model
     public function canReceiveContributions()
     {
         return $this->status === 'active' &&
-               $this->is_public &&
-               !$this->is_expired &&
-               $this->current_amount < $this->target_amount;
+            $this->is_public &&
+            !$this->isExpired() &&
+            $this->current_amount < $this->target_amount;
+    }
+
+    public function isTargetReached(): bool
+    {
+        return $this->current_amount >= $this->target_amount;
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->deadline <= now();
+    }
+
+    public function getDaysRemainingAttribute(): int
+    {
+        if ($this->is_expired) {
+            return 0;
+        }
+
+        return max(now()->diffInDays($this->deadline, false), 0);
+    }
+
+    public function scopePublic($query)
+    {
+        return $query->where('is_public', true);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_public', true)
+            ->where('deadline', '>', now());
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->where('deadline', '<=', now());
     }
 }

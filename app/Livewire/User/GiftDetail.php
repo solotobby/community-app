@@ -15,7 +15,9 @@ class GiftDetail extends Component
     public $gift;
     public $giftId;
     public $showEditModal = false;
-    public $showDeleteModal = false;
+    public $showEndModal = false;
+
+    public $platform;
 
     // Edit form properties
     public $title;
@@ -76,17 +78,13 @@ class GiftDetail extends Component
 
     public function toggleStatus()
     {
-        // Check if gift has contributions
-        if ($this->gift->completedContributions()->count() > 0 && $this->gift->status === 'active') {
-            session()->flash('error', 'Cannot pause gift with existing contributions.');
-            return;
-        }
 
-        $newStatus = $this->gift->status === 'active' ? 'paused' : 'active';
-        $this->gift->update(['status' => $newStatus]);
+        $newStatus = $this->gift->is_public === true ? false : true;
+        $this->gift->update(['is_public' => $newStatus]);
 
-        session()->flash('message', "Gift {$newStatus} successfully.");
-        $this->loadGift(); // Refresh data
+
+        session()->flash('message', "Gift Status Updated successfully.");
+        $this->loadGift();
     }
 
     public function openEditModal()
@@ -120,15 +118,12 @@ class GiftDetail extends Component
             ]
         ];
 
-        // Handle image upload
         if ($this->gift_image) {
-            // Delete old image if exists
             if ($this->current_image) {
                 Storage::disk('public')->delete($this->current_image);
             }
             $updateData['gift_image'] = $this->gift_image->store('gift-images', 'public');
         } elseif ($this->remove_image && $this->current_image) {
-            // Remove existing image
             Storage::disk('public')->delete($this->current_image);
             $updateData['gift_image'] = null;
         }
@@ -140,40 +135,56 @@ class GiftDetail extends Component
         $this->loadGift();
     }
 
-    public function openDeleteModal()
+    public function openEndModal()
     {
-        $this->showDeleteModal = true;
+        $this->showEndModal = true;
     }
 
-    public function closeDeleteModal()
+    public function closeEndModal()
     {
-        $this->showDeleteModal = false;
+        $this->showEndModal = false;
     }
 
-    public function deleteGift()
+    public function endGift()
     {
-        // Check if gift has contributions
-        if ($this->gift->completedContributions()->count() > 0) {
-            session()->flash('error', 'Cannot delete gift with existing contributions.');
-            $this->closeDeleteModal();
-            return;
+        $user = auth()->user();
+        $update = $this->gift->update([
+            'is_public' => false,
+            'status' => 'completed'
+        ]);
+
+        if ($update) {
+            $user->wallet->decrement('processing_balance', $this->gift->current_amount);
+            $user->wallet->increment('withdrawable_balance', $this->gift->current_amount);
         }
 
-        // Delete image if exists
-        if ($this->gift->gift_image) {
-            Storage::disk('public')->delete($this->gift->gift_image);
-        }
-
-        $this->gift->delete();
-
-        session()->flash('message', 'Gift deleted successfully.');
-        return redirect()->route('user.gift.index');
+        session()->flash('message', 'Gift ended successfully.');
+        $this->closeEndModal();
+        $this->loadGift();
     }
 
-    public function copyGiftLink()
+
+    public function shareGift($platform)
     {
-        $this->dispatch('copy-to-clipboard', ['text' => $this->gift->getPublicUrl()]);
-        session()->flash('message', 'Gift link copied to clipboard!');
+        $url = urlencode($this->gift->getPublicUrl());
+        $text = urlencode("Help donate to: " . $this->gift->title);
+
+        $shareUrls = [
+            'facebook' => "https://www.facebook.com/sharer/sharer.php?u={$url}",
+            'twitter' => "https://twitter.com/intent/tweet?url={$url}&text={$text}",
+            'whatsapp' => "https://wa.me/?text={$text}%20{$url}",
+            'telegram' => "https://t.me/share/url?url={$url}&text={$text}",
+        ];
+
+        if (isset($shareUrls[$platform])) {
+            $this->dispatch('openWindow', $shareUrls[$platform]);
+        }
+    }
+
+    public function copyLink()
+    {
+        $this->dispatch('copyToClipboard', $this->gift->getPublicUrl());
+        session()->flash('message', 'Link copied to clipboard!');
     }
 
     public function render()

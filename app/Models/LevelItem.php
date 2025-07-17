@@ -16,6 +16,7 @@ class LevelItem extends Model
         'price',
         'currency',
         'created_by',
+        'status'
     ];
 
     public function level()

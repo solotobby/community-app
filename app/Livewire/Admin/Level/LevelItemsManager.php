@@ -18,6 +18,7 @@ class LevelItemsManager extends Component
     public $itemname;
     public $price;
     public $image;
+    public $status;
     public $itemToDeleteId;
 
     public $showModal = false;
@@ -36,6 +37,15 @@ class LevelItemsManager extends Component
     public function openModal()
     {
         $this->resetValidation();
+
+        if ($this->level->registration_amount == 0) {
+
+            session()->flash('error', 'Item can not be added to a free level.');
+            $this->reset(['itemname', 'price', 'image']);
+            $this->loadItems();
+            $this->closeModal();
+            return;
+        }
         $this->reset(['itemname', 'price']);
         $this->showModal = true;
     }
@@ -54,17 +64,22 @@ class LevelItemsManager extends Component
     protected $rules = [
         'itemname' => 'required|string|max:255',
         'price' => 'required|numeric|min:0',
-        'image' => 'required|image|max:2048', // optional: limit size to 2MB
+        'image' => 'required|image|max:2048',
     ];
 
     public function submit()
     {
         $this->validate();
 
+        if ($this->price > $this->level->entry_gift) {
+            session()->flash('error', 'Item Price can not be greater than the level cap amount');
+            $this->reset(['itemname', 'price', 'image']);
+            $this->loadItems();
+            $this->closeModal();
+            return;
+        }
         $filePath = 'levelItems/' . time() . '.' . $this->image->getClientOriginalExtension();
-
         Storage::disk('public')->put($filePath, file_get_contents($this->image->getRealPath()));
-
 
         $url = asset('storage/' . $filePath);
 
@@ -93,6 +108,26 @@ class LevelItemsManager extends Component
         $this->loadItems();
         session()->flash('success', 'Level item deleted successfully.');
     }
+
+
+    public function toggleItemStatus($id)
+    {
+        $item = LevelItem::findOrFail($id);
+
+        $item->status = ! $item->status;
+
+        $item->save();
+
+        $this->loadItems();
+
+        session()->flash(
+            'success',
+            $item->status
+                ? 'Level item activated successfully.'
+                : 'Level item deactivated successfully.'
+        );
+    }
+
 
     public function render()
     {

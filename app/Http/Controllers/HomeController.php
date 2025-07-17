@@ -12,7 +12,7 @@ class HomeController extends Controller
 
         $user = Auth::user();
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasAnyRole('admin','super_admin')) {
             return redirect()->route('admin');
         }
 
@@ -20,6 +20,9 @@ class HomeController extends Controller
         //     return redirect()->route('user.settings');
         // }
 
+        if ($user->free_user) {
+            return redirect()->route('user.gift.index');
+        }
         return redirect()->route('user.dashboard');
     }
 }

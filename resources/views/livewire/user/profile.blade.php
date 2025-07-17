@@ -249,7 +249,7 @@
         @if ($showUserModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="updateUserDetails">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -309,8 +309,8 @@
         {{-- Transaction PIN Modal --}}
         @if ($showPinModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-                <div class="modal-dialog modal-dialobag-centered">
-                    <div class="modal-content">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveTransactionPin">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -376,7 +376,7 @@
         @if ($showBankModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveBankDetails">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -420,22 +420,26 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Account Name</label>
-                                    <input type="text"
-                                        class="form-control @error('account_name') is-invalid @enderror"
-                                        wire:model="account_name" readonly
-                                        placeholder="Will be auto-filled after validation">
-                                    @error('account_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    @if ($account_name)
+                               <div class="mb-3">
+                                   @error('account_name')
+                                   <div class="invalid-feedback">{{ $message }}</div>
+                                   @enderror
+
+                                   @if ($account_name)
+                                   <label class="form-label">Account Name</label>
+
+                                   <input type="text"
+                                       class="form-control @error('account_name') is-invalid @enderror"
+                                       wire:model="account_name"
+                                       readonly
+                                       placeholder="Will be auto‑filled after validation">
                                         <div class="form-text text-success">
                                             <i class="fas fa-check-circle me-1"></i>
                                             Account validated successfully
                                         </div>
                                     @endif
                                 </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
@@ -445,7 +449,7 @@
                                     <span wire:loading.remove>Save Bank Details</span>
                                     <span wire:loading>
                                         <span class="spinner-border spinner-border-sm me-2"></span>
-                                        Saving...
+                                        Processing...
                                     </span>
                                 </button>
                             </div>
@@ -459,7 +463,7 @@
         @if ($showContactModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <form wire:submit.prevent="saveContactInfo">
                             <div class="modal-header">
                                 <h5 class="modal-title">
@@ -534,7 +538,7 @@
                                 <button type="button" class="btn btn-secondary"
                                     wire:click="closeContactModal">Cancel</button>
                                 <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                                    <span wire:loading.remove">Save Contact Info</span>
+                                    <span wire:loading.remove>Save Contact Info</span>
                                     <span wire:loading>
                                         <span class="spinner-border spinner-border-sm me-2"></span>
                                         Saving...
@@ -551,7 +555,7 @@
         @if ($showPhoneVerificationModal)
             <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content theme-sensitive">
                         <div class="modal-header">
                             <h5 class="modal-title">
                                 <i class="fas fa-mobile-alt text-primary me-2"></i>
@@ -622,57 +626,6 @@
             </div>
         @endif
     </div>
-
-    <style>
-        .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-        }
-
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .modal-content {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #e9ecef;
-            border-radius: 15px 15px 0 0;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-        }
-
-        code {
-            font-size: 0.9rem;
-        }
-    </style>
 
     <script>
         function copyToClipboard(text) {

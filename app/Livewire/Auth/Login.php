@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Http\Controllers\PaystackController;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
@@ -15,7 +16,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Models\Level;
-
+use Illuminate\Support\Facades\Hash;
 
 #[Layout('components.layouts.auth')]
 class Login extends Component
@@ -28,16 +29,16 @@ class Login extends Component
 
     public bool $remember = false;
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function login(): void
+
+    public function login()
     {
         $this->validate();
-
         $this->ensureIsNotRateLimited();
 
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+
+        $user = User::where('email', $this->email)->first();
+
+        if (!$user || ! Hash::check($this->password, $user->password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -45,49 +46,48 @@ class Login extends Component
             ]);
         }
 
-        $user = User::where('email', $this->email)->first();
-
-
-        if ($user->hasRole('admin') || $user->has_subscribed) {
-
+        // If user is already subscribed or free
+        if (
+            $user->hasAnyRole('admin','super_admin')
+            || $user->has_subscribed || $user->free_user
+        ) {
             RateLimiter::clear($this->throttleKey());
             Session::regenerate();
 
-            $this->redirectIntended(default: route('home', absolute: false), navigate: true);
-        } else {
-            $level = Level::find($user->level);
-
-            $transaction = Transaction::create([
-                'reference' => 'TXN_' . Str::uuid(),
-                'user_id' => $user->id,
-                'transaction_type' => 'subscription',
-                'transaction_reason' => 'Registration Level Payment',
-                'level_id' => $user->level,
-                'amount' => $level?->registration_amount ?? 0,
-                'status' => 'pending',
-            ]);
+            Auth::login($user);
+            $this->redirectIntended(route('home'), navigate: true);
+            return;
+        }
 
 
-            $response = Http::withToken(config('services.paystack.secret_key'))->post(
-                'https://api.paystack.co/transaction/initialize',
-                [
-                    'email' => $user->email,
-                    'amount' => $transaction->amount * 100,
-                    'reference' => $transaction->reference,
-                    'callback_url' => route('paystack.payment.callback'),
-                ]
-            )->json();
+        $level = Level::find($user->level);
+        $transaction = Transaction::create([
+            'reference' => 'TXN_' . Str::upper(Str::random(15)),
+            'user_id' => $user->id,
+            'transaction_type' => 'subscription',
+            'transaction_reason' => 'Registration Level Payment',
+            'level_id' => $user->level,
+            'amount' => $level?->registration_amount ?? 0,
+            'status' => 'pending',
+        ]);
 
-            if (!$response['status']) {
-                session()->flash('error', 'Payment initialization failed, try again.');
-                return;
-            }
+        $paymentUrl = app(PaystackController::class)->initializeFunding(
+            $user->email,
+            $transaction->amount,
+            $transaction->reference,
+            route('paystack.payment.callback'),
+            []
+        );
 
+        if ($paymentUrl) {
             $this->js(<<<JS
-        window.location.href = "{$response['data']['authorization_url']}";
+            window.location.href = "{$paymentUrl}";
         JS);
+        } else {
+            session()->flash('error', 'Payment initialization failed. Please try again.');
         }
     }
+
 
     /**
      * Ensure the authentication request is not rate limited.

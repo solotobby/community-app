@@ -3,51 +3,59 @@
     {{-- Header Section --}}
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar-container me-3">
-                                <div
-                                    class="avatar bg-primary text-white d-flex align-items-center justify-content-center">
-                                    {{ strtoupper(substr($user->name, 0, 2)) }}
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h3 class="mb-1">{{ $user->name }}</h3>
-                                <p class="text-muted mb-0">{{ $user->email }}</p>
-                                <small class="text-muted">
-                                    <i class="fas fa-star text-warning me-1"></i>
-                                    Level: {{ $user->levelInfo->name ?? 'Not assigned' }}
-                                </small>
-                            </div>
-                        </div>
-                        <div>
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i>Back to Users
-                            </a>
-                            {{-- <a href="{{ route('admin.users.index', $user) }}" class="btn btn-primary">
-                                <i class="fas fa-edit me-1"></i>Edit User
-                            </a> --}}
-
-
-                            <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
-                                class="btn btn-primary" onclick="event.stopPropagation()">
-                                User Raffle Draw
-                            </a>
-
-                            <a href="{{ route('admin.users.referral', $user) }}"
-                                class="btn btn-primary" onclick="event.stopPropagation()">
-                                User Referral
-                            </a>
-                             <a href="{{ route('admin.users.wallet', $user) }}"
-                                class="btn btn-primary" onclick="event.stopPropagation()">
-                                User Wallet
-                            </a>
-                        </div>
+            <div>
+            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+                          <i class="fas fa-arrow-left me-1"></i>Back to Users
+                      </a>
+            </div>
+            <br>
+            <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-3">
+            <!-- User Info -->
+            <div class="d-flex align-items-center">
+                <div class="avatar-container me-3">
+                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-5"
+                         style="width: 50px; height: 50px;">
+                        {{ strtoupper(substr($user->name, 0, 2)) }}
                     </div>
                 </div>
+                <div>
+                    <h5 class="mb-1">{{ $user->name }}</h5>
+                    <p class="text-muted mb-1">{{ $user->email }}</p>
+                    <small class="text-muted">
+                        <i class="fas fa-star text-warning me-1"></i>
+                        Level: {{ $user->levelInfo->name ?? 'Not assigned' }}
+                    </small>
+                </div>
             </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
+                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                    <i class="fas fa-ticket-alt me-1"></i> Raffle Draw
+                </a>
+
+                <a href="{{ route('admin.users.referral', $user) }}"
+                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                    <i class="fas fa-user-friends me-1"></i> Referrals
+                </a>
+
+                <a href="{{ route('admin.users.wallet', $user) }}"
+                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                    <i class="fas fa-wallet me-1"></i> Wallet
+                </a>
+
+                <a href="{{ route('admin.users.crowdfunding', $user) }}"
+                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                    <i class="fas fa-gift me-1"></i> Crowdfunding
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 

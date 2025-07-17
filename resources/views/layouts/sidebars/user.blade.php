@@ -61,22 +61,35 @@
 
         <!-- Wallet -->
         <li class="nav-main-item">
-            <a class="nav-main-link {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
-               href="{{ route('user.wallet') }}">
+            <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('user.wallet.*') ? 'active' : '' }}"
+                data-toggle="submenu" href="{{ route('user.wallet') }}">
                 <i class="nav-main-link-icon fa fa-wallet"></i>
                 <span class="nav-main-link-name">My Wallet</span>
             </a>
+            <ul class="nav-main-submenu">
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.wallet') }}">
+                        View Wallet
+                    </a>
+                </li>
+                <li class="nav-main-item">
+                    <a class="nav-main-link" href="{{ route('user.wallet.withdrawal') }}">
+                        Withdrawal
+                    </a>
+                </li>
+            </ul>
         </li>
 
-         <!-- Crowdfunding -->
+
+        <!-- Crowdfunding -->
         <li class="nav-main-item">
             <a class="nav-main-link nav-main-link-submenu {{ request()->routeIs('user.gift.*') ? 'active' : '' }}"
-                data-toggle="submenu" href="#">
+                data-toggle="submenu" href="{{ route('user.gift.index') }}">
                 <i class="nav-main-link-icon fa fa-gamepad"></i>
                 <span class="nav-main-link-name">Crowdfunding</span>
             </a>
             <ul class="nav-main-submenu">
-                  <li class="nav-main-item">
+                <li class="nav-main-item">
                     <a class="nav-main-link" href="{{ route('user.gift.index') }}">
                         View Requested Gifts
                     </a>
@@ -94,10 +107,8 @@
             </ul>
         </li>
 
-
-
-         <!-- Settings -->
-         <li class="nav-main-item">
+        <!-- Settings -->
+        <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('user.settings') ? 'active' : '' }}"
                 href="{{ route('user.settings') }}">
                 <i class="nav-main-link-icon fa fa-user-cog"></i>
