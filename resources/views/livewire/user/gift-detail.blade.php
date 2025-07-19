@@ -438,7 +438,7 @@
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
                             <h5>Are you sure you want to end this gift?</h5>
-                            <p class="text-muted">This action cannot be undo. As your link will no long be public and amount
+                            <p class="text-muted">This action cannot be undone. As your link will no long be public and amount
                                 raised will be moved to your withdrawable balance</p>
                             <div class="alert alert-info">
                                 <strong>{{ $gift->title }}</strong><br>

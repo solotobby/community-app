@@ -96,7 +96,7 @@
                                         <input class="form-check-input" type="checkbox" id="include_fee"
                                             wire:model.live="include_fee">
                                         <label class="form-text" for="include_fee">
-                                            Do you want your commission fee (5%) to be added to your target amount?
+                                            Do you want Famlic commission fee (5%) to be added to your target amount?
                                         </label>
                                     </div>
 
