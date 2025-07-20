@@ -106,16 +106,8 @@ class GiftDetail extends Component
         $this->validate();
 
         $updateData = [
-            'title' => $this->title,
-            'reason' => $this->reason,
             'description' => $this->description,
-            'target_amount' => $this->target_amount,
             'deadline' => $this->deadline ?: null,
-            'is_public' => $this->is_public,
-            'settings' => [
-                'allow_messages' => $this->allow_messages,
-                'min_contribution' => $this->min_contribution ?: null,
-            ]
         ];
 
         if ($this->gift_image) {

@@ -111,14 +111,14 @@
             </ul>
         </li> --}}
 
-        <!-- Settings -->
-        {{-- <li class="nav-main-item">
+         <!-- Settings -->
+        <li class="nav-main-item">
             <a class="nav-main-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"
                 href="{{ route('admin.settings') }}">
                 <i class="nav-main-link-icon fa fa-cogs"></i>
                 <span class="nav-main-link-name">Settings</span>
             </a>
-        </li> --}}
+        </li>
 
     </ul>
 </div>

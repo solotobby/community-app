@@ -12,6 +12,7 @@ use App\Livewire\Admin\Level\AllLevelItems;
 use App\Livewire\Admin\Level\CreateLevel;
 use App\Livewire\Admin\Level\LevelItemsManager;
 use App\Livewire\Admin\Level\ListLevel;
+use App\Livewire\Admin\Setting\AdminProfile;
 use App\Livewire\Admin\Transaction\ListTransactions;
 use App\Livewire\Admin\User\CrowdfundingDetails;
 use App\Livewire\Admin\User\ListUsers;
@@ -78,6 +79,10 @@ Route::middleware([
     Route::get('crowdfunding', Crowdfunding::class)->name('admin.crowdfunding.all');
     Route::get('crowdfunding-reason', GiftReason::class)->name('admin.crowdfunding.reason');
 
+    //Setting
+    Route::get('settings', AdminProfile::class)->name('admin.settings');
+
+
 });
 
 Route::middleware([
@@ -89,7 +94,6 @@ Route::middleware([
     'user.'
 )->group(function () {
 
-    Route::get('/gift-claim', RaffleClaim::class)->name('raffle.claim');
     Route::get('/dashboard', UserDashboard::class)->name('dashboard');
     Route::get('/referrals', Rewards::class)->name('referrals');
     Route::get('settings/profile', Profile::class)->name('settings');
