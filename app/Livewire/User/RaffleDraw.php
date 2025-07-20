@@ -346,6 +346,10 @@ class RaffleDraw extends Component
                     'claimed_at' => now(),
                 ]);
 
+                $this->user->update([
+                    'welcome_modal' => false
+                ]);
+
                 $this->resetClaimProcess();
                 session()->flash('success', 'Payment has been initiated to your account.');
             } else {

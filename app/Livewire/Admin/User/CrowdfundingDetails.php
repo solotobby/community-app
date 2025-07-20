@@ -16,7 +16,7 @@ class CrowdfundingDetails extends Component
     public $gift;
     public $giftId;
     public $showEditModal = false;
-    public $showDeleteModal = false;
+    public $showEndModal = false;
 
     public $platform;
 
@@ -118,16 +118,8 @@ class CrowdfundingDetails extends Component
         $this->validate();
 
         $updateData = [
-            'title' => $this->title,
-            'reason' => $this->reason,
             'description' => $this->description,
-            'target_amount' => $this->target_amount,
             'deadline' => $this->deadline ?: null,
-            'is_public' => $this->is_public,
-            'settings' => [
-                'allow_messages' => $this->allow_messages,
-                'min_contribution' => $this->min_contribution ?: null,
-            ]
         ];
 
         if ($this->gift_image) {
@@ -147,34 +139,33 @@ class CrowdfundingDetails extends Component
         $this->loadGift();
     }
 
-    public function openDeleteModal()
+     public function openEndModal()
     {
-        $this->showDeleteModal = true;
+        $this->showEndModal = true;
     }
 
-    public function closeDeleteModal()
+    public function closeEndModal()
     {
-        $this->showDeleteModal = false;
+        $this->showEndModal = false;
     }
 
-    public function deleteGift()
+    public function endGift()
     {
-        if ($this->gift->completedContributions()->count() > 0) {
-            session()->flash('error', 'Cannot delete gift with existing contributions.');
-            $this->closeDeleteModal();
-            return;
+        $user = User::findOrFail($this->gift->user_id);
+        $update = $this->gift->update([
+            'is_public' => false,
+            'status' => 'completed'
+        ]);
+
+        if ($update) {
+            $user->wallet->decrement('processing_balance', $this->gift->current_amount);
+            $user->wallet->increment('withdrawable_balance', $this->gift->current_amount);
         }
 
-        if ($this->gift->gift_image) {
-            Storage::disk('public')->delete($this->gift->gift_image);
-        }
-
-        $this->gift->delete();
-
-        session()->flash('message', 'Gift deleted successfully.');
-        return redirect()->route('livewire.admin.user.user-crowdfunding');
+        session()->flash('message', 'Gift ended successfully.');
+        $this->closeEndModal();
+        $this->loadGift();
     }
-
 
     public function shareGift($platform)
     {
@@ -199,7 +190,15 @@ class CrowdfundingDetails extends Component
         session()->flash('message', 'Link copied to clipboard!');
     }
 
-   
+    public function expireGift()
+    {
+        GiftRequest::where('status', 'active')
+            ->where('deadline', '<', now())
+            ->update([
+                'status'    => 'expired',
+                'is_public' => false,
+            ]);
+    }
 
     public function render()
     {

@@ -1,68 +1,68 @@
 <div class="content">
     @if (session()->has('success'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)"
-             x-show="show" x-transition
-             class="alert alert-success">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
     @if(auth()->user()->hasRole('super_admin'))
-    <div class="container-fluid p-0 m-0">
+        <div class="container-fluid p-0 m-0">
 
-        <!-- === Stats Row === -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-1">Total Income</h6>
-                        <h4 class="text-success mb-0">₦{{ number_format($totalIncome, 2) }}</h4>
+            <!-- === Stats Row === -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted mb-1">Total Income</h6>
+                            <h4 class="text-success mb-0">₦{{ number_format($totalIncome, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted mb-1">Total Subscription Income</h6>
+                            <h4 class="text-success mb-0">₦{{ number_format($totalSubscriptionIncome, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted mb-1">Total Level Upgrade Income</h6>
+                            <h4 class="text-success mb-0">₦{{ number_format($totalLevelUpgradeIncome, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted mb-1">Total Successful Income Transaction</h6>
+                            <h4 class="text-success mb-0">{{ ($totalIncomeTransaction) }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted mb-1">Total Payout</h6>
+                            <h4 class="text-danger mb-0">₦{{ number_format($totalPayout, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted mb-1">Total Successful Payout Transaction</h6>
+                            <h4 class="text-danger mb-0">{{ $totalPayoutTransaction }}</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-1">Total Subscription Income</h6>
-                        <h4 class="text-success mb-0">₦{{ number_format($totalSubscriptionIncome, 2) }}</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-1">Total Level Upgrade Income</h6>
-                        <h4 class="text-success mb-0">₦{{ number_format($totalLevelUpgradeIncome, 2) }}</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-1">Total Successful Income Transaction</h6>
-                        <h4 class="text-success mb-0">{{ ($totalIncomeTransaction) }}</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-1">Total Payout</h6>
-                        <h4 class="text-danger mb-0">₦{{ number_format($totalPayout, 2) }}</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body text-center">
-                        <h6 class="text-muted mb-1">Total Successful Payout Transaction</h6>
-                        <h4 class="text-danger mb-0">{{ $totalPayoutTransaction }}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- === /Stats Row === -->
-@endif
+            <!-- === /Stats Row === -->
+    @endif
+
         <div class="card border-0">
             <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start gap-2">
                 <h5 class="mb-0">User Transactions</h5>
@@ -108,9 +108,9 @@
                                 <td>₦{{ number_format($transaction->amount, 2) }}</td>
                                 <td>
                                     <span class="badge
-                                        @if($transaction->status === 'success')  bg-success
-                                        @elseif($transaction->status === 'failed') bg-danger
-                                        @else bg-warning text-dark @endif">
+                                                            @if($transaction->status === 'success')  bg-success
+                                                            @elseif($transaction->status === 'failed') bg-danger
+                                                            @else bg-warning text-dark @endif">
                                         {{ ucfirst($transaction->status) }}
                                     </span>
                                 </td>
@@ -141,4 +141,3 @@
             @endif
         </div>
     </div>
-</div>
