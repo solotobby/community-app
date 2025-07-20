@@ -12,7 +12,7 @@ class ListTransactions extends Component
     use WithPagination;
 
     public $search   = '';
-    public $perPage  = 10;    
+    public $perPage  = 10;
     protected $paginationTheme = 'bootstrap';
 
     /** Persist query in URL */
@@ -45,7 +45,7 @@ class ListTransactions extends Component
         $totalIncome  = Transaction::whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status' , 'success')->sum('amount');
         $totalSubscriptionIncome  = Transaction::where('transaction_type', 'subscription')->where('status' , 'success')->sum('amount');
         $totalLevelUpgradeIncome  = Transaction::where('transaction_type', 'level_upgrade')->where('status' , 'success')->sum('amount');
-        $totalPayout  = Transaction::where('transaction_type', 'payout')->where('status' , 'success')->sum('amount');
+        $totalPayout  = Transaction::whereIn('transaction_type', ['payout', 'wallet_withdrawal'])->where('status' , 'success')->sum('amount');
         $totalIncomeTransaction  = Transaction::whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status' , 'success')->count();
         $totalPayoutTransaction  = Transaction::where('transaction_type', 'payout')->where('status' , 'success')->count();
         $adminBalance = Wallet::where('user_id', 0)->first();

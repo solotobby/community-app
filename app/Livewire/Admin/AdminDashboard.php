@@ -54,7 +54,7 @@ class AdminDashboard extends Component
     public function loadDashboardData()
     {
         // User Stats with date filtering
-        $userQuery = User::query();
+        $userQuery = User::role('user');
         $this->userStats = [
             'total_users' => $this->getDateQuery(clone $userQuery)->count(),
             'verified_users' => $this->getDateQuery(clone $userQuery)->whereNotNull('email_verified_at')->count(),
@@ -105,7 +105,12 @@ class AdminDashboard extends Component
             'registration_transactions' => $this->getDateQuery(clone $transactionQuery)->where('transaction_type', 'subscription')->count(),
             'withdrawal_transactions' => $this->getDateQuery(clone $transactionQuery)->where('transaction_type', 'wallet_withdrawal')->count(),
             'payout_transactions' => $this->getDateQuery(clone $transactionQuery)->where('transaction_type', 'payout')->count(),
-            // 'raffle_draw_claims' => $this->getDateQuery(RaffleDraw::query())->where('status', 'earned')->count(),
+            'total_income'  => $this->getDateQuery(clone $transactionQuery)->whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status', 'success')->sum('amount'),
+            'total_subscription_income'  => $this->getDateQuery(clone $transactionQuery)->where('transaction_type', 'subscription')->where('status', 'success')->sum('amount'),
+            'total_level_upgrade_income'  => $this->getDateQuery(clone $transactionQuery)->where('transaction_type', 'level_upgrade')->where('status', 'success')->sum('amount'),
+            'total_payout'  => $this->getDateQuery(clone $transactionQuery)->whereIn('transaction_type', ['payout', 'wallet_withdrawal'])->where('status', 'success')->sum('amount'),
+            'total_income_transaction'  => $this->getDateQuery(clone $transactionQuery)->whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status', 'success')->count(),
+            'total_payout_transaction'  => $this->getDateQuery(clone $transactionQuery)->where('transaction_type', 'payout')->where('status', 'success')->count(),
         ];
 
         // Latest Withdrawal Requests

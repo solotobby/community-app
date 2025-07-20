@@ -118,7 +118,7 @@
                                     <span class="input-group-text">₦</span>
                                     <input type="number"
                                            class="form-control @error('amount') is-invalid @enderror"
-                                           wire:model.defer="amount"
+                                           wire:model.live="amount"
                                            placeholder="Enter amount to withdraw"
                                            min="100"
                                            max="{{ $balance }}"
