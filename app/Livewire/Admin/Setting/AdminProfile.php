@@ -219,11 +219,11 @@ class AdminProfile extends Component
     {
         $user = Auth::user();
 
-        if ($user->hasRole('super_admin')) {
+        // if ($user->hasRole('super_admin')) {
             return Role::whereIn('name', ['admin', 'super_admin'])->get();
-        }
+        // }
 
-        return Role::where('name', 'admin')->get();
+        // return Role::where('name', 'admin')->get();
     }
 
     private function canAssignRole($roleName)
