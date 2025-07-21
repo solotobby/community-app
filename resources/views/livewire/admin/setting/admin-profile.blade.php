@@ -192,12 +192,12 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group">
-                                                        @if (auth()->user()->hasAnyRole(['super_admin']))
+                                                        {{-- @if (auth()->user()->hasAnyRole(['super_admin'])) --}}
                                                             <button wire:click="editAdmin({{ $admin->id }})"
                                                                 class="btn btn-sm btn-outline-primary">
                                                                 <i class="fa fa-edit"></i>
                                                             </button>
-                                                        @endif
+                                                        {{-- @endif --}}
 
                                                         @if (auth()->user()->hasAnyRole(['super_admin']))
                                                             @if($admin->id !== auth()->id())
@@ -361,7 +361,7 @@
                                     @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
-            
+
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
                                 <select wire:model="status" class="form-select">
