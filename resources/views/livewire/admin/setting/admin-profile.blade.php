@@ -176,9 +176,8 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    <span
-                                                        class="badge bg-{{ ($admin->status ?? 'active') === 'active' ? 'success' : 'secondary' }}">
-                                                        {{ ($admin->status ?? 'active') }}
+                                                    <span class="badge bg-{{ $admin->status ? 'success' : 'secondary' }}">
+                                                        {{ $admin->status ? 'Active' : 'Inactive' }}
                                                     </span>
                                                 </td>
                                                 <td>{{ $admin->phone ?? '-' }}</td>
@@ -283,10 +282,11 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
-                                <select wire:model="status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
                                 </select>
+                                @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -352,10 +352,11 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
-                                <select wire:model="status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
                                 </select>
+                                @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="modal-footer">

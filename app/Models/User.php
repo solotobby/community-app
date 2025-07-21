@@ -40,6 +40,7 @@ class User extends Authenticatable
         'phone_verified_at',
         'phone_verified',
         'phone',
+        'status',
         'registration_draw',
         'recipient_code',
         'free_user',
