@@ -92,13 +92,16 @@
                 <div class="form-floating mb-4">
                     <select wire:model.defer="hear_us" class="form-control" id="hear_us">
                         <option value="" selected disabled>-- Select an option --</option>
-                        <option value="social_media">Social Media (Instagram, Twitter, etc.)</option>
-                        <option value="friend_family">Friend or Family</option>
-                        <option value="online_search">Online Search (Google, etc.)</option>
-                        <option value="advertisement">Advertisement</option>
-                        <option value="blog_article">Blog or Article</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="youtube">Youtube</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="twitter">Twitter(X)</option>
                         <option value="event">Event or Seminar</option>
-                        <option value="other">Other</option>
+                        <option value="friend">Referred by Friend</option>
+                        <option value="family">Referred by Family</option>
+                        <option value="online_ads">Online Ads (Google, etc.)</option>
                     </select>
                     <label for="hear_us">How did you hear about us?</label>
                     @error('hear_us')
