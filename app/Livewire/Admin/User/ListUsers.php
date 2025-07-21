@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Level;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class ListUsers extends Component
@@ -16,6 +18,10 @@ class ListUsers extends Component
     public $perPage = 10;
     public $filterByLevel = '';
     public $filterByStatus = '';
+    public $showBlockModal = false;
+    public $selectedUserId = null;
+    public $isBlocking = true;
+
     protected $paginationTheme = 'bootstrap';
 
     protected $queryString = [
@@ -104,6 +110,46 @@ class ListUsers extends Component
         return Response::stream($callback, 200, $headers);
     }
 
+
+
+    public function confirmBlockModal($userId)
+    {
+        $user = User::findOrFail($userId);
+        $this->selectedUserId = $userId;
+        $this->isBlocking = $user->status == 1;
+        $this->showBlockModal = true;
+    }
+
+    public function closeBlockModal()
+    {
+        $this->reset(['showBlockModal', 'selectedUserId', 'isBlocking']);
+    }
+
+    public function toggleBlock()
+    {
+        $user = User::findOrFail($this->selectedUserId);
+        $user->status = $user->status == 1 ? 0 : 1;
+        $user->save();
+
+        session()->flash('message', $user->status == 0 ? 'User blocked successfully.' : 'User unblocked successfully.');
+        $this->closeBlockModal();
+    }
+
+    public function blockUser()
+    {
+        $user = User::where('id', $this->selectedUserId)->first();
+
+        if ($user) {
+            $user->status = $user->status ? 0 : 1;
+            $user->save();
+
+            session()->flash('message', $user->status ? 'User unblocked.' : 'User blocked.');
+        }
+
+        $this->closeBlockModal();
+    }
+
+
     private function getCSVUsersQuery()
     {
         return User::role('user')
@@ -132,6 +178,8 @@ class ListUsers extends Component
                 } elseif ($this->filterByStatus == '2') {
                     $q->where('has_subscribed', false)
                         ->where('free_user', true);
+                } elseif ($this->filterByStatus == '3') {
+                    $q->where('status', false);
                 } else {
                     $q->where('has_subscribed', false)
                         ->where('free_user', false);
