@@ -1,14 +1,22 @@
 <div class="content">
     @if (session()->has('success'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
     <div class="block block-rounded">
         <div class="block-header block-header-default">
             <h3 class="block-title">Users</h3>
 
-            <!-- Per‑page selector -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Download CSV Button -->
+                <button wire:click="downloadCsv" class="btn btn-success btn-sm">
+                    <i class="fa fa-download me-1"></i> Download CSV
+                </button>
+
+                <!-- Per-page selector -->
                 <div class="d-flex align-items-center">
                     <label class="me-2 mb-0 small text-muted">Per Page:</label>
                     <select wire:model.live="perPage" class="form-select form-select-sm w-auto">
@@ -18,31 +26,49 @@
                         <option value="50">50</option>
                     </select>
                 </div>
+            </div>
         </div>
 
         <div class="block-content">
+            <!-- Filters Row -->
+            <div class="row mb-3">
+                <!-- Search -->
+                <div class="col-md-3 mb-2">
+                    <input type="text" class="form-control" placeholder="Search user with email or name..."
+                        wire:model.live.debounce.300ms="search">
+                </div>
 
-            <!-- Search -->
-            <div class="block pull-t pull-x">
-    <div class="block-content block-content-full block-content-sm bg-body-light">
-        <div class="input-group">
-            <!-- Livewire search binding -->
-            <input type="text"
-                   wire:model.debounce.500ms="search"
-                   class="form-control"
-                   placeholder="Search users by name or email..." />
+                <!-- Level Filter -->
+                <div class="col-md-2">
+                    <select wire:model.live="filterByLevel" class="form-select">
+                        <option value="">All Levels</option>
+                        @foreach($levels as $level)
+                            <option value="{{ $level->id }}">{{ $level->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <!-- Optional icon button; no submit -->
-            <button type="button" class="btn btn-secondary">
-                <i class="fa fa-search"></i>
-            </button>
-        </div>
-    </div>
-</div>
+                <!-- Status Filter -->
+                <div class="col-md-2">
+                    <select wire:model.live="filterByStatus" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="1">Subscribed</option>
+                        <option value="0">Unsubscribed</option>
+                        <option value="2">Free Account</option>
+                    </select>
+                </div>
 
-            <!-- END Search -->
+                <!-- Clear Filters -->
+                <div class="col-md-2">
+                    <button
+                        wire:click="$set('search', ''); $set('filterByLevel', ''); $set('filterByStatus', '');"
+                        class="btn btn-outline-secondary w-100">
+                        <i class="fa fa-times me-1"></i> Clear
+                    </button>
+                </div>
+            </div>
 
-
+            <!-- Results Table -->
             <table class="table table-borderless table-vcenter">
                 <thead>
                     <tr>
@@ -51,6 +77,7 @@
                         <th>Email</th>
                         <th>Level</th>
                         <th>Status</th>
+                        <th>User Type</th>
                         <th>Created At</th>
                         <th>Action</th>
                     </tr>
@@ -59,14 +86,33 @@
                     @forelse($users as $user)
                         <tr>
                             <th class="text-center">
-                                {{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</th>
+                                {{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}
+                            </th>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->levelInfo?->name ?? 'N/A' }}</td>
-                            <td>{{ $user->has_subscribed ? 'Subscribed' : 'Unsubscribed' }}</td>
-                            {{-- <td>{{ $user->getRoleNames()->implode(', ') }}</td> --}}
+                            <td>
+                                @php
+                                    if ($user->has_subscribed) {
+                                        $status = 'Subscribed';
+                                        $badge = 'bg-success';
+                                    } elseif ($user->free_user) {
+                                        $status = 'Free Account';
+                                        $badge = 'bg-info';
+                                    } else {
+                                        $status = 'Unsubscribed';
+                                        $badge = 'bg-warning';
+                                    }
+                                @endphp
+
+                                <span class="badge {{ $badge }}">
+                                    {{ $status }}
+                                </span>
+                            </td>
+
+                            <td>{{ $user->getRoleNames()->implode(', ') }}</td>
                             <td>{{ $user->created_at->format('d M, Y') }}</td>
-                             <td>
+                            <td>
                                 <a href="{{ route('admin.users.details', ['id' => $user->id]) }}"
                                     class="btn btn-sm btn-primary" onclick="event.stopPropagation()">
                                     View Details
@@ -75,16 +121,19 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted">No users found.</td>
+                            <td colspan="8" class="text-center text-muted">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
-             @if ($users->hasPages())
+            <!-- Pagination -->
+            @if ($users->hasPages())
                 <div class="mt-3 d-flex justify-content-between align-items-center px-3">
                     <small class="text-muted">
-                        Page {{ $users->currentPage() }} of {{ $users->lastPage() }}
+                        Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }}
+                        of {{ $users->total() }} results
+                        (Page {{ $users->currentPage() }} of {{ $users->lastPage() }})
                     </small>
                     {{ $users->links() }}
                 </div>
