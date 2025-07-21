@@ -9,11 +9,11 @@
                 <p class="text-muted mb-0">Manage admin users and system settings</p>
             </div>
             <div class="col-md-6 text-end">
-                {{-- @if (auth()->user()->hasAnyRole(['super_admin'])) --}}
+                @if (auth()->user()->hasAnyRole(['super_admin']))
                     <button wire:click="openCreateModal" class="btn btn-primary">
                         <i class="fa fa-plus"></i> Create Admin
                     </button>
-                {{-- @endif --}}
+                @endif
             </div>
         </div>
 
@@ -192,12 +192,12 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group">
-                                                        {{-- @if (auth()->user()->hasAnyRole(['super_admin'])) --}}
+                                                        @if (auth()->user()->hasAnyRole(['super_admin']))
                                                             <button wire:click="editAdmin({{ $admin->id }})"
                                                                 class="btn btn-sm btn-outline-primary">
                                                                 <i class="fa fa-edit"></i>
                                                             </button>
-                                                        {{-- @endif --}}
+                                                        @endif
 
                                                         @if (auth()->user()->hasAnyRole(['super_admin']))
                                                             @if($admin->id !== auth()->id())

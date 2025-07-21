@@ -80,10 +80,10 @@ class AdminProfile extends Component
         $this->validate();
 
         // Check if current user can assign this role
-        // if (!$this->canAssignRole($this->role)) {
-        //     session()->flash('error', 'You do not have permission to assign this role.');
-        //     return;
-        // }
+        if (!$this->canAssignRole($this->role)) {
+            session()->flash('error', 'You do not have permission to assign this role.');
+            return;
+        }
 
         $user = User::create([
             'name' => $this->name,
@@ -130,10 +130,10 @@ class AdminProfile extends Component
         $user = User::findOrFail($this->editingUserId);
 
         // Check permissions
-        // if (!$this->canEditUser($user) || !$this->canAssignRole($this->role)) {
-        //     session()->flash('error', 'You do not have permission to perform this action.');
-        //     return;
-        // }
+        if (!$this->canEditUser($user) || !$this->canAssignRole($this->role)) {
+            session()->flash('error', 'You do not have permission to perform this action.');
+            return;
+        }
 
         $updateData = [
             'name' => $this->name,
@@ -153,7 +153,6 @@ class AdminProfile extends Component
 
         $this->closeEditModal();
         session()->flash('success', 'Admin user updated successfully!');
-        return;
     }
 
     public function closeEditModal()
@@ -220,11 +219,11 @@ class AdminProfile extends Component
     {
         $user = Auth::user();
 
-        // if ($user->hasRole('super_admin')) {
+        if ($user->hasRole('super_admin')) {
             return Role::whereIn('name', ['admin', 'super_admin'])->get();
-        // }
+        }
 
-        // return Role::where('name', 'admin')->get();
+        return Role::where('name', 'admin')->get();
     }
 
     private function canAssignRole($roleName)

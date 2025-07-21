@@ -23,32 +23,45 @@ class ListTransactions extends Component
     ];
 
     // Reset page when search or perPage changes
-    public function updatingSearch()  { $this->resetPage(); }
-    public function updatedSearch()   { $this->resetPage(); }
-    public function updatingPerPage() { $this->resetPage(); }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
         $transactions = Transaction::with(['user.level'])
             ->when($this->search, function ($q) {
-                $q->whereHas('user', fn ($u) =>
-                        $u->where('name', 'like', "%{$this->search}%")
-                          ->orWhere('email', 'like', "%{$this->search}%"))
-                  ->orWhere('transaction_type',   'like', "%{$this->search}%")
-                  ->orWhere('transaction_reason', 'like', "%{$this->search}%")
-                  ->orWhere('status',             'like', "%{$this->search}%");
+                $q->whereHas('user', fn($u) =>
+                $u->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('email', 'like', "%{$this->search}%"))
+                    ->orWhere('transaction_type',   'like', "%{$this->search}%")
+                    ->orWhere('transaction_reason', 'like', "%{$this->search}%")
+                    ->orWhere('status',             'like', "%{$this->search}%");
             })
             ->latest()
             ->paginate($this->perPage);
 
         // Stats
-        $totalIncome  = Transaction::whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status' , 'success')->sum('amount');
-        $totalSubscriptionIncome  = Transaction::where('transaction_type', 'subscription')->where('status' , 'success')->sum('amount');
-        $totalLevelUpgradeIncome  = Transaction::where('transaction_type', 'level_upgrade')->where('status' , 'success')->sum('amount');
-        $totalPayout  = Transaction::whereIn('transaction_type', ['payout', 'wallet_withdrawal'])->where('status' , 'success')->sum('amount');
-        $totalIncomeTransaction  = Transaction::whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status' , 'success')->count();
-        $totalPayoutTransaction  = Transaction::where('transaction_type', 'payout')->where('status' , 'success')->count();
-        $adminBalance = Wallet::where('user_id', 0)->first();
+        $totalIncome  = Transaction::whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status', 'success')->sum('amount');
+        $totalSubscriptionIncome  = Transaction::where('transaction_type', 'subscription')->where('status', 'success')->sum('amount');
+        $totalLevelUpgradeIncome  = Transaction::where('transaction_type', 'level_upgrade')->where('status', 'success')->sum('amount');
+        $totalPayout  = Transaction::whereIn('transaction_type', ['payout', 'wallet_withdrawal'])->where('status', 'success')->sum('amount');
+        $totalIncomeTransaction  = Transaction::whereIn('transaction_type', ['subscription', 'level_upgrade'])->where('status', 'success')->count();
+        $totalPayoutTransaction  = Transaction::where('transaction_type', 'payout')->where('status', 'success')->count();
+        $adminBalance = Wallet::firstOrCreate(
+            ['user_id' => 0],
+            ['balance' => 0, 'user_role' => 'admin']
+        );
+
 
         return view('livewire.admin.transaction.list-transactions', [
             'transactions' => $transactions,
