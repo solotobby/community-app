@@ -176,9 +176,8 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    <span
-                                                        class="badge bg-{{ ($admin->status ?? 'active') === 'active' ? 'success' : 'secondary' }}">
-                                                        {{ ($admin->status ?? 'active') }}
+                                                    <span class="badge bg-{{ $admin->status ? 'success' : 'secondary' }}">
+                                                        {{ $admin->status ? 'Active' : 'Inactive' }}
                                                     </span>
                                                 </td>
                                                 <td>{{ $admin->phone ?? '-' }}</td>
@@ -237,9 +236,9 @@
 
     <!-- Create Admin Modal -->
     @if($showCreateModal)
-        <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             <i class="fa fa-user-plus text-primary me-2"></i>Create New Admin
@@ -281,24 +280,13 @@
                                     @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
-                            {{-- <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Password *</label>
-                                    <input type="password" wire:model="password"
-                                        class="form-control @error('password') is-invalid @enderror">
-                                    @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Confirm Password *</label>
-                                    <input type="password" wire:model="password_confirmation" class="form-control">
-                                </div>
-                            </div> --}}
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
-                                <select wire:model="status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
                                 </select>
+                                @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -317,9 +305,9 @@
 
     <!-- Edit Admin Modal -->
     @if($showEditModal)
-        <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             <i class="fa fa-edit text-warning me-2"></i>Edit Admin
@@ -364,16 +352,17 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Status</label>
-                                <select wire:model="status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                <select wire:model="status" class="form-select @error('status') is-invalid @enderror">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
                                 </select>
+                                @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" wire:click="closeEditModal">Cancel</button>
                             <button type="submit" class="btn btn-warning" wire:loading.attr="disabled">
-                                <span wire:loading.remove">Update Admin</span>
+                                <span wire:loading.remove>Update Admin</span>
                                 <span wire:loading>Updating...</span>
                             </button>
                         </div>
@@ -386,9 +375,9 @@
 
     <!-- Delete Confirmation Modal -->
     @if($showDeleteModal)
-        <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             <i class="fa fa-exclamation-triangle text-danger me-2"></i>Confirm Delete
@@ -401,7 +390,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" wire:click="closeDeleteModal">Cancel</button>
                         <button type="button" class="btn btn-danger" wire:click="deleteAdmin" wire:loading.attr="disabled">
-                            <span wire:loading.remove">Delete</span>
+                            <span wire:loading.remove>Delete</span>
                             <span wire:loading>Deleting...</span>
                         </button>
                     </div>

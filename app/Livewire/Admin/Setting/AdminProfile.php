@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
@@ -26,7 +27,7 @@ class AdminProfile extends Component
     public $password_confirmation = '';
     public $role = 'admin';
     public $phone = '';
-    public $status = 'active';
+    public $status = 1; // Changed from true to 1
 
     // Edit/Delete properties
     public $editingUserId = null;
@@ -43,14 +44,20 @@ class AdminProfile extends Component
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
             'role' => 'required|exists:roles,name',
             'phone' => 'nullable|string|max:20',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:0,1',
         ];
 
+        // Dynamic email validation
         if ($this->showEditModal && $this->editingUserId) {
-            $rules['email'] = 'required|email|unique:users,email,' . $this->editingUserId;
+            $rules['email'] = [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->editingUserId)
+            ];
+        } else {
+            $rules['email'] = 'required|email|unique:users,email';
         }
 
         return $rules;
@@ -58,8 +65,8 @@ class AdminProfile extends Component
 
     public function mount()
     {
-        // Set default role to first available admin role
         $this->role = $this->getAvailableRoles()->first()?->name ?? 'admin';
+        $this->status = 1;
     }
 
     public function openCreateModal()
@@ -79,7 +86,6 @@ class AdminProfile extends Component
     {
         $this->validate();
 
-        // Check if current user can assign this role
         if (!$this->canAssignRole($this->role)) {
             session()->flash('error', 'You do not have permission to assign this role.');
             return;
@@ -90,7 +96,7 @@ class AdminProfile extends Component
             'email' => $this->email,
             'password' => Hash::make('password123'),
             'phone' => $this->phone,
-            'status' => $this->status,
+            'status' => (bool)$this->status,
             'email_verified_at' => now(),
         ]);
 
@@ -105,7 +111,6 @@ class AdminProfile extends Component
     {
         $user = User::findOrFail($userId);
 
-        // Check if current user can edit this user
         if (!$this->canEditUser($user)) {
             session()->flash('error', 'You do not have permission to edit this user.');
             return;
@@ -115,8 +120,8 @@ class AdminProfile extends Component
         $this->name = $user->name;
         $this->email = $user->email;
         $this->role = $user->getRoleNames()->first() ?? 'admin';
-        $this->phone = $user->phone;
-        $this->status = $user->status ?? 'active';
+        $this->phone = $user->phone ?? '';
+        $this->status = $user->status ? 1 : 0;
         $this->password = '';
         $this->password_confirmation = '';
 
@@ -139,7 +144,7 @@ class AdminProfile extends Component
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'status' => $this->status,
+            'status' => (bool) $this->status,
         ];
 
         if (!empty($this->password)) {
@@ -148,7 +153,6 @@ class AdminProfile extends Component
 
         $user->update($updateData);
 
-        // Update role using Spatie
         $user->syncRoles([$this->role]);
 
         $this->closeEditModal();
@@ -167,13 +171,11 @@ class AdminProfile extends Component
     {
         $user = User::findOrFail($userId);
 
-        // Check if current user can delete this user
         if (!$this->canDeleteUser($user)) {
             session()->flash('error', 'You do not have permission to delete this user.');
             return;
         }
 
-        // Prevent self-deletion
         if ($user->id === Auth::id()) {
             session()->flash('error', 'You cannot delete your own account.');
             return;
@@ -187,7 +189,6 @@ class AdminProfile extends Component
     {
         $user = User::findOrFail($this->deletingUserId);
 
-        // Final permission check
         if (!$this->canDeleteUser($user) || $user->id === Auth::id()) {
             session()->flash('error', 'You cannot delete this user.');
             return;
@@ -209,12 +210,13 @@ class AdminProfile extends Component
     {
         $this->name = '';
         $this->email = '';
+        $this->password = '';
+        $this->password_confirmation = '';
         $this->role = $this->getAvailableRoles()->first()?->name ?? 'admin';
         $this->phone = '';
-        $this->status = 'active';
+        $this->status = 1;
     }
 
-    // Helper methods for role management
     private function getAvailableRoles()
     {
         $user = Auth::user();
@@ -280,15 +282,16 @@ class AdminProfile extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%')
-                      ->orWhere('phone', 'like', '%' . $this->search . '%');
+                        ->orWhere('email', 'like', '%' . $this->search . '%')
+                        ->orWhere('phone', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->roleFilter, function ($query) {
                 $query->role($this->roleFilter);
             })
-            ->when($this->statusFilter, function ($query) {
-                $query->where('status', $this->statusFilter);
+            ->when($this->statusFilter !== '', function ($query) {
+                $status = $this->statusFilter === 'active' ? 1 : 0;
+                $query->where('status', $status);
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10);

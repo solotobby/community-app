@@ -38,7 +38,7 @@ class Login extends Component
 
         $user = User::where('email', $this->email)->first();
 
-        if (!$user || ! Hash::check($this->password, $user->password)) {
+        if (!$user || !Hash::check($this->password, $user->password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -46,15 +46,22 @@ class Login extends Component
             ]);
         }
 
+        //  Prevent login if the user is blocked
+        if (!$user->status) {
+            throw ValidationException::withMessages([
+                'email' => 'Your account has been blocked. Please contact support.',
+            ]);
+        }
+
         // If user is already subscribed or free
         if (
-            $user->hasAnyRole('admin','super_admin')
+            $user->hasAnyRole('admin', 'super_admin')
             || $user->has_subscribed || $user->free_user
         ) {
             RateLimiter::clear($this->throttleKey());
             Session::regenerate();
 
-            Auth::login($user);
+            Auth::login(user: $user);
             $this->redirectIntended(route('home'), navigate: true);
             return;
         }

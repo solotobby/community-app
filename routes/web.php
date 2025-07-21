@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware([
     'auth',
+    'checkStatus',
     'role:admin|super_admin'
 ])->prefix(
     'admin'
@@ -87,6 +88,7 @@ Route::middleware([
 
 Route::middleware([
     'auth',
+    'checkStatus',
     'role:user'
 ])->prefix(
     'user'
