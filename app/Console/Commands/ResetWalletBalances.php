@@ -31,7 +31,7 @@ protected $signature = 'wallets:reset-balances {--dry-run : Show what would be r
 
     try {
         $count = DB::table('wallets')->update([
-            'total_balance'        => 0,
+            'balance'        => 0,
             'withdrawable_balance' => 0,
             'processing_balance'   => 0,
             'updated_at'           => now(),
