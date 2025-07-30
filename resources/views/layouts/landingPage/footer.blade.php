@@ -5,7 +5,7 @@
                 <div class="footer-widget-2 about-widget">
                     <div class="footer-logo">
                         <a href="index-2.html">
-                            <img src="{{asset('assets__/img/logo/logo-w2.png')}}" alt="logo">
+                            <img src="{{asset('assets__/img/logo/FAMLIC_LOGO.png')}}" alt="logo">
                         </a>
                     </div>
                     <p>
