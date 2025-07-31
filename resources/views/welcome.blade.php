@@ -1,9 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Famlic - Support for Every Family</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="author" content="Famlic">
+    <meta name="robots" content="Famlic">
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:site_name" content="Famlic">
+    <meta property="og:description"
+        content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://famlic.com">
+    <meta property="og:image" content="">
+
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicons/apple-touch-icon-180x180.png">
+    <title>Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa </title>
     <style>
         * {
             margin: 0;
@@ -28,7 +48,7 @@
         header {
             background: #FFFFFF;
             padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             position: fixed;
             width: 100%;
             top: 0;
@@ -46,6 +66,19 @@
             font-weight: bold;
             color: #000000;
         }
+
+        .desktop-tablet-only {
+            display: inline-block;
+        }
+
+        @media (max-width: 767px) {
+
+            /* Mobile breakpoint */
+            .desktop-tablet-only {
+                display: none;
+            }
+        }
+
 
         .logo .green {
             color: #2F6932;
@@ -138,6 +171,28 @@
         }
 
         .hero-image {
+            background: #ffffff;
+            ;
+            border-radius: 15px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2F6932;
+            font-size: 1.2rem;
+            border: 2px dashed #2F6932;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+
+        /* .hero-image {
             background: #F4F4F4;
             border-radius: 15px;
             height: 400px;
@@ -149,7 +204,7 @@
             border: 2px dashed #2F6932;
             text-align: center;
             padding: 2rem;
-        }
+        } */
 
         .btn-secondary {
             background: transparent;
@@ -261,7 +316,7 @@
             padding: 2rem;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
 
@@ -329,7 +384,7 @@
         }
 
         .benefits-image {
-            background: #F4F4F4;
+            background: #ffffff;;
             border-radius: 15px;
             height: 400px;
             display: flex;
@@ -375,7 +430,7 @@
             padding: 2rem;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
             position: relative;
         }
@@ -421,6 +476,61 @@
             color: #666;
             margin-bottom: 2rem;
             font-size: 0.9rem;
+        }
+
+        /* FAQs Section*/
+        .faq-section {
+            max-width: 800px;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            color: #000000;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #ccc;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: #f4f4f4;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: #e4e4e4;
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            padding: 0 1rem;
+        }
+
+        .accordion-body p {
+            margin: 1rem 0;
+        }
+
+        /* Show active body */
+        .accordion-item.active .accordion-body {
+            max-height: 500px;
+            /* adjust based on content */
+            padding-bottom: 1rem;
         }
 
         /* Testimonials Section */
@@ -597,6 +707,17 @@
             color: #FFFFFF;
         }
 
+        .stat-card {
+            transition: all 0.6s ease-out;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .stat-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -657,7 +778,7 @@
         .step-image {
             width: 100%;
             height: 200px;
-            background: #F4F4F4;
+            background: #ffffff;;
             border-radius: 10px;
             margin-bottom: 1.5rem;
             display: flex;
@@ -695,7 +816,7 @@
             border-radius: 10px;
             text-align: center;
             min-width: 200px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .value-item h3 {
@@ -929,7 +1050,7 @@
                 left: 0;
                 width: 100%;
                 background: #FFFFFF;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                 padding: 1rem;
             }
 
@@ -990,19 +1111,24 @@
             }
         }
     </style>
+
 </head>
+
 <body>
     <header>
         <nav class="container">
             <div class="logo">
-                Fam<span class="green">lic</span>
+                <a href="{{ url('/') }}">
+                    <img src="{{asset('assets__/img/logo/FAMLIC_LOGO.png')}}" alt="logo"
+                        style="max-width: 120px; height: auto;">
+                </a>
             </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
                 <li><a href="#" class="nav-link" data-page="about">About Us</a></li>
                 <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
             </ul>
-            <a href="#" class="cta-btn">Start Campaign</a>
+            <a href="{{ route('login') }}" class="cta-btn desktop-tablet-only">Raise Money</a>
             <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
         </nav>
     </header>
@@ -1014,23 +1140,71 @@
                 <div class="container">
                     <div class="hero-content">
                         <div class="hero-text">
-                            <h1><span class="highlight">Support</span> for Every Family</h1>
-                            <p>Help Nigerian families raise funds for essential needs through our trusted crowdfunding platform</p>
+                            <h1><span class="highlight">Raise Money</span> for Urgent NEEDS</h1>
+                            <p>Raise funds for essential needs from friends & families through our trusted
+                                crowdfunding platform</p>
                             <div class="hero-buttons">
-                                <a href="#" class="cta-btn">Create Campaign</a>
-                                <a href="#" class="btn-secondary">Browse Campaigns</a>
+                                <a href="{{ route('login') }}" class="cta-btn">Raise Money</a>
+                                <a href="{{ route('register') }}" class="btn-secondary">Support a Family</a>
                             </div>
+
                         </div>
                         <div class="hero-image">
-                            [Hero Image Placeholder]<br>
-                            Nigerian families together<br>
-                            showing community support
+                            <img src="{{asset('assets__/img/famlic/famlic_banner.jpg')}}" alt="thumb-1">
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="features">
+            <section class="how-it-works">
+                <div class="container">
+                    <h2>How It Works</h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-image">
+                                <img src="{{asset('assets__/img/famlic/Ask_for_help.jpg')}}" alt="thumb-1">
+
+                            </div>
+                            <h3>Ask for Help</h3>
+                            <p>Create a request to ask for support for food, money or gadgets on your big day or
+                                for a special need.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-image">
+                                [Step 2 Image]<br>
+                                Sharing campaign link<br>
+                                via social media
+                            </div>
+                            <h3>Share & Invite</h3>
+                            <p>Share your crowdfunding link with friends, family, and colleagues</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-image">
+                                [Step 3 Image]<br>
+                                People contributing<br>
+                                money via app
+                            </div>
+                            <h3>Receive Support</h3>
+                            <p>Watch as your community comes together to support your cause</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <div class="step-image">
+                                [Step 4 Image]<br>
+                                Money being withdrawn<br>
+                                to bank account
+                            </div>
+                            <h3>Withdraw Funds</h3>
+                            <p>Get your money in your bank account securely</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- <section class="features">
                 <div class="container">
                     <h2>How Famlic Works</h2>
                     <div class="features-grid">
@@ -1040,8 +1214,9 @@
                                 [Feature Image]<br>
                                 Nigerian family in home setting
                             </div>
-                            <h3>Family-Centered</h3>
-                            <p>Designed specifically for Nigerian families to raise support for household essentials, food, and gadgets.</p>
+                            <h3>Ask for help</h3>
+                            <p>Create a request to ask for support for food, money or gadgets on your big day or
+                                for a special need.</p>
                         </div>
                         <div class="feature-card">
                             <div class="feature-icon">🤝</div>
@@ -1049,8 +1224,9 @@
                                 [Feature Image]<br>
                                 Community members helping each other
                             </div>
-                            <h3>Community Trust</h3>
-                            <p>Built on transparency and reliability, creating a trusted space for community support.</p>
+                            <h3>Get Support</h3>
+                            <p>Small helps from many people add up to help you.
+                            </p>
                         </div>
                         <div class="feature-card">
                             <div class="feature-icon">📱</div>
@@ -1058,29 +1234,29 @@
                                 [Feature Image]<br>
                                 Mobile app interface screenshot
                             </div>
-                            <h3>Simple & Digital</h3>
-                            <p>Easy-to-use platform that simplifies how families access financial and material help.</p>
+                            <h3>Withdraw Securely</h3>
+                            <p>Receive the money you have raised securely in your bank account.</p>
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> --}}
 
             <section class="stats">
                 <div class="container">
                     <div class="stats-grid">
-                        <div class="stat-card">
+                        <div class="stat-card animate">
                             <h3>10,000+</h3>
                             <p>Families Supported</p>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card animate">
                             <h3>₦500M+</h3>
                             <p>Funds Raised</p>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card animate">
                             <h3>98%</h3>
                             <p>Success Rate</p>
                         </div>
-                        <div class="stat-card">
+                        <div class="stat-card animate">
                             <h3>30 Sec</h3>
                             <p>Average Withdrawal Time</p>
                         </div>
@@ -1104,69 +1280,23 @@
                         </div>
                         <div class="more-feature-card">
                             <div class="more-feature-icon">📱</div>
-                            <h3>Contribute Anywhere</h3>
-                            <p>Easy to contribute at work, home, or on the move with our mobile app</p>
+                            <h3>Earn Food Gifts</h3>
+                            <p>Gain access to regular food items as gifts when you subscribe to any Famlic
+                                Premium Food packages</p>
                         </div>
                         <div class="more-feature-card">
                             <div class="more-feature-icon">🔒</div>
                             <h3>Secure Payments</h3>
-                            <p>Simple, secure payment system with bank-level encryption</p>
+                            <p>Withdraw money raised securely to your bank accounts</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="how-it-works">
-                <div class="container">
-                    <h2>How It Works</h2>
-                    <div class="steps-grid">
-                        <div class="step-card">
-                            <div class="step-number">1</div>
-                            <div class="step-image">
-                                [Step 1 Image]<br>
-                                Person creating campaign<br>
-                                on mobile device
-                            </div>
-                            <h3>Create Campaign</h3>
-                            <p>Set up your fundraising campaign in minutes with our simple form</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-number">2</div>
-                            <div class="step-image">
-                                [Step 2 Image]<br>
-                                Sharing campaign link<br>
-                                via social media
-                            </div>
-                            <h3>Share & Invite</h3>
-                            <p>Share your campaign with friends, family, and colleagues</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-number">3</div>
-                            <div class="step-image">
-                                [Step 3 Image]<br>
-                                People contributing<br>
-                                money via app
-                            </div>
-                            <h3>Receive Support</h3>
-                            <p>Watch as your community comes together to support your cause</p>
-                        </div>
-                        <div class="step-card">
-                            <div class="step-number">4</div>
-                            <div class="step-image">
-                                [Step 4 Image]<br>
-                                Money being withdrawn<br>
-                                to bank account
-                            </div>
-                            <h3>Withdraw Funds</h3>
-                            <p>Get your money in your bank account within 30 seconds</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <section class="benefits">
                 <div class="container">
-                    <h2>Platform Benefits</h2>
+                    {{-- <h2>Why Choose Famlic</h2> --}}
                     <div class="benefits-content">
                         <div>
                             <ul class="benefits-list">
@@ -1181,10 +1311,8 @@
                             </ul>
                         </div>
                         <div class="benefits-image">
-                            [Benefits Image]<br>
-                            Dashboard showing<br>
-                            campaign analytics<br>
-                            and progress
+                            <img src="{{asset('assets__/img/famlic/Famlic_benefit.png')}}" alt="thumb-1">
+
                         </div>
                     </div>
                 </div>
@@ -1193,61 +1321,118 @@
             <section class="pricing">
                 <div class="container">
                     <h2>Choose Your Level</h2>
-                    <p class="pricing-subtitle">Select the membership level that fits your family's needs</p>
+                    <p class="pricing-subtitle">Raise Funds through our Free Crowdfunding feature or subscribe to our
+                        Premium regular food gifts packages.</p>
                     <div class="pricing-grid">
                         <div class="pricing-card">
                             <div class="pricing-title">Crowdfunding</div>
                             <div class="pricing-price">₦0</div>
                             <div class="pricing-description">Basic crowdfunding access</div>
-                            <a href="#" class="cta-btn">Get Started</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Get Started</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Famlic 1</div>
                             <div class="pricing-price">₦20,000</div>
                             <div class="pricing-description">Children & Students</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Famlic 2</div>
                             <div class="pricing-price">₦30,000</div>
                             <div class="pricing-description">Singles & Newly Married</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card featured">
                             <div class="pricing-title">Famlic 3</div>
                             <div class="pricing-price">₦50,000</div>
                             <div class="pricing-description">New Parents</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Famlic 4</div>
                             <div class="pricing-price">₦70,000</div>
                             <div class="pricing-description">Family of 2-6 Children</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Famlic 5</div>
                             <div class="pricing-price">₦100,000</div>
                             <div class="pricing-description">Grand Parents</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Famlic Pro</div>
                             <div class="pricing-price">₦200,000</div>
                             <div class="pricing-description">Professional tier</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Famlic Plus</div>
                             <div class="pricing-price">₦500,000</div>
                             <div class="pricing-description">Premium features</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
                         </div>
                         <div class="pricing-card">
                             <div class="pricing-title">Community Gift</div>
                             <div class="pricing-price">₦750,000</div>
                             <div class="pricing-description">Ultimate community support</div>
-                            <a href="#" class="cta-btn">Choose Plan</a>
+                            <a href="{{ route('register') }}" class="cta-btn">Choose Plan</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="faq-section">
+                <div class="container">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="accordion">
+                        <div class="accordion-item active">
+                            <button class="accordion-header">What is Famlic?</button>
+                            <div class="accordion-body">
+                                <p>Famlic is a platform that allows families to raise and receive financial support
+                                    quickly
+                                    and securely.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header">How do I raise money?</button>
+                            <div class="accordion-body">
+                                <p>Just sign up, set your fundraising goal, and share your campaign link with friends
+                                    and
+                                    supporters.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header">How soon can I withdraw funds?</button>
+                            <div class="accordion-body">
+                                <p>Withdrawals are processed within 30 seconds once your account is verified.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="security">
+                <div class="container">
+                    <h2>Secure & Fast Withdrawals</h2>
+                    <div class="security-content">
+                        <div>
+                            <ul class="security-features">
+                                <li><strong>Instant credit to your wallet</strong><br>Money appears in your Famlic
+                                    wallet immediately when someone contributes</li>
+                                <li><strong>Raise funds from as many friends as possible</strong><br>No limits on the
+                                    number of people who can support your campaign</li>
+                                <li><strong>Easy to contribute at work or on the move</strong><br>Mobile-optimized
+                                    platform works anywhere, anytime</li>
+                                <li><strong>Simple secure payments</strong><br>Bank-level security with easy withdrawal
+                                    to your account in under 30 seconds</li>
+                            </ul>
+                        </div>
+                        <div class="security-image">
+                            [Security Image]<br>
+                            Mobile phone showing<br>
+                            secure payment interface<br>
+                            and bank transfer
                         </div>
                     </div>
                 </div>
@@ -1265,7 +1450,8 @@
                                         Adanna O.
                                     </div>
                                     <div class="testimonial-text">
-                                        "I was able to raise ₦150,000 for my children's school fees in just 2 weeks. The platform made it so easy to reach out to family and friends. Thank you Famlic!"
+                                        "I was able to raise ₦150,000 for my children's school fees in just 2 weeks. The
+                                        platform made it so easy to reach out to family and friends. Thank you Famlic!"
                                     </div>
                                     <div class="testimonial-author">Adanna Okafor</div>
                                     <div class="testimonial-details">Mother of 3, Lagos • Raised ₦150,000</div>
@@ -1278,7 +1464,8 @@
                                         Chidi M.
                                     </div>
                                     <div class="testimonial-text">
-                                        "When my wife was pregnant, we needed funds for hospital bills. Famlic helped us raise ₦80,000 from our church community and colleagues. Amazing platform!"
+                                        "When my wife was pregnant, we needed funds for hospital bills. Famlic helped us
+                                        raise ₦80,000 from our church community and colleagues. Amazing platform!"
                                     </div>
                                     <div class="testimonial-author">Chidi Mbah</div>
                                     <div class="testimonial-details">New Father, Abuja • Raised ₦80,000</div>
@@ -1291,7 +1478,8 @@
                                         Fatima A.
                                     </div>
                                     <div class="testimonial-text">
-                                        "My laptop broke during my final year project. Thanks to Famlic, I raised enough money to buy a new one and graduate on time. Forever grateful!"
+                                        "My laptop broke during my final year project. Thanks to Famlic, I raised enough
+                                        money to buy a new one and graduate on time. Forever grateful!"
                                     </div>
                                     <div class="testimonial-author">Fatima Abdullahi</div>
                                     <div class="testimonial-details">University Student, Kano • Raised ₦120,000</div>
@@ -1306,28 +1494,6 @@
                             <span class="slider-dot active"></span>
                             <span class="slider-dot"></span>
                             <span class="slider-dot"></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="security">
-                <div class="container">
-                    <h2>Secure & Fast Withdrawals</h2>
-                    <div class="security-content">
-                        <div>
-                            <ul class="security-features">
-                                <li><strong>Instant credit to your wallet</strong><br>Money appears in your Famlic wallet immediately when someone contributes</li>
-                                <li><strong>Raise funds from as many friends as possible</strong><br>No limits on the number of people who can support your campaign</li>
-                                <li><strong>Easy to contribute at work or on the move</strong><br>Mobile-optimized platform works anywhere, anytime</li>
-                                <li><strong>Simple secure payments</strong><br>Bank-level security with easy withdrawal to your account in under 30 seconds</li>
-                            </ul>
-                        </div>
-                        <div class="security-image">
-                            [Security Image]<br>
-                            Mobile phone showing<br>
-                            secure payment interface<br>
-                            and bank transfer
                         </div>
                     </div>
                 </div>
@@ -1385,8 +1551,15 @@
                     <div class="about-section-with-image">
                         <div>
                             <h2>Our Story</h2>
-                            <p>Famlic is a family-centered digital platform developed by Dominahl Technology to help Nigerian families raise support for essential needs such as food, household items, and gadgets. Launched in June 2025, Famlic is built on the power of community, trust, and practical support for everyday living.</p>
-                            <p>We recognized that many Nigerian families face challenges in accessing financial support for basic necessities. Traditional methods of seeking help were often complicated, unreliable, or lacked transparency. Famlic was created to bridge this gap by providing a modern, trustworthy platform that connects families in need with those willing to help.</p>
+                            <p>Famlic is a family-centered digital platform developed by Dominahl Technology to help
+                                Nigerian families raise support for essential needs such as food, household items, and
+                                gadgets. Launched in June 2025, Famlic is built on the power of community, trust, and
+                                practical support for everyday living.</p>
+                            <p>We recognized that many Nigerian families face challenges in accessing financial support
+                                for basic necessities. Traditional methods of seeking help were often complicated,
+                                unreliable, or lacked transparency. Famlic was created to bridge this gap by providing a
+                                modern, trustworthy platform that connects families in need with those willing to help.
+                            </p>
                         </div>
                         <div class="about-section-image">
                             [Story Image]<br>
@@ -1398,7 +1571,10 @@
                     <div class="about-section-with-image">
                         <div>
                             <h2>Our Mission</h2>
-                            <p>To simplify how families access financial and material help by creating a trusted digital space for support, donations, and sharing. We believe that every family deserves access to basic necessities, and our platform makes it easier for communities to come together and support one another.</p>
+                            <p>To simplify how families access financial and material help by creating a trusted digital
+                                space for support, donations, and sharing. We believe that every family deserves access
+                                to basic necessities, and our platform makes it easier for communities to come together
+                                and support one another.</p>
                         </div>
                         <div class="about-section-image">
                             [Mission Image]<br>
@@ -1410,7 +1586,10 @@
                     <div class="about-section-with-image">
                         <div>
                             <h2>Our Vision</h2>
-                            <p>To be Africa's most reliable platform for family crowdfunding and community support. We envision a future where no family has to struggle alone, where communities are strengthened through mutual support, and where technology serves as a bridge to connect those who need help with those who can provide it.</p>
+                            <p>To be Africa's most reliable platform for family crowdfunding and community support. We
+                                envision a future where no family has to struggle alone, where communities are
+                                strengthened through mutual support, and where technology serves as a bridge to connect
+                                those who need help with those who can provide it.</p>
                         </div>
                         <div class="about-section-image">
                             [Vision Image]<br>
@@ -1421,8 +1600,12 @@
 
                     <div class="about-section">
                         <h2>Why Choose Famlic?</h2>
-                        <p>Famlic stands apart as a platform specifically designed for Nigerian families. We understand the unique challenges and cultural context of our community. Our platform is built with transparency, security, and ease-of-use at its core, ensuring that both campaign creators and donors feel confident and secure in their interactions.</p>
-                        <p>Developed by Dominahl Technology, Famlic combines technical expertise with deep understanding of community needs, creating a solution that truly serves Nigerian families.</p>
+                        <p>Famlic stands apart as a platform specifically designed for Nigerian families. We understand
+                            the unique challenges and cultural context of our community. Our platform is built with
+                            transparency, security, and ease-of-use at its core, ensuring that both campaign creators
+                            and donors feel confident and secure in their interactions.</p>
+                        <p>Developed by Dominahl Technology, Famlic combines technical expertise with deep understanding
+                            of community needs, creating a solution that truly serves Nigerian families.</p>
                     </div>
                 </div>
             </section>
@@ -1508,7 +1691,8 @@
                 <div class="footer-section">
                     <h3>Famlic</h3>
                     <p>Support for Every Family</p>
-                    <p>A family-centered digital platform helping Nigerian families raise support for essential needs.</p>
+                    <p>A family-centered digital platform helping Nigerian families raise support for essential needs.
+                    </p>
                 </div>
                 <div class="footer-section">
                     <h3>Quick Links</h3>
@@ -1576,13 +1760,53 @@
         });
 
         // Smooth scrolling for internal links
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('cta-btn') || e.target.classList.contains('btn-secondary')) {
-                e.preventDefault();
-                // Add your campaign creation or browsing logic here
-                alert('Campaign functionality will be implemented in the backend.');
-            }
+        // document.addEventListener('click', (e) => {
+        //     if (e.target.classList.contains('cta-btn') || e.target.classList.contains('btn-secondary')) {
+        //         e.preventDefault();
+        //         // Add your campaign creation or browsing logic here
+        //         alert('Campaign functionality will be implemented in the backend.');
+        //     }
+        // });
+        const observers = document.querySelectorAll('.animate');
+
+        const options = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, options);
+
+        observers.forEach(el => observer.observe(el));
+
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const allItems = document.querySelectorAll('.accordion-item');
+
+                // Close all
+                allItems.forEach(i => {
+                    if (i !== item) i.classList.remove('active');
+                });
+
+                // Toggle current
+                item.classList.toggle('active');
+            });
+        });
+
+        // Auto-open the first
+        window.addEventListener('DOMContentLoaded', () => {
+            const first = document.querySelector('.accordion-item');
+            if (first) first.classList.add('active');
         });
     </script>
+
+
 </body>
+
 </html>
