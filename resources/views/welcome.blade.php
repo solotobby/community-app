@@ -1150,7 +1150,7 @@
 
                         </div>
                         <div class="hero-image">
-                            <img src="{{asset('assets__/img/famlic/famlic_banner.jpg')}}" alt="thumb-1">
+                            <img src="{{asset('assets__/img/famlic/Famlic_banner.jpg')}}" alt="thumb-1">
                         </div>
                     </div>
                 </div>
