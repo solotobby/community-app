@@ -22,7 +22,7 @@
     <meta property="og:image" content="">
 
     <!-- Place favicon.ico in the root directory -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicons/apple-touch-icon-180x180.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicons/Favicon-famlic.ico">
     <title>Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa </title>
     <style>
         * {
@@ -190,6 +190,20 @@
             max-height: 100%;
             object-fit: contain;
             border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-image {
+                height: auto;
+                /* Allow image to define height */
+                padding: 0.5rem;
+            }
+
+            .hero-image img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
         }
 
         /* .hero-image {
@@ -384,7 +398,7 @@
         }
 
         .benefits-image {
-            background: #ffffff;;
+            background: #ffffff;
             border-radius: 15px;
             height: 400px;
             display: flex;
@@ -396,6 +410,51 @@
             text-align: center;
             padding: 2rem;
         }
+
+        /* .benefits-image img {
+            max-width: 100%;
+            max-height: auto;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+
+        } */
+
+        .benefits-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            display: block;
+        }
+
+
+        @media (max-width: 768px) {
+            .benefits-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .benefits-list {
+                padding: 0;
+                text-align: left;
+                margin: 0 auto;
+                max-width: 90%;
+            }
+
+            .benefits-list li {
+                justify-content: flex-start;
+            }
+
+            .benefits-image {
+                margin-top: 2rem;
+                height: auto;
+            }
+
+
+        }
+
 
         /* Pricing Section */
         .pricing {
@@ -778,7 +837,7 @@
         .step-image {
             width: 100%;
             height: 200px;
-            background: #ffffff;;
+            background: #ffffff;
             border-radius: 10px;
             margin-bottom: 1.5rem;
             display: flex;
@@ -788,7 +847,17 @@
             color: #2F6932;
             font-size: 0.9rem;
             text-align: center;
+            overflow: hidden;
         }
+
+        .step-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            /* optional: match or soften */
+        }
+
 
         /* Values Section */
         .values {
@@ -1111,7 +1180,6 @@
             }
         }
     </style>
-
 </head>
 
 <body>
@@ -1163,8 +1231,7 @@
                         <div class="step-card">
                             <div class="step-number">1</div>
                             <div class="step-image">
-                                <img src="{{asset('assets__/img/famlic/Ask_for_help.jpg')}}" alt="thumb-1">
-
+                                <img src="{{asset('assets__/img/famlic/famlic_step1.jpg')}}" alt="thumb-1">
                             </div>
                             <h3>Ask for Help</h3>
                             <p>Create a request to ask for support for food, money or gadgets on your big day or
@@ -1173,9 +1240,7 @@
                         <div class="step-card">
                             <div class="step-number">2</div>
                             <div class="step-image">
-                                [Step 2 Image]<br>
-                                Sharing campaign link<br>
-                                via social media
+                                <img src="{{asset('assets__/img/famlic/famlic_step2.jpg')}}" alt="thumb-2">
                             </div>
                             <h3>Share & Invite</h3>
                             <p>Share your crowdfunding link with friends, family, and colleagues</p>
@@ -1183,9 +1248,8 @@
                         <div class="step-card">
                             <div class="step-number">3</div>
                             <div class="step-image">
-                                [Step 3 Image]<br>
-                                People contributing<br>
-                                money via app
+                                <img src="{{asset('assets__/img/famlic/famlic_step3.jpg')}}" alt="thumb-2">
+
                             </div>
                             <h3>Receive Support</h3>
                             <p>Watch as your community comes together to support your cause</p>
@@ -1193,9 +1257,7 @@
                         <div class="step-card">
                             <div class="step-number">4</div>
                             <div class="step-image">
-                                [Step 4 Image]<br>
-                                Money being withdrawn<br>
-                                to bank account
+                                <img src="{{asset('assets__/img/famlic/famlic_step4.jpg')}}" alt="thumb-2">
                             </div>
                             <h3>Withdraw Funds</h3>
                             <p>Get your money in your bank account securely</p>
@@ -1300,19 +1362,17 @@
                     <div class="benefits-content">
                         <div>
                             <ul class="benefits-list">
-                                <li>No hidden fees - transparent pricing</li>
+                                <li>Fast Fundraising - Raise money for urgent needs</li>
+                                <li>Full control -You can pause/activate fund raising</li>
+                                <li>Social media integration -share fund raising on social media</li>
+                                <li>Real-time tracking</li>
+                                <li>Fast &Secure Withdrawal to your bank account</li>
                                 <li>24/7 customer support</li>
-                                <li>Mobile-first design</li>
-                                <li>Social media integration</li>
-                                <li>Real-time campaign tracking</li>
-                                <li>Automated thank you messages</li>
-                                <li>Campaign analytics</li>
-                                <li>Multiple payment options</li>
+                                <li>Multiple payment option Access to Community Outreach Gifts</li>
                             </ul>
                         </div>
                         <div class="benefits-image">
-                            <img src="{{asset('assets__/img/famlic/Famlic_benefit.png')}}" alt="thumb-1">
-
+                            <img src="{{asset('assets__/img/famlic/Famlic_benefit.jpg')}}" alt="thumb-1">
                         </div>
                     </div>
                 </div>
@@ -1412,7 +1472,7 @@
                 </div>
             </section>
 
-            <section class="security">
+            {{-- <section class="security">
                 <div class="container">
                     <h2>Secure & Fast Withdrawals</h2>
                     <div class="security-content">
@@ -1436,7 +1496,7 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> --}}
 
             <section class="testimonials">
                 <div class="container">
