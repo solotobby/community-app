@@ -38,18 +38,21 @@
     @endif
 </div> --}}
 
-<div class="bg-image" style="background-image: url('assets/media/photos/photo34@2x.jpg');">
-    <div class="row mx-0 bg-black-50">
+<div class="bg-image" style="background-image: url('assets/media/photos/famlic_background4.jpg');">
+    <div class="row mx-0">
         <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end">
             <div class="p-4">
-                <p class="fs-3 fw-semibold text-white">
-                    Get Inspired and Create.
-                </p>
-                <p class="text-white-75 fw-medium">
+                {{-- <p class="text-white-75 fw-medium">
                     Copyright &copy; <span data-toggle="year-copy"></span>
-                </p>
+                </p> --}}
+
+                {{-- <p class="fs-4 fw-semibold text-black">
+                    Raise Funds and Support from Family & Friends
+                </p> --}}
+
             </div>
         </div>
+
         <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center bg-body-extra-light">
             <div class="content content-full">
                 <!-- Header -->
@@ -121,3 +124,8 @@
                         </div>
                     </div>
                 </form>
+
+            </div>
+        </div>
+    </div>
+</div>

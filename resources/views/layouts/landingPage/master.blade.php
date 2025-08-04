@@ -52,7 +52,7 @@
                 <div class="col-xl-2 col-lg-3 col-md-4 col-4">
                     <div class="logo">
                         <a href="{{ url('/') }}">
-                            <img src="{{asset('assets__/img/logo/logo.png')}}" alt="logo">
+                            <img src="{{asset('assets__/img/logo/FAMLIC_LOGO.png')}}" alt="logo">
                         </a>
                     </div>
                 </div>
