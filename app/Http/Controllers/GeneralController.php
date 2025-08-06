@@ -6,19 +6,32 @@ use Illuminate\Http\Request;
 
 class GeneralController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('welcome');
     }
 
-    public function foodFundraising(){
+    public function foodFundraising() {}
 
-    }
-
-    public function aboutUs(){
+    public function aboutUs()
+    {
         return view('about-us');
     }
 
-    public function blog(){
-
+    public function terms()
+    {
+        return view('terms');
     }
+
+    public function contactUs()
+    {
+        return view('contact-us');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('privacy-policy');
+    }
+
+    public function blog() {}
 }
