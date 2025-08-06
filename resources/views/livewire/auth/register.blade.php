@@ -1,18 +1,17 @@
-<div class="row mx-0 bg-earth-op">
-    <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end bg-image"
-        style="background-image: url('{{ asset('assets/media/photos/photo34@2x.jpg') }}');">
-        <div class="p-4">
-            <p class="fs-3 fw-semibold text-white mb-1">
-                We're very happy you are joining our community!
-            </p>
-            <p class="fs-5 text-white fw-medium">
-                <i class="fa fa-angle-right opacity-50"></i> Create your account today and receive 50% off.
-            </p>
-            <p class="text-white-75 fw-medium">
-                Copyright &copy; <span>{{ now()->year }}</span>
-            </p>
+<div class="bg-image" style="background-image: url('assets/media/photos/famlic_background4.jpg');">
+    <div class="row mx-0">
+        <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end">
+            <div class="p-4">
+                {{-- <p class="text-white-75 fw-medium">
+                    Copyright &copy; <span data-toggle="year-copy"></span>
+                </p> --}}
+
+                {{-- <p class="fs-4 fw-semibold text-black">
+                    Raise Funds and Support from Family & Friends
+                </p> --}}
+
+            </div>
         </div>
-    </div>
 
     <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center bg-body-extra-light">
         <div class="content content-full">

@@ -59,8 +59,7 @@
                         </button>
                         </div>
                     </div>
-</div>
-
+                </div>
             </div>
         </div>
 
@@ -73,7 +72,7 @@
                     @endphp
 
                     <div class="col-md-3 mb-3" wire:key="gift-item-{{ $item['id'] }}">
-                        <div class="card h-100 {{ $isSelected ? 'border-success' : '' }}" x-data="{ error: '', clickable: @js($item['clickable']) }">
+                        <div class="card h-100 {{ $isSelected ? 'border-success' : '' }}" x-data="{ error: '', clickable: @json($item['clickable']) }">
                             <img src="{{ $item['item_url'] }}" class="card-img-top"
                                 style="height: 150px; object-fit: cover;">
                             <div class="card-body text-center">
@@ -81,35 +80,37 @@
 
                                 <button
                                     @click.prevent="
-                                        if (clickable) {
-                                            $wire.call('selectItem', {{ $item['id'] }});
-                                            error = '';
-                                        } else {
-                                            error = '🎁 This Gift is not accessible in your level, please select another one';
-                                            setTimeout(() => error = '', 3000);
-                                        }
-                                    "
+                                if (clickable) {
+                                    @this.call('selectItem', {{ $item['id'] }});
+                                    error = '';
+                                } else {
+                                    error = '🎁 This Gift is not accessible in your level, please select another one';
+                                    setTimeout(() => error = '', 3000);
+                                }
+                            "
                                     class="btn btn-sm {{ $isSelected ? 'btn-danger' : 'btn-outline-primary' }}"
-                                    @if ($isDisabled) disabled @endif>
-                                    {{ $isSelected ? 'Remove' : 'Select' }}
+                                    @if ($isDisabled)
+                                        disabled
+                                    @endif>
+                                {{ $isSelected ? 'Remove' : 'Select' }}
                                 </button>
 
-                                <template x-if="error">
-                                    <small class="text-danger d-block mt-2" x-text="error"></small>
-                                </template>
-                            </div>
+                            <template x-if="error">
+                                <small class="text-danger d-block mt-2" x-text="error"></small>
+                            </template>
                         </div>
                     </div>
+                </div>
                 @endforeach
             </div>
+        <div class="mt-4 text-end">
+    <button wire:click="confirmSelection" class="btn btn-success" @if (count($selectedItems) < 4) disabled @endif>
+        🎁 Confirm Selection ({{ count($selectedItems) }}/7)
+    </button>
+</div>
+</div>
 
-            <div class="mt-4 text-end">
-                <button wire:click="confirmSelection" class="btn btn-success" @if (count($selectedItems) < 4) disabled @endif>
-                    🎁 Confirm Selection ({{ count($selectedItems) }}/7)
-                </button>
-            </div>
-        </div>
-    </div>
+</div>
 
     {{-- Welcome Modal --}}
     @if ($showWelcomeModal)
