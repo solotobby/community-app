@@ -38,8 +38,10 @@ use App\Livewire\User\Wallet;
 
 
 Route::get('/', [GeneralController::class, 'index'])->name('homepage');
-Route::get('about-us', [GeneralController::class, 'aboutUs']);
-Route::get('blog', [GeneralController::class, 'blog']);
+Route::get('about-us', [GeneralController::class, 'aboutUs'])->name('aboutUs');
+Route::get('contact-us', [GeneralController::class, 'contactUs'])->name('contactUs');
+Route::get('privacy-policy', [GeneralController::class, 'privacyPolicy'])->name('privacyPolicy');
+Route::get('terms', [GeneralController::class, 'terms'])->name('terms');
 Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
 
 Route::get('/gift/{slug}', Gifting::class)->name('gift.public');
