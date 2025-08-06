@@ -49,11 +49,11 @@
                         Request Gift
                     </a>
                 </li>
-                <li class="nav-main-item">
+                {{-- <li class="nav-main-item">
                     <a class="nav-main-link" href="{{ route('user.gift.create-gift') }}">
                         Offer Gift
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 
