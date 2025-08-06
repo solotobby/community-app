@@ -43,7 +43,7 @@ Route::get('blog', [GeneralController::class, 'blog']);
 Route::get('food-fundraising', [GeneralController::class, 'foodFundraising']);
 
 Route::get('/gift/{slug}', Gifting::class)->name('gift.public');
-
+Route::get('/paystack/gift/callback', [PaystackController::class, 'giftingCallback'])->name('payment.gifting.callback');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('home', [HomeController::class, 'home'])->name('home');
