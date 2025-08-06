@@ -32,20 +32,19 @@
         @endif
 
         {{-- Profile Header --}}
-        <div class="row mb-4">
+       <div class="row mb-4">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center flex-wrap">
                             <div class="avatar-container me-3">
-                                <div
-                                    class="avatar bg-primary text-black d-flex align-items-center justify-content-center">
+                                <div class="avatar bg-primary text-black d-flex align-items-center justify-content-center">
                                     {{ strtoupper(substr($name, 0, 2)) }}
                                 </div>
                             </div>
                             <div class="flex-grow-1">
                                 <h3 class="mb-1">{{ $name }}</h3>
-                                <p class="text-muted mb-0">{{ $email }}</p>
+                                <p class="text-muted mb-0 text-break">{{ $email }}</p>
                                 <small class="text-muted">
                                     <i class="fas fa-star text-warning me-1"></i>
                                     Level: {{ $level->name ?? 'Not assigned' }}
@@ -56,6 +55,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="row">
             {{-- Personal Information --}}
