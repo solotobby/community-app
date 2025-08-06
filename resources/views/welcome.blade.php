@@ -595,7 +595,7 @@
         /* Testimonials Section */
         .testimonials {
             padding: 4rem 0;
-            background: #FFFFFF;
+            background: #f4f4f4;
         }
 
         .testimonials h2 {
@@ -623,7 +623,7 @@
         }
 
         .testimonial-card {
-            background: #F4F4F4;
+            background: #ffffff;
             padding: 3rem;
             border-radius: 20px;
             text-align: center;
@@ -862,7 +862,7 @@
         /* Values Section */
         .values {
             padding: 4rem 0;
-            background: #F4F4F4;
+            background: #ffffff;
         }
 
         .values h2 {
@@ -916,18 +916,26 @@
         }
 
         .about-hero-image {
-            background: #FFFFFF;
+            background: #f4f4f4;
             border-radius: 15px;
             height: 300px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #2F6932;
-            font-size: 1.1rem;
             border: 2px dashed #2F6932;
             text-align: center;
             padding: 2rem;
+            overflow: hidden;
         }
+
+        .about-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+
 
         .about-content {
             padding: 4rem 0;
@@ -1449,25 +1457,59 @@
                         <div class="accordion-item active">
                             <button class="accordion-header">What is Famlic?</button>
                             <div class="accordion-body">
-                                <p>Famlic is a platform that allows families to raise and receive financial support
-                                    quickly
-                                    and securely.</p>
+                                <p>Famlic trusted crowdfunding platform, built for easy online fundraising and support
+                                    when families and students need help.
+                                    This digital solution allows families to raise and receive financial support quickly
+                                    and securely during special needs
+                                    (birthdays, health care needs, students support, wedding support, etc).
+                                    We also provide an avenue for family members to share food gifts to other families
+                                    easily through our premium food gifts packages.</p>
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <button class="accordion-header">How do I raise money?</button>
+                            <button class="accordion-header">Do I need to pay to start fundraising?</button>
                             <div class="accordion-body">
-                                <p>Just sign up, set your fundraising goal, and share your campaign link with friends
-                                    and
-                                    supporters.</p>
+                                <p>No. we created the platform to help you meet essential needs quickly from your
+                                    friends and family.
+                                    When a friend cannot help you, another one will be willing to share a fraction with
+                                    you.
+                                    Our goal is to help you never to be stranded when you need help for a
+                                    specific reason.</p>
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <button class="accordion-header">How soon can I withdraw funds?</button>
+                            <button class="accordion-header">Why do I need a Digital Fundraising platform when my
+                                friends can simply credit me? </button>
                             <div class="accordion-body">
-                                <p>Withdrawals are processed within 30 seconds once your account is verified.</p>
+                                <p>Raising money for a specific need is a great motivation for givers. When they know
+                                    they're not just crediting your account, it is easy for them to gift you to meet
+                                    that essential need. On Famlic, you can even allow them to specify when you can
+                                    access the funds raised. A little here and there from devoted friends can help you
+                                    reach your goals faster. Whether it's a medical emergency, a school fee need, or a
+                                    support for your big day, Famlic helps you meet your essential needs
+                                    faster and easier.</p>
                             </div>
                         </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header">Is Famlic a Scam? </button>
+                            <div class="accordion-body">
+                                <p>Famlic is not a scam. Famlic is a digital family sharing initiative of Freebyz
+                                    Technology Ltd, a duly registered startup with successful track records in Edutech,
+                                    Adtech and Jobtech ecosystem since 2021. We have upheld our core values of integrity
+                                    and promised value delivery in our products like eportal, Freebyz Remote Jobs, etc
+                                </p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header">How do Premium regular food gifts work on Famlic?</button>
+                            <div class="accordion-body">
+                                <p> When you subscribe to any of our premium food gifts, you qualify to claim up to
+                                    N120,000 worth of food items instantly that you can share with your family members,
+                                    get access to food donations from donors globally and You also have a referral link
+                                    you can use to earn when your friends use Famlic for family gifts</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -1571,10 +1613,10 @@
                             <h3>Community</h3>
                             <p>Building stronger connections</p>
                         </div>
-                        <div class="value-item">
+                        {{-- <div class="value-item">
                             <h3>Transparency</h3>
                             <p>Open and honest platform</p>
-                        </div>
+                        </div> --}}
                         <div class="value-item">
                             <h3>Simplicity</h3>
                             <p>Easy to use for everyone</p>
@@ -1598,9 +1640,7 @@
                             <p>Support for Every Family</p>
                         </div>
                         <div class="about-hero-image">
-                            [About Hero Image]<br>
-                            Dominahl Technology team<br>
-                            or company building
+                            <img src="{{asset('assets__/img/famlic/famlic_about_us.jpg')}}" alt="about-us">
                         </div>
                     </div>
                 </div>
@@ -1611,14 +1651,18 @@
                     <div class="about-section-with-image">
                         <div>
                             <h2>Our Story</h2>
-                            <p>Famlic is a family-centered digital platform developed by Dominahl Technology to help
-                                Nigerian families raise support for essential needs such as food, household items, and
-                                gadgets. Launched in June 2025, Famlic is built on the power of community, trust, and
-                                practical support for everyday living.</p>
+                            <p>Famlic is a family-centered digital platform developed to help Nigerian families raise
+                                support for essential needs such as food, household items, medical emergencies and
+                                gadgets. Famlic is a digital family sharing initiative of Freebyz Technology Ltd, a duly
+                                registered startup with successful track records in Edutech, Adtech and Jobtech
+                                ecosystem since 2021. We have upheld our core values of integrity and promised value
+                                delivery in our products like eportal, Freebyz Remote Jobs, etc.
+                            </p>
                             <p>We recognized that many Nigerian families face challenges in accessing financial support
                                 for basic necessities. Traditional methods of seeking help were often complicated,
                                 unreliable, or lacked transparency. Famlic was created to bridge this gap by providing a
-                                modern, trustworthy platform that connects families in need with those willing to help.
+                                modern, transparent and trustworthy platform that connects families in need with those
+                                willing to help.
                             </p>
                         </div>
                         <div class="about-section-image">
@@ -1664,7 +1708,8 @@
                             the unique challenges and cultural context of our community. Our platform is built with
                             transparency, security, and ease-of-use at its core, ensuring that both campaign creators
                             and donors feel confident and secure in their interactions.</p>
-                        <p>Developed by Dominahl Technology, Famlic combines technical expertise with deep understanding
+                        <p>Developed by Freebyz Technology Ltd, Famlic combines technical expertise with deep
+                            understanding
                             of community needs, creating a solution that truly serves Nigerian families.</p>
                     </div>
                 </div>
@@ -1750,9 +1795,8 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Famlic</h3>
-                    <p>Support for Every Family</p>
-                    <p>A family-centered digital platform helping Nigerian families raise support for essential needs.
-                    </p>
+                    <p>A trusted crowdfunding platform, </p>
+                    <p>built for easy online fundraising and support when families and students need help.</p>
                 </div>
                 <div class="footer-section">
                     <h3>Quick Links</h3>
@@ -1764,19 +1808,19 @@
                 <div class="footer-section">
                     <h3>Support</h3>
                     <p><a href="#">Help Center</a></p>
-                    <p><a href="#">Create Campaign</a></p>
-                    <p><a href="#">Browse Campaigns</a></p>
-                    <p><a href="#">Safety Guidelines</a></p>
+                    <p><a href="{{ route('login') }}">Raise Funds </a></p>
+                    <p><a href="#">How it Works</a></p>
+                    <p><a href="#">Safety Policy</a></p>
                 </div>
                 <div class="footer-section">
                     <h3>Connect</h3>
                     <p>Email: support@famlic.ng</p>
                     <p>Phone: +234 (0) 800 FAMLIC</p>
-                    <p>Developed by Dominahl Technology</p>
+                    <p>Developed by Freebyz Technology Ltd</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Famlic by Dominahl Technology. All rights reserved.</p>
+                <p>&copy; 2025 Famlic by Freebyz Technology Ltd. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1864,6 +1908,53 @@
             const first = document.querySelector('.accordion-item');
             if (first) first.classList.add('active');
         });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("testimonialContainer");
+            const slides = document.querySelectorAll(".testimonial-slide");
+            const dots = document.querySelectorAll(".slider-dot");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+
+            let currentIndex = 0;
+            const slideCount = slides.length;
+
+            function updateSlider() {
+                const slideWidth = slides[0].offsetWidth;
+                container.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+
+                dots.forEach(dot => dot.classList.remove("active"));
+                dots[currentIndex].classList.add("active");
+            }
+
+            function goToNextSlide() {
+                currentIndex = (currentIndex + 1) % slideCount;
+                updateSlider();
+            }
+
+            nextBtn.addEventListener("click", () => {
+                goToNextSlide();
+            });
+
+            prevBtn.addEventListener("click", () => {
+                currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+                updateSlider();
+            });
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener("click", () => {
+                    currentIndex = index;
+                    updateSlider();
+                });
+            });
+
+            // Auto-scroll every 5 seconds
+            setInterval(goToNextSlide, 5000);
+
+            updateSlider(); // Initial render
+        });
+
     </script>
 
 
