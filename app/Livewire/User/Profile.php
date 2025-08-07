@@ -251,9 +251,9 @@ class Profile extends Component
         $this->validate($rules);
 
         // Verify current PIN if it exists
-        if ($user->transaction_pin && !Hash::check($this->current_pin, $user->transaction_pin)) {
-            return session()->flash('error', 'Current PIN is incorrect.');
-        }
+        // if ($user->transaction_pin && !Hash::check($this->current_pin, $user->transaction_pin)) {
+        //     return session()->flash('error', 'Current PIN is incorrect.');
+        // }
 
         $user->update([
             'transaction_pin' => Hash::make($this->new_transaction_pin),
