@@ -9,8 +9,7 @@
     </div>
 
     <!-- Right Content -->
-    <div class="hero-static col-md-8 col-xl-5 d-flex align-items-center ms-auto"
-        style="background-color: white; min-height: 100vh; overflow-y: auto;">
+    <div class="hero-static col-md-8 col-xl-5 d-flex align-items-center ms-auto">
         <div class="content content-full">
             <!-- Header -->
             <div class="px-4 py-2 mb-4">
