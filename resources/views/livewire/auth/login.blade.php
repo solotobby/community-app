@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center" style="background-color: white;">
+        <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center">
             <div class="content content-full">
                 <!-- Header -->
                 <div class="px-4 py-2 mb-4">

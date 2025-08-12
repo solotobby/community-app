@@ -13,7 +13,7 @@
             </div>
         </div>
 
-    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center ms-auto" style="background-color: white; min-height: 100vh; overflow-y: auto;">
+    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center ms-auto min-height: 100vh; overflow-y: auto;">
         <div class="content content-full">
             <div class="px-4 py-2 mb-4">
                 <a class="link-fx fw-bold" href="{{ url('/') }}">
