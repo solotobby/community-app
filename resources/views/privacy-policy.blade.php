@@ -3,6 +3,8 @@
 @section('content')
 <main class="policy-page py-5">
     <div class="container">
+        <br>
+        <br>
         <h1 class="mb-4 text-center text-success">Privacy Policy for Famlic.com</h1>
         <p><strong>Effective Date:</strong> August 2025</p>
 
@@ -49,6 +51,9 @@
         <p>
             To exercise any of these rights, email us at <a href="mailto:support@famlic.com">support@famlic.com</a>.
         </p>
+        <br>
+        <br>
     </div>
+
 </main>
 @endsection

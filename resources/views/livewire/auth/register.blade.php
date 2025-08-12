@@ -1,6 +1,6 @@
-<div class="bg-image" style="background-image: url('assets/media/photos/famlic_background4.jpg');">
-    <div class="row mx-0">
-        <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end">
+<div class="row mx-0 min-vh-100">
+     <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
+             style="background-image: url('assets/media/photos/Famlic_banner.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white; height: 100vh; width: 58.3333%;">
             <div class="p-4">
                 {{-- <p class="text-white-75 fw-medium">
                     Copyright &copy; <span data-toggle="year-copy"></span>
@@ -13,7 +13,7 @@
             </div>
         </div>
 
-    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center bg-body-extra-light">
+    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center ms-auto" style="background-color: white; min-height: 100vh; overflow-y: auto;">
         <div class="content content-full">
             <div class="px-4 py-2 mb-4">
                 <a class="link-fx fw-bold" href="{{ url('/') }}">
