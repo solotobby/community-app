@@ -3,6 +3,7 @@
 namespace App\Livewire\User;
 
 use App\Http\Controllers\PaystackController;
+use App\Http\Controllers\MailController;
 use App\Models\Level;
 use App\Models\LevelItem;
 use App\Models\RaffleDraw;
@@ -50,8 +51,18 @@ class UserDashboard extends Component
         $this->userLevel = Level::findOrFail(Auth::user()->level);
         $this->loadAvailableLevels();
         $this->showWelcomeModal = $user->welcome_modal ? true : false;
+        $this->mail();
     }
 
+    public function mail()
+    {
+        $user = Auth::user();
+        return app(MailController::class)->sendMail(
+            $user->email,
+            'Testing',
+            'Hello'
+        );
+    }
     public function availableItems()
     {
         $user = Auth::user();

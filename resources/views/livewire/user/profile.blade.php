@@ -81,7 +81,7 @@
                                 <label class="form-label text-muted">Email Address</label>
                                 <div class="fw-bold text-muted">{{ $email }}</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label text-muted">Referral Code</label>
                                 <div class="d-flex align-items-center">
                                     <code class="bg-light px-2 py-1 rounded me-2">{{ $referral_code }}</code>
@@ -92,31 +92,16 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label text-muted">Referred By</label>
                                 <div class="fw-bold text-muted">{{ $referred_by ?? 'Direct signup' }}</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                              <div class="col-md-4">
+                                <label class="form-label text-muted">Date of Birth</label>
+                                <div class="fw-bold text-muted">{{ $dob ?? 'Not provided' }}</div>
+                            </div>
 
-            {{-- Contact Information --}}
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-grey border-bottom-0 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="fas fa-address-book text-primary me-2"></i>
-                            Contact Information
-                        </h5>
-                        <button class="btn btn-outline-primary btn-sm" wire:click="openContactModal">
-                            <i class="fas fa-edit me-1"></i>
-                            {{ $phone && $address ? 'Update' : 'Add' }} Details
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-12">
+                              <div class="col-md-12">
                                 <label class="form-label text-muted">Phone Number</label>
                                 <div class="d-flex align-items-center">
                                     <div class="fw-bold text-muted font-monospace">{{ $phone ?? 'Not provided' }}
@@ -138,10 +123,28 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label text-muted">Date of Birth</label>
-                                <div class="fw-bold text-muted">{{ $dob ?? 'Not provided' }}</div>
-                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Contact Information --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-grey border-bottom-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-address-book text-primary me-2"></i>
+                            Contact Information
+                        </h5>
+                        <button class="btn btn-outline-primary btn-sm" wire:click="openContactModal">
+                            <i class="fas fa-edit me-1"></i>
+                            {{ $phone && $address ? 'Update' : 'Add' }} Details
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+
+
                             <div class="col-12">
                                 <label class="form-label text-muted">Address</label>
                                 <div class="fw-bold text-muted">{{ $address ?? 'Not provided' }}</div>
