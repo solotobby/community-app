@@ -374,27 +374,6 @@
                                 </div>
                             @endif
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><strong>Minimum Contribution (₦)</strong></label>
-                                <input type="number" class="form-control" wire:model="min_contribution" disabled>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" wire:model="is_public" disabled>
-                                <label class="form-check-label">Make this gift request public</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" wire:model="allow_messages" disabled>
-                                <label class="form-check-label">Allow contributors to leave messages</label>
-                            </div>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
