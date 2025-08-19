@@ -184,8 +184,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title mb-0">Contributors</h6>
-                                <h4 class="mb-0">{{ $stats['total_contributors'] }}</h4>
+                                <h6 class="card-title mb-0">Contributions</h6>
+                                <h4 class="mb-0">{{ $stats['total_contributions'] }}</h4>
                             </div>
                             <div class="align-self-center">
                                 <i class="fas fa-users fa-2x opacity-75"></i>
@@ -400,7 +400,7 @@
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
                             <h5>Are you sure you want to end this gift?</h5>
-                            <p class="text-muted">This action cannot be undone. As your link will no long be public and amount
+                            <p class="text-muted">This action cannot be undo. As your link will no long be public and amount
                                 raised will be moved to your withdrawable balance</p>
                             <div class="alert alert-info">
                                 <strong>{{ $gift->title }}</strong><br>
