@@ -29,6 +29,7 @@ class UserDashboard extends Component
     public $errorMessage = null;
     public $raffleDraw;
     public $showWelcomeModal = false;
+    public $showResetPinModal = false;
 
 
     // Account Upgrade Properties
@@ -51,7 +52,7 @@ class UserDashboard extends Component
         $this->userLevel = Level::findOrFail(Auth::user()->level);
         $this->loadAvailableLevels();
         $this->showWelcomeModal = $user->welcome_modal ? true : false;
-        $this->mail();
+        // $this->mail();
     }
 
     public function mail()
