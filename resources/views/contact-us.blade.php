@@ -14,9 +14,7 @@
                             <p>Get in touch with our team</p>
                         </div>
                         <div class="contact-hero-image">
-                            [Contact Hero Image]<br>
-                            Customer support team<br>
-                            or office location
+                                <img src="{{asset('assets__/img/famlic/famlic_contact_us_hero.jpg')}}" alt="contact-us">
                         </div>
                     </div>
                 </div>
@@ -53,9 +51,9 @@
                             <div class="contact-item">
                                 <strong>Email:</strong><br>
                                 support@famlic.ng<br>
-                                info@famlic.ng
+                                {{-- info@famlic.ng --}}
                             </div>
-                            <div class="contact-item">
+                            {{-- <div class="contact-item">
                                 <strong>Phone:</strong><br>
                                 +234 (0) 800 FAMLIC<br>
                                 +234 (0) 800 326 5424
@@ -64,7 +62,7 @@
                                 <strong>Address:</strong><br>
                                 Freebyz Technology Ltd<br>
                                 Lagos, Nigeria
-                            </div>
+                            </div> --}}
                             <div class="contact-item">
                                 <strong>Business Hours:</strong><br>
                                 Monday - Friday: 9:00 AM - 6:00 PM<br>

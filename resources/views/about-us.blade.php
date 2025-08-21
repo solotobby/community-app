@@ -39,9 +39,8 @@
                             </p>
                         </div>
                         <div class="about-section-image">
-                            [Story Image]<br>
-                            Platform development<br>
-                            or family success story
+                            <img src="{{asset('assets__/img/famlic/famlic_about_1.jpg')}}" alt="about-us">
+
                         </div>
                     </div>
 
@@ -54,9 +53,7 @@
                                 and support one another.</p>
                         </div>
                         <div class="about-section-image">
-                            [Mission Image]<br>
-                            Families receiving support<br>
-                            or community gathering
+                            <img src="{{asset('assets__/img/famlic/famlic_about_2.jpg')}}" alt="about-us">
                         </div>
                     </div>
 
@@ -69,9 +66,7 @@
                                 those who need help with those who can provide it.</p>
                         </div>
                         <div class="about-section-image">
-                            [Vision Image]<br>
-                            Map of Africa or<br>
-                            connected communities
+                                <img src="{{asset('assets__/img/famlic/famlic_about_3.jpg')}}" alt="about-us">
                         </div>
                     </div>
 

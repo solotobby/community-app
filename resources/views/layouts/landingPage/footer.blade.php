@@ -29,7 +29,7 @@
             <div class="footer-section">
                 <h3>Connect</h3>
                 <p>Email: <a href="mailto:support@famlic.ng">support@famlic.ng</a></p>
-                <p>Phone: +234 (0) 800 FAMLIC</p>
+                {{-- <p>Phone: +234 (0) 800 FAMLIC</p> --}}
                 <p>Developed by Freebyz Technology Ltd</p>
             </div>
         </div>
