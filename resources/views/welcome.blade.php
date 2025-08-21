@@ -367,7 +367,7 @@
                             <div class="testimonial-slide">
                                 <div class="testimonial-card">
                                     <div class="testimonial-image">
-                                            <img src="{{asset('assets__/img/famlic/male avater.png')}}" alt="thumb-1">
+                                            <img src="{{asset('assets__/img/famlic/male avater.png')}}">
                                     </div>
                                     <div class="testimonial-text">
                                         "My laptop broke during my final year project. Thanks to Famlic, I raised enough

@@ -39,8 +39,7 @@
                             </p>
                         </div>
                         <div class="about-section-image">
-                            <img src="{{asset('assets__/img/famlic/famlic_about_1.jpg')}}" alt="about-us">
-
+                            <img src="{{asset('assets__/img/famlic/famlic_about_1.jpg')}}">
                         </div>
                     </div>
 
@@ -53,7 +52,7 @@
                                 and support one another.</p>
                         </div>
                         <div class="about-section-image">
-                            <img src="{{asset('assets__/img/famlic/famlic_about_2.jpg')}}" alt="about-us">
+                            <img src="{{asset('assets__/img/famlic/famlic_about_2.jpg')}}">
                         </div>
                     </div>
 
@@ -66,7 +65,7 @@
                                 those who need help with those who can provide it.</p>
                         </div>
                         <div class="about-section-image">
-                                <img src="{{asset('assets__/img/famlic/famlic_about_3.jpg')}}" alt="about-us">
+                                <img src="{{asset('assets__/img/famlic/famlic_about_3.jpg')}}">
                         </div>
                     </div>
 
