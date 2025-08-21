@@ -341,8 +341,7 @@
                             <div class="testimonial-slide">
                                 <div class="testimonial-card">
                                     <div class="testimonial-image">
-                                        [Testimonial Photo]<br>
-                                        Adanna O.
+                                        <img src="{{asset('assets__/img/famlic/female avater.jpeg')}}" alt="thumb-1">
                                     </div>
                                     <div class="testimonial-text">
                                         "I was able to raise ₦150,000 for my children's school fees in just 2 weeks. The
@@ -355,8 +354,7 @@
                             <div class="testimonial-slide">
                                 <div class="testimonial-card">
                                     <div class="testimonial-image">
-                                        [Testimonial Photo]<br>
-                                        Chidi M.
+                                            <img src="{{asset('assets__/img/famlic/male avater.png')}}" alt="thumb-1">
                                     </div>
                                     <div class="testimonial-text">
                                         "When my wife was pregnant, we needed funds for hospital bills. Famlic helped us
@@ -369,8 +367,7 @@
                             <div class="testimonial-slide">
                                 <div class="testimonial-card">
                                     <div class="testimonial-image">
-                                        [Testimonial Photo]<br>
-                                        Fatima A.
+                                            <img src="{{asset('assets__/img/famlic/male avater.png')}}" alt="thumb-1">
                                     </div>
                                     <div class="testimonial-text">
                                         "My laptop broke during my final year project. Thanks to Famlic, I raised enough

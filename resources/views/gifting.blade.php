@@ -285,16 +285,32 @@
                                         <div class="col-12">
                                             <label for="amount" class="form-label">
                                                 Contribution Amount (₦) *
-                                                @if (isset($gift->settings['min_contribution']))
-                                                    <small class="text-muted">(Min:
-                                                        ₦{{ number_format($gift->settings['min_contribution'], 0) }})</small>
-                                                @endif
+                                                {{-- @if (isset($gift->settings['min_contribution']))
+                                                <small class="text-muted">(Min: ₦{{
+                                                    number_format($gift->settings['min_contribution'], 0) }})</small>
+                                                @endif --}}
+                                                @php
+                                                    $remainingAmount = $gift->target_amount - $gift->current_amount;
+                                                @endphp
+                                                {{-- @if ($remainingAmount > 0)
+                                                <small class="text-info">(Max: ₦{{ number_format($remainingAmount, 0) }}
+                                                    remaining)</small>
+                                                @endif --}}
                                             </label>
                                             <div class="input-group">
                                                 <span class="input-group-text">₦</span>
                                                 <input type="number" class="form-control @error('amount') is-invalid @enderror"
-                                                    id="amount" wire:model="amount" min="1" step="0.01" required>
+                                                    id="amount" wire:model="amount"
+                                                    min="{{ isset($gift->settings['min_contribution']) ? $gift->settings['min_contribution'] : 1 }}"
+                                                    max="{{ $remainingAmount > 0 ? $remainingAmount : $gift->target_amount }}"
+                                                    step="0.01" required
+                                                    oninput="validateContributionAmount(this, {{ $remainingAmount }})">
                                             </div>
+                                            @if ($remainingAmount <= 0)
+                                                <div class="text-success mt-1">
+                                                    <small><i class="fa fa-check-circle"></i> Target amount reached!</small>
+                                                </div>
+                                            @endif
                                             @error('amount')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -362,6 +378,39 @@
 
                         {{-- JavaScript for countdown and copy functionality --}}
                         <script>
+                            function validateContributionAmount(input, remainingAmount) {
+                                const value = parseFloat(input.value);
+
+                                if (value > remainingAmount && remainingAmount > 0) {
+                                    input.value = remainingAmount;
+                                    // Show a brief notification
+                                    showContributionNotification('Amount adjusted to remaining target: ₦' + remainingAmount.toLocaleString());
+                                }
+                            }
+
+                            function showContributionNotification(message) {
+                                // Create or update notification
+                                let notification = document.getElementById('contribution-notification');
+                                if (!notification) {
+                                    notification = document.createElement('div');
+                                    notification.id = 'contribution-notification';
+                                    notification.className = 'alert alert-warning alert-dismissible fade show mt-2';
+                                    notification.style.fontSize = '0.875rem';
+                                    document.getElementById('amount').parentNode.parentNode.appendChild(notification);
+                                }
+
+                                notification.innerHTML = `
+                                                    <i class="fa fa-info-circle"></i> ${message}
+                                                    <button type="button" class="btn-close btn-close-sm" onclick="this.parentElement.remove()"></button>
+                                                `;
+
+                                // Auto-hide after 3 seconds
+                                setTimeout(() => {
+                                    if (notification && notification.parentNode) {
+                                        notification.remove();
+                                    }
+                                }, 5000);
+                            }
                             // Countdown timer
                             @if ($payment_method === 'bank_transfer' && $virtual_account)
                                 let expiresAt = new Date('{{ $virtual_account['expires_at'] ?? now()->addMinutes(30) }}');

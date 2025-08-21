@@ -184,8 +184,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title mb-0">Contributors</h6>
-                                <h4 class="mb-0">{{ $stats['total_contributors'] }}</h4>
+                                <h6 class="card-title mb-0">Contributions</h6>
+                                <h4 class="mb-0">{{ $stats['total_contributions'] }}</h4>
                             </div>
                             <div class="align-self-center">
                                 <i class="fas fa-users fa-2x opacity-75"></i>
@@ -310,6 +310,7 @@
                                     <option value="Wedding">Wedding</option>
                                     <option value="New Baby">New Baby</option>
                                     <option value="Condolence">Condolence</option>
+                                    <option value="Retirement">Retirement</option>
                                 </select>
                             </div>
                         </div>
@@ -374,27 +375,6 @@
                                 </div>
                             @endif
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><strong>Minimum Contribution (₦)</strong></label>
-                                <input type="number" class="form-control" wire:model="min_contribution" disabled>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" wire:model="is_public" disabled>
-                                <label class="form-check-label">Make this gift request public</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" wire:model="allow_messages" disabled>
-                                <label class="form-check-label">Allow contributors to leave messages</label>
-                            </div>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -421,7 +401,7 @@
                         <div class="text-center">
                             <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
                             <h5>Are you sure you want to end this gift?</h5>
-                            <p class="text-muted">This action cannot be undone. As your link will no long be public and amount
+                            <p class="text-muted">This action cannot be undo. As your link will no long be public and amount
                                 raised will be moved to your withdrawable balance</p>
                             <div class="alert alert-info">
                                 <strong>{{ $gift->title }}</strong><br>
