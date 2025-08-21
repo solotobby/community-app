@@ -22,7 +22,7 @@
     <title>Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('assets__/css/public.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets__/css/public.css') }}?v={{ time() }}">
 
     <style>
         /* .page { display: none; }
