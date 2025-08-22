@@ -311,6 +311,7 @@
                                     <option value="New Baby">New Baby</option>
                                     <option value="Condolence">Condolence</option>
                                     <option value="Retirement">Retirement</option>
+                                    <option value="Others">Others</option>
                                 </select>
                             </div>
                         </div>

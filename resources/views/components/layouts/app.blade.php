@@ -35,8 +35,7 @@
     <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicons/Favicon-famlic.ico">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
     <!-- END Icons -->
 
     <!-- Stylesheets -->
@@ -827,7 +826,7 @@
                     </div>
                     <!-- END Side User -->
 
-                    @if (auth()->user()->hasAnyRole(['admin','super_admin']))
+                    @if (auth()->user()->hasAnyRole(['admin', 'super_admin']))
                         @include('layouts.sidebars.admin')
                     @elseif(auth()->user()->hasRole('user') && auth()->user()->free_user)
                         @include('layouts.sidebars.free')
@@ -900,7 +899,19 @@
     <!-- Page JS Code -->
     <script src="{{ asset('assets/js/pages/be_pages_dashboard.min.js') }}"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/68a83bda3b2d9e1926a1c57a/1j38ijk7k';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 
 </body>
 

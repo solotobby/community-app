@@ -4,14 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="description"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:title"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta property="og:site_name" content="Famlic">
-    <meta property="og:description" content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
+    <meta property="og:description"
+        content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="{{ asset('assets__/media/favicons/Favicon-famlic.ico') }}">
@@ -28,14 +31,21 @@
         /* .page { display: none; }
         .page.active { display: block; } */
 
-        .animate { opacity: 0; transition: opacity 0.8s ease-in; }
-        .animate.visible { opacity: 1; }
+        .animate {
+            opacity: 0;
+            transition: opacity 0.8s ease-in;
+        }
+
+        .animate.visible {
+            opacity: 1;
+        }
 
         @media (max-width: 768px) {
             #navLinks {
                 display: none;
                 flex-direction: column;
             }
+
             #navLinks.active {
                 display: flex;
             }
@@ -48,7 +58,8 @@
         <nav class="container d-flex align-items-center justify-content-between">
             <div class="logo">
                 <a href="{{ url('/') }}">
-                    <img src="{{ asset('assets__/img/logo/FAMLIC_LOGO.png') }}" alt="Famlic Logo" style="max-width: 120px; height: auto;">
+                    <img src="{{ asset('assets__/img/logo/FAMLIC_LOGO.png') }}" alt="Famlic Logo"
+                        style="max-width: 120px; height: auto;">
                 </a>
             </div>
 
@@ -181,6 +192,19 @@
             }
         });
     </script>
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/68a83bda3b2d9e1926a1c57a/1j38ijk7k';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
 
 </html>
