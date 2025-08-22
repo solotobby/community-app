@@ -96,7 +96,7 @@
                 </li>
                 <li class="nav-main-item">
                     <a class="nav-main-link" href="{{ route('user.gift.create-gift') }}">
-                        Request Gift
+                        Raise Money
                     </a>
                 </li>
                 {{-- <li class="nav-main-item">
