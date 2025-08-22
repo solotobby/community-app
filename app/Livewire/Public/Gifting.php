@@ -35,8 +35,6 @@ class Gifting extends Component
         if (!$this->gift) {
             $this->gift = null;
         }
-
-        // Check for any pending bank transfer contributions and restore state
         $this->restorePendingBankTransfer();
     }
 
@@ -45,15 +43,13 @@ class Gifting extends Component
      */
     private function restorePendingBankTransfer()
     {
-        // Look for recent pending bank transfer contribution for this gift
-        // You might want to also match by session or user if you have authentication
         $pendingContribution = Contribution::where('gift_request_id', $this->gift?->id)
             ->where('status', 'pending')
             ->where('payment_method', 'bank_transfer')
             ->whereNotNull('virtual_account_details')
-            ->where('created_at', '>=', now()->subHours(1))  // Only restore recent ones
+            ->where('created_at', '>=', now()->subMinutes(30))
             ->latest()
-            ->first();
+            ->first(    );
 
         if ($pendingContribution && $pendingContribution->virtual_account_details) {
             // Check if virtual account is still valid (not expired)
@@ -322,7 +318,7 @@ class Gifting extends Component
         }
     }
 
-    private function resetForm()
+    public function resetForm()
     {
         $this->contributor_name = '';
         $this->contributor_email = '';

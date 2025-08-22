@@ -1,12 +1,14 @@
 <div class="container py-4">
     @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-success">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-success">
             {{ session('message') }}
         </div>
     @endif
 
     @if (session()->has('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition class="alert alert-danger">
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+            class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
@@ -26,7 +28,7 @@
                         <a href="{{ route('homepage') }}" class="btn btn-primary">
                             <i class="fas fa-home me-2"></i>Go to Homepage
                         </a>
-                         <a href="{{ route('register') }}" class="btn btn-primary">
+                        <a href="{{ route('register') }}" class="btn btn-primary">
                             <i class="fas fa-add me-2"></i>Raise Money Now
                         </a>
                     </div>
@@ -85,8 +87,7 @@
                         <!-- Progress Section -->
                         <div class="mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span
-                                    class="h5 mb-0 text-success">₦{{ number_format($gift->current_amount, 2) }}</span>
+                                <span class="h5 mb-0 text-success">₦{{ number_format($gift->current_amount, 2) }}</span>
                                 <span class="text-muted">of ₦{{ number_format($gift->target_amount, 2) }}</span>
                             </div>
 
@@ -117,25 +118,21 @@
                                 <!-- Only show share button when contributions are active -->
                                 <div class="col-12 mb-2">
                                     <div class="dropdown">
-                                        <button class="btn btn-outline-primary btn-lg w-100 dropdown-toggle"
-                                            type="button" data-bs-toggle="dropdown">
+                                        <button class="btn btn-outline-primary btn-lg w-100 dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
                                             <i class="fas fa-share me-2"></i>Share This Campaign
                                         </button>
                                         <ul class="dropdown-menu w-100">
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('facebook')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('facebook')">
                                                     <i class="fab fa-facebook me-2"></i>Facebook
                                                 </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('twitter')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('twitter')">
                                                     <i class="fab fa-twitter me-2"></i>Twitter
                                                 </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('whatsapp')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('whatsapp')">
                                                     <i class="fab fa-whatsapp me-2"></i>WhatsApp
                                                 </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('telegram')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('telegram')">
                                                     <i class="fab fa-telegram me-2"></i>Telegram
                                                 </a></li>
                                             <li>
@@ -162,25 +159,21 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="dropdown">
-                                        <button class="btn btn-outline-primary btn-lg w-100 dropdown-toggle"
-                                            type="button" data-bs-toggle="dropdown">
+                                        <button class="btn btn-outline-primary btn-lg w-100 dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
                                             <i class="fas fa-share me-2"></i>Share
                                         </button>
                                         <ul class="dropdown-menu w-100">
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('facebook')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('facebook')">
                                                     <i class="fab fa-facebook me-2"></i>Facebook
                                                 </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('twitter')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('twitter')">
                                                     <i class="fab fa-twitter me-2"></i>Twitter
                                                 </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('whatsapp')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('whatsapp')">
                                                     <i class="fab fa-whatsapp me-2"></i>WhatsApp
                                                 </a></li>
-                                            <li><a class="dropdown-item" href="#"
-                                                    wire:click="shareGift('telegram')">
+                                            <li><a class="dropdown-item" href="#" wire:click="shareGift('telegram')">
                                                     <i class="fab fa-telegram me-2"></i>Telegram
                                                 </a></li>
                                             <li>
@@ -205,8 +198,7 @@
                                     class="d-flex justify-content-center justify-content-md-start align-items-center gap-3">
                                     <img src="{{ asset('assets/media/photos/paystack.png') }}" alt="Paystack"
                                         style="height: 40px;">
-                                    <img src="{{ asset('assets/media/photos/visa.png') }}" alt="Visa"
-                                        style="height: 40px;">
+                                    <img src="{{ asset('assets/media/photos/visa.png') }}" alt="Visa" style="height: 40px;">
                                     <img src="{{ asset('assets/media/photos/mastercard.png') }}" alt="Mastercard"
                                         style="height: 40px;">
                                 </div>
@@ -227,7 +219,7 @@
             {{-- Enhanced Contribution Sidebar --}}
             <div class="col-lg-5">
                 <div class="sticky-top" style="top: 2rem;" id="contribution-section">
-                    {{--  --}}
+                    {{-- --}}
                     @if (!$virtual_account)
                         <div class="card shadow border-0" id="contribution-form">
                             <div class="card-header bg-gradient text-white text-center py-3"
@@ -243,12 +235,10 @@
                                     <label class="form-label fw-bold mb-3">Choose Payment Method</label>
                                     <div class="row g-2">
                                         <div class="col-6">
-                                            <input class="form-check-input d-none" type="radio"
-                                                name="payment_method" id="payment_card" value="card"
-                                                wire:model.live="payment_method">
+                                            <input class="form-check-input d-none" type="radio" name="payment_method"
+                                                id="payment_card" value="card" wire:model.live="payment_method">
                                             <label class="form-check-label w-100" for="payment_card">
-                                                <div
-                                                    class="text-center p-3 border rounded-3 h-100 payment-method-option">
+                                                <div class="text-center p-3 border rounded-3 h-100 payment-method-option">
                                                     <i class="fas fa-credit-card fa-2x mb-2 text-primary"></i>
                                                     <div class="fw-bold small">Card Payment</div>
                                                     <small class="text-muted">Instant</small>
@@ -256,12 +246,10 @@
                                             </label>
                                         </div>
                                         <div class="col-6">
-                                            <input class="form-check-input d-none" type="radio"
-                                                name="payment_method" id="payment_transfer" value="bank_transfer"
-                                                wire:model.live="payment_method">
+                                            <input class="form-check-input d-none" type="radio" name="payment_method"
+                                                id="payment_transfer" value="bank_transfer" wire:model.live="payment_method">
                                             <label class="form-check-label w-100" for="payment_transfer">
-                                                <div
-                                                    class="text-center p-3 border rounded-3 h-100 payment-method-option">
+                                                <div class="text-center p-3 border rounded-3 h-100 payment-method-option">
                                                     <i class="fas fa-university fa-2x mb-2 text-success"></i>
                                                     <div class="fw-bold small">Bank Transfer</div>
                                                     <small class="text-muted">Secure</small>
@@ -297,18 +285,32 @@
                                         <div class="col-12">
                                             <label for="amount" class="form-label">
                                                 Contribution Amount (₦) *
-                                                @if (isset($gift->settings['min_contribution']))
-                                                    <small class="text-muted">(Min:
-                                                        ₦{{ number_format($gift->settings['min_contribution'], 0) }})</small>
-                                                @endif
+                                                {{-- @if (isset($gift->settings['min_contribution']))
+                                                <small class="text-muted">(Min: ₦{{
+                                                    number_format($gift->settings['min_contribution'], 0) }})</small>
+                                                @endif --}}
+                                                @php
+                                                    $remainingAmount = $gift->target_amount - $gift->current_amount;
+                                                @endphp
+                                                {{-- @if ($remainingAmount > 0)
+                                                <small class="text-info">(Max: ₦{{ number_format($remainingAmount, 0) }}
+                                                    remaining)</small>
+                                                @endif --}}
                                             </label>
                                             <div class="input-group">
                                                 <span class="input-group-text">₦</span>
-                                                <input type="number"
-                                                    class="form-control @error('amount') is-invalid @enderror"
-                                                    id="amount" wire:model="amount" min="1" step="0.01"
-                                                    required>
+                                                <input type="number" class="form-control @error('amount') is-invalid @enderror"
+                                                    id="amount" wire:model="amount"
+                                                    min="{{ isset($gift->settings['min_contribution']) ? $gift->settings['min_contribution'] : 1 }}"
+                                                    max="{{ $remainingAmount > 0 ? $remainingAmount : $gift->target_amount }}"
+                                                    step="0.01" required
+                                                    oninput="validateContributionAmount(this, {{ $remainingAmount }})">
                                             </div>
+                                            @if ($remainingAmount <= 0)
+                                                <div class="text-success mt-1">
+                                                    <small><i class="fa fa-check-circle"></i> Target amount reached!</small>
+                                                </div>
+                                            @endif
                                             @error('amount')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -325,10 +327,16 @@
                                         </div>
 
                                         <div class="col-12 mt-4">
-                                            <button type="submit" class="btn btn-success btn-lg w-100"
-                                                wire:loading.attr="disabled"
-                                                @if (!$gift->canReceiveContributions()) disabled @endif>
+                                            @auth
+                                                @php
+                                                    $isMine = $gift->isMine();
+                                                @endphp
+                                            @endauth
 
+                                            <button type="submit" class="btn btn-success btn-lg w-100"
+                                                wire:loading.attr="disabled" @if (isset($isMine) && $isMine) disabled @endif
+                                                @if (!$gift->canReceiveContributions()) disabled @endif
+                                                >
                                                 <span wire:loading.remove>
                                                     <i class="fas fa-heart me-2"></i>
                                                     @if ($payment_method === 'bank_transfer')
@@ -343,7 +351,16 @@
                                                     Processing...
                                                 </span>
                                             </button>
+
+                                            {{-- Show message if the user owns the gift --}}
+                                            @if (isset($isMine) && $isMine)
+                                                <small class="text-danger d-block text-center mt-2">
+                                                    You cannot contribute to your own gift.
+                                                </small>
+                                            @endif
                                         </div>
+
+
                                     </div>
                                 </form>
 
@@ -361,6 +378,39 @@
 
                         {{-- JavaScript for countdown and copy functionality --}}
                         <script>
+                            function validateContributionAmount(input, remainingAmount) {
+                                const value = parseFloat(input.value);
+
+                                if (value > remainingAmount && remainingAmount > 0) {
+                                    input.value = remainingAmount;
+                                    // Show a brief notification
+                                    showContributionNotification('Amount adjusted to remaining target: ₦' + remainingAmount.toLocaleString());
+                                }
+                            }
+
+                            function showContributionNotification(message) {
+                                // Create or update notification
+                                let notification = document.getElementById('contribution-notification');
+                                if (!notification) {
+                                    notification = document.createElement('div');
+                                    notification.id = 'contribution-notification';
+                                    notification.className = 'alert alert-warning alert-dismissible fade show mt-2';
+                                    notification.style.fontSize = '0.875rem';
+                                    document.getElementById('amount').parentNode.parentNode.appendChild(notification);
+                                }
+
+                                notification.innerHTML = `
+                                                    <i class="fa fa-info-circle"></i> ${message}
+                                                    <button type="button" class="btn-close btn-close-sm" onclick="this.parentElement.remove()"></button>
+                                                `;
+
+                                // Auto-hide after 3 seconds
+                                setTimeout(() => {
+                                    if (notification && notification.parentNode) {
+                                        notification.remove();
+                                    }
+                                }, 5000);
+                            }
                             // Countdown timer
                             @if ($payment_method === 'bank_transfer' && $virtual_account)
                                 let expiresAt = new Date('{{ $virtual_account['expires_at'] ?? now()->addMinutes(30) }}');
@@ -391,13 +441,13 @@
 
                             // Copy to clipboard function
                             function copyToClipboard(text, button) {
-                                navigator.clipboard.writeText(text).then(function() {
+                                navigator.clipboard.writeText(text).then(function () {
                                     let originalIcon = button.innerHTML;
                                     button.innerHTML = '<i class="fas fa-check"></i>';
                                     button.classList.add('btn-success');
                                     button.classList.remove('btn-outline-primary');
 
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         button.innerHTML = originalIcon;
                                         button.classList.remove('btn-success');
                                         button.classList.add('btn-outline-primary');
@@ -441,14 +491,14 @@
 
                                     <div class="col-12">
                                         <label class="form-label fw-bold">Bank Name</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $virtual_account['bank_name'] }}" readonly>
+                                        <input type="text" class="form-control" value="{{ $virtual_account['bank_name'] }}"
+                                            readonly>
                                     </div>
 
                                     <div class="col-12">
                                         <label class="form-label fw-bold">Account Name</label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $virtual_account['account_name'] }}" readonly>
+                                        <input type="text" class="form-control" value="{{ $virtual_account['account_name'] }}"
+                                            readonly>
                                     </div>
 
                                     <div class="col-12">
@@ -464,8 +514,8 @@
                                 <div class="alert alert-warning border-0 my-4">
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-clock me-2"></i>
-                                        <small><strong>Expires in:</strong> <span id="countdown"
-                                                class="fw-bold">30:00</span> minutes</small>
+                                        <small><strong>Expires in:</strong> <span id="countdown" class="fw-bold">30:00</span>
+                                            minutes</small>
                                     </div>
                                 </div>
 
@@ -546,15 +596,15 @@
         document.addEventListener('livewire:init', () => {
             Livewire.on('openWindow', (url) => {
                 window.open(url, '_blank', 'width=600,height=400');
-                });
+            });
 
-                Livewire.on('copyToClipboard', (text) => {
-                    navigator.clipboard.writeText(text).then(() => {
-                        // Optional: Show toast notification
-                        });
-                        });
-                        });
-                    </script> --}}
+            Livewire.on('copyToClipboard', (text) => {
+                navigator.clipboard.writeText(text).then(() => {
+                    // Optional: Show toast notification
+                });
+            });
+        });
+    </script> --}}
 
 
 

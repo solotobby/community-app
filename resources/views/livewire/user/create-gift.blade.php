@@ -56,6 +56,8 @@
                                     <option value="Wedding">Wedding</option>
                                     <option value="New Baby">New Baby</option>
                                     <option value="Condolence">Condolence</option>
+                                    <option value="Retirement">Retirement</option>
+                                    <option value="Others">Others</option>
                                 </select>
                                 @error('reason')
                                     <div class="invalid-feedback">{{ $message }}</div>

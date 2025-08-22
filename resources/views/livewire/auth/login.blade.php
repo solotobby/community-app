@@ -1,46 +1,6 @@
-{{-- <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')"
-        :description="__('Enter your email and password below to log in')" />
-
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
-
-    <form wire:submit="login" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <flux:input wire:model="email" :label="__('Email address')" type="email" required autofocus autocomplete="email"
-            placeholder="email@example.com" />
-
-        <!-- Password -->
-        <div class="relative">
-            <flux:input wire:model="password" :label="__('Password')" type="password" required
-                autocomplete="current-password" :placeholder="__('Password')" viewable />
-
-            @if (Route::has('password.request'))
-            <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
-                {{ __('Forgot your password?') }}
-            </flux:link>
-            @endif
-        </div>
-
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
-
-        <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
-        </div>
-    </form>
-
-    @if (Route::has('register'))
-    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-        {{ __('Don\'t have an account?') }}
-        <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
-    </div>
-    @endif
-</div> --}}
-
-<div class="bg-image" style="background-image: url('assets/media/photos/famlic_background4.jpg');">
-    <div class="row mx-0">
-        <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end">
+<div class="row mx-0 min-vh-100">
+        <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image"
+             style="background-image: url('assets/media/photos/Famlic_banner.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
             <div class="p-4">
                 {{-- <p class="text-white-75 fw-medium">
                     Copyright &copy; <span data-toggle="year-copy"></span>
@@ -53,7 +13,7 @@
             </div>
         </div>
 
-        <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center bg-body-extra-light">
+        <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center">
             <div class="content content-full">
                 <!-- Header -->
                 <div class="px-4 py-2 mb-4">
@@ -64,7 +24,6 @@
                     <h1 class="h3 fw-bold mt-4 mb-2">Welcome to Your Dashboard</h1>
                     <h2 class="h5 fw-medium text-muted mb-0">Please sign in</h2>
                 </div>
-
 
                 <form wire:submit.prevent="login" class="js-validation-signin px-4">
                     <div class="form-floating mb-4">
@@ -94,7 +53,6 @@
                         @enderror
                     </div>
 
-
                     <div class="mb-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="login-remember-me"
@@ -104,9 +62,6 @@
                     </div>
 
                     <div class="mb-4">
-                        {{-- <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold">
-                            Sign In
-                        </button> --}}
                         <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold"
                             wire:loading.attr="disabled">
                             <span wire:loading.remove>Sign In</span>
@@ -128,4 +83,3 @@
             </div>
         </div>
     </div>
-</div>

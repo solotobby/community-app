@@ -93,6 +93,7 @@ class PaystackController extends Controller
                 'registration_draw' => true,
                 'has_subscribed' => true,
                 'can_raffle' => true,
+                'free_user' => false,
             ]);
 
             $user->load('level', 'referrer');
@@ -161,7 +162,7 @@ class PaystackController extends Controller
             $bonus = $contribution->amount;
             $wallet->increment('balance', $bonus);
             $wallet->increment('processing_balance', $bonus);
-           
+
 
             return redirect()
                 ->route('gift.public', ['slug' => $contribution->giftRequest->slug])

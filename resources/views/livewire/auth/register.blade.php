@@ -1,20 +1,19 @@
-<div class="row mx-0 bg-earth-op">
-    <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end bg-image"
-        style="background-image: url('{{ asset('assets/media/photos/photo34@2x.jpg') }}');">
-        <div class="p-4">
-            <p class="fs-3 fw-semibold text-white mb-1">
-                We're very happy you are joining our community!
-            </p>
-            <p class="fs-5 text-white fw-medium">
-                <i class="fa fa-angle-right opacity-50"></i> Create your account today and receive 50% off.
-            </p>
-            <p class="text-white-75 fw-medium">
-                Copyright &copy; <span>{{ now()->year }}</span>
-            </p>
-        </div>
-    </div>
+<div class="row mx-0 min-vh-100">
+     <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
+             style="background-image: url('assets/media/photos/Famlic_banner.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white; height: 100vh; width: 58.3333%;">
+            <div class="p-4">
+                {{-- <p class="text-white-75 fw-medium">
+                    Copyright &copy; <span data-toggle="year-copy"></span>
+                </p> --}}
 
-    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center bg-body-extra-light">
+                {{-- <p class="fs-4 fw-semibold text-black">
+                    Raise Funds and Support from Family & Friends
+                </p> --}}
+
+            </div>
+        </div>
+
+    <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center ms-auto min-height: 100vh; overflow-y: auto;">
         <div class="content content-full">
             <div class="px-4 py-2 mb-4">
                 <a class="link-fx fw-bold" href="{{ url('/') }}">

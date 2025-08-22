@@ -32,20 +32,19 @@
         @endif
 
         {{-- Profile Header --}}
-        <div class="row mb-4">
+       <div class="row mb-4">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center flex-wrap">
                             <div class="avatar-container me-3">
-                                <div
-                                    class="avatar bg-primary text-black d-flex align-items-center justify-content-center">
+                                <div class="avatar bg-primary text-black d-flex align-items-center justify-content-center">
                                     {{ strtoupper(substr($name, 0, 2)) }}
                                 </div>
                             </div>
                             <div class="flex-grow-1">
                                 <h3 class="mb-1">{{ $name }}</h3>
-                                <p class="text-muted mb-0">{{ $email }}</p>
+                                <p class="text-muted mb-0 text-break">{{ $email }}</p>
                                 <small class="text-muted">
                                     <i class="fas fa-star text-warning me-1"></i>
                                     Level: {{ $level->name ?? 'Not assigned' }}
@@ -56,6 +55,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="row">
             {{-- Personal Information --}}
@@ -81,7 +81,7 @@
                                 <label class="form-label text-muted">Email Address</label>
                                 <div class="fw-bold text-muted">{{ $email }}</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label text-muted">Referral Code</label>
                                 <div class="d-flex align-items-center">
                                     <code class="bg-light px-2 py-1 rounded me-2">{{ $referral_code }}</code>
@@ -92,31 +92,16 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label text-muted">Referred By</label>
                                 <div class="fw-bold text-muted">{{ $referred_by ?? 'Direct signup' }}</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                              <div class="col-md-4">
+                                <label class="form-label text-muted">Date of Birth</label>
+                                <div class="fw-bold text-muted">{{ $dob ?? 'Not provided' }}</div>
+                            </div>
 
-            {{-- Contact Information --}}
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-grey border-bottom-0 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="fas fa-address-book text-primary me-2"></i>
-                            Contact Information
-                        </h5>
-                        <button class="btn btn-outline-primary btn-sm" wire:click="openContactModal">
-                            <i class="fas fa-edit me-1"></i>
-                            {{ $phone && $address ? 'Update' : 'Add' }} Details
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-12">
+                              <div class="col-md-12">
                                 <label class="form-label text-muted">Phone Number</label>
                                 <div class="d-flex align-items-center">
                                     <div class="fw-bold text-muted font-monospace">{{ $phone ?? 'Not provided' }}
@@ -138,10 +123,28 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label text-muted">Date of Birth</label>
-                                <div class="fw-bold text-muted">{{ $dob ?? 'Not provided' }}</div>
-                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Contact Information --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-grey border-bottom-0 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-address-book text-primary me-2"></i>
+                            Contact Information
+                        </h5>
+                        <button class="btn btn-outline-primary btn-sm" wire:click="openContactModal">
+                            <i class="fas fa-edit me-1"></i>
+                            {{ $phone && $address ? 'Update' : 'Add' }} Details
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+
+
                             <div class="col-12">
                                 <label class="form-label text-muted">Address</label>
                                 <div class="fw-bold text-muted">{{ $address ?? 'Not provided' }}</div>
@@ -353,8 +356,11 @@
                                     @error('confirm_transaction_pin')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                    <button type="button" class="btn btn-link btn-sm p-0" wire:click="openResetPinModal">
+                                        Forgot PIn
+                                    </button>
                                 </div>
-                            </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     wire:click="closePinModal">Cancel</button>
@@ -625,6 +631,92 @@
                 </div>
             </div>
         @endif
+
+       @if ($showResetPinModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content theme-sensitive">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-lock text-primary me-2"></i>
+                            Reset Transaction PIN
+                        </h5>
+                        <button type="button" class="btn-close" wire:click="closeResetPinModal"></button>
+                    </div>
+                    <div class="modal-body">
+                            <form wire:submit.prevent="resetTransactionPin">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-key fa-3x text-success mb-3"></i>
+                                    <p class="mb-2">Enter the token sent to your email.</p>
+                                    <strong>{{ $email }}</strong>
+                                    <p class="small text-muted mt-2">
+                                        The token expires in <strong>10 minutes</strong>.<br>
+                                        Didn’t receive the token?
+                                         <button class="btn btn-primary" wire:click="resendToken" wire:loading.attr="disabled">
+                                            <span wire:loading.remove wire:target="resendToken">
+                                                <i class="fas fa-paper-plane me-2"></i>
+                                                Resend Token
+                                            </span>
+                                            <span wire:loading wire:target="resendToken">
+                                                <span class="spinner-border spinner-border-sm me-2"></span>
+                                                Sending...
+                                            </span>
+                                        </button>
+
+                                    </p>
+                                </div>
+
+                                {{-- Token Input --}}
+                                <div class="mb-3">
+                                    <input type="text"
+                                        class="form-control form-control-lg text-center @error('reset_token') is-invalid @enderror"
+                                        wire:model.defer="reset_token"
+                                        placeholder="Enter Token" maxlength="6">
+                                    @error('reset_token')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- New 4-Digit PIN --}}
+                                <div class="mb-3">
+                                    <input type="password"
+                                        class="form-control form-control-lg text-center @error('new_pin') is-invalid @enderror"
+                                        wire:model.defer="new_pin" placeholder="Enter your new 4-digit PIN" maxlength="4">
+                                    @error('new_pin')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- Confirm New PIN --}}
+                                <div class="mb-3">
+                                    <input type="password"
+                                        class="form-control form-control-lg text-center @error('confirm_pin') is-invalid @enderror"
+                                        wire:model.defer="confirm_pin" placeholder="Confirm PIN" maxlength="4">
+                                    @error('confirm_pin')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success" wire:loading.attr="disabled">
+                                        <span wire:loading.remove wire:target="resetTransactionPin">
+                                            <i class="fas fa-check me-2"></i>
+                                            Reset PIN
+                                        </span>
+                                        <span wire:loading wire:target="resetTransactionPin">
+                                            <span class="spinner-border spinner-border-sm me-2"></span>
+                                            Processing...
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+                        {{-- @endif --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
     </div>
 
     <script>

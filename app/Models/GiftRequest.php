@@ -122,6 +122,11 @@ class GiftRequest extends Model
         return $this->deadline <= now();
     }
 
+    public function isMine(): bool
+    {
+        return $this->user_id == auth()->user()->id;
+    }
+
     public function getDaysRemainingAttribute(): int
     {
         if ($this->is_expired) {

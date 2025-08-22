@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User;
 
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaystackController;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,9 @@ class Profile extends Component
     public $showUserModal = false;
     public $showPhoneVerificationModal = false;
 
+    public $showResetPinModal = false;
+
+
     // Contact information
     public $phone, $dob, $phone_verified, $address, $landmark, $lga, $state, $country;
 
@@ -37,6 +41,10 @@ class Profile extends Component
     public $new_transaction_pin = '';
     public $current_pin = '';
     public $confirm_transaction_pin = '';
+
+    public $reset_token = '';
+    public $new_pin = '';
+    public $confirm_pin = '';
 
     // Password change
     public $current_password, $new_password, $new_password_confirmation;
@@ -234,6 +242,122 @@ class Profile extends Component
         $this->resetValidation();
     }
 
+
+    public function openResetPinModal()
+    {
+        $this->sendEmailToken();
+        $this->showResetPinModal = true;
+        $this->showPinModal = false;
+        $this->reset_token = '';
+        $this->new_pin = '';
+        $this->confirm_pin = '';
+        $this->resetValidation();
+    }
+
+    public function resendToken()
+    {
+        $user = Auth::user();
+        $code = rand(100000, 999999);
+
+        PhoneOtp::updateOrCreate(
+            ['phone' => $user->email],
+            [
+                'code' => $code,
+                'expires_at' => now()->addMinutes(10),
+            ]
+        );
+
+        // Send OTP via mail
+        $response = app(MailController::class)->sendMail(
+            $user->email,
+            'RESET TRANSACTION PIN',
+            'Kindly use the code to reset your transaction pin: ' . $code
+        );
+
+        return back()->with('success', 'A new token has been sent to your email.');
+    }
+
+    public function sendEmailToken()
+    {
+        try {
+
+            $user = Auth::user();
+            $code = rand(100000, 999999);
+
+            PhoneOtp::updateOrCreate(
+                ['phone' => $user->email],
+                [
+                    'code' => $code,
+                    'expires_at' => now()->addMinutes(10),
+                ]
+            );
+
+            // Send OTP via mail
+            $response = app(MailController::class)->sendMail(
+                $user->email,
+                'RESET TRANSACTION PIN',
+                'Kindly use the code to reset your transaction pin: ' . $code
+            );
+
+            $this->resetPinInputs();
+
+            session()->flash($response ? 'success' : 'error', $response
+                ? 'Verification code sent to your email.'
+                : 'Failed to send verification code. Try again.');
+        } catch (Throwable $e) {
+            Log::error('OTP send failed', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Failed to send verification code. Please try again.');
+        }
+    }
+    public function closeResetPinModal()
+    {
+        $this->showResetPinModal = false;
+        $this->resetValidation();
+    }
+
+    public function resetTransactionPin()
+    {
+        $user = Auth::user();
+
+        $rules = [
+            'reset_token' => 'required',
+            'new_pin' => 'required|digits:4',
+            'confirm_pin' => 'required|same:new_pin',
+        ];
+
+
+        $this->validate($rules);
+
+        // Verify token
+        $record = PhoneOtp::where('phone', $user->email)
+            ->where('code', $this->reset_token)
+            ->where('expires_at', '>=', now())
+            ->first();
+
+        if (!$record) {
+            session()->flash('error', 'Invalid or expired token.');
+            return;
+        }
+
+        $user->update([
+            'transaction_pin' => Hash::make($this->new_pin),
+        ]);
+
+        $record->delete();
+
+        $this->closeResetPinModal();
+        $this->mount();
+        session()->flash('success', 'Transaction PIN ' . ($user->transaction_pin ? 'updated' : 'set') . ' successfully.');
+    }
+
+    private function resetPinInputs()
+    {
+        $this->reset_token = '';
+        $this->new_pin = '';
+        $this->confirm_pin = '';
+        $this->resetValidation();
+    }
+
     public function saveTransactionPin()
     {
         $user = auth()->user();
@@ -253,14 +377,14 @@ class Profile extends Component
         // Verify current PIN if it exists
         if ($user->transaction_pin && !Hash::check($this->current_pin, $user->transaction_pin)) {
             return session()->flash('error', 'Current PIN is incorrect.');
-        }
+        };
 
         $user->update([
             'transaction_pin' => Hash::make($this->new_transaction_pin),
         ]);
 
         $this->closePinModal();
-        $this->mount(); // Refresh data
+        $this->mount();
         session()->flash('success', 'Transaction PIN ' . ($user->transaction_pin ? 'updated' : 'set') . ' successfully.');
     }
 

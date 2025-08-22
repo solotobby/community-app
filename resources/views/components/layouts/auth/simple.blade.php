@@ -1,30 +1,35 @@
-{{-- <!DOCTYPE html>
+{{--
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
-    <head>
-        @include('partials.head')
-    </head>
-    <body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
-        <div class="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-            <div class="flex w-full max-w-sm flex-col gap-2">
-                <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-                    <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
-                        <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
-                    </span>
-                    <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
-                </a>
-                <div class="flex flex-col gap-6">
-                    {{ $slot }}
-                </div>
+
+<head>
+    @include('partials.head')
+</head>
+
+<body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
+    <div class="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div class="flex w-full max-w-sm flex-col gap-2">
+            <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
+                <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
+                    <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
+                </span>
+                <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
+            </a>
+            <div class="flex flex-col gap-6">
+                {{ $slot }}
             </div>
         </div>
-        @fluxScripts
-    </body>
+    </div>
+    @fluxScripts
+</body>
+
 </html> --}}
 
 
 <!doctype html>
 <html lang="en" class="remember-theme">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <!--
       Available classes for <html> element:
@@ -39,14 +44,17 @@
 
     <title>Community App</title>
 
-   <meta name="description" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta name="description"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:title"
+        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
     <meta property="og:site_name" content="Famlic">
-    <meta property="og:description" content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
+    <meta property="og:description"
+        content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="">
@@ -54,8 +62,8 @@
     <!-- Icons -->
     <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicons/Favicon-famlic.ico">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/media/favicons/favicon-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/media/favicons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/media/favicons/Favicon-famlic.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/media/favicons/Favicon-famlic.ico">
     <!-- END Icons -->
 
     <!-- Stylesheets -->
@@ -69,7 +77,7 @@
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
     <script src="assets/js/setTheme.js"></script>
-     <style>
+    <style>
         .theme-sensitive {
             background-color: #ffffff;
             color: #212529;
@@ -372,9 +380,9 @@
             }
         }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <!-- Page Container -->
     <!--
       Available classes for #page-container:
@@ -415,28 +423,28 @@
         'main-content-boxed'                        Full width Main Content with a specific maximum width (screen width > 1200px)
         'main-content-narrow'                       Full width Main Content with a percentage width (screen width > 1200px)
     -->
-   <div id="page-container" class="main-content-boxed">
+    <div id="page-container" class="main-content-boxed">
 
-      <!-- Main Container -->
-      <main id="main-container">
-        <!-- Page Content -->
-       <!-- END Header -->
+        <!-- Main Container -->
+        <main id="main-container">
+            <!-- Page Content -->
+            <!-- END Header -->
 
-                <!-- Sign In Form -->
-                <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js -->
-                <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
+            <!-- Sign In Form -->
+            <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js -->
+            <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
 
 
-                {{ $slot }}
+            {{ $slot }}
 
-                <!-- END Sign In Form -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- END Page Content -->
-      </main>
-      <!-- END Main Container -->
+            <!-- END Sign In Form -->
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
     </div>
     <!-- END Page Container -->
 
@@ -456,5 +464,20 @@
 
     <!-- Page JS Code -->
     <script src="assets/js/pages/op_auth_signin.min.js"></script>
-  </body>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/68a83bda3b2d9e1926a1c57a/1j38ijk7k';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+</body>
+
 </html>
