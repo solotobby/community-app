@@ -22,8 +22,8 @@ class CreateLevel extends Component
     {
         $this->validate();
 
-        $referral = ($this->referral_bonus/100) * $this->registration_amount;
-        $entry = ($this->entry_gift/100) * $this->registration_amount;
+        $referral = ($this->referral_bonus / 100) * $this->registration_amount;
+        $entry = ($this->entry_gift / 100) * $this->registration_amount;
         Level::create([
             'name' => $this->name,
             'registration_amount' => $this->registration_amount,
@@ -35,8 +35,8 @@ class CreateLevel extends Component
 
         session()->flash('success', 'Level created successfully.');
 
-        // $this->reset();
-         return redirect()->route('admin.list.level');
+        $this->reset();
+        return redirect()->route('admin.list.level');
     }
     public function render()
     {

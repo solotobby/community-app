@@ -128,7 +128,8 @@ class ListTransactions extends Component
 
         $adminBalance = Wallet::firstOrCreate(
             ['user_id' => 0],
-            ['balance' => 0, 'user_role' => 'admin']
+            ['balance' => 0,
+             'user_role' => 'admin']
         );
 
         return view('livewire.admin.transaction.list-transactions', [
@@ -142,7 +143,7 @@ class ListTransactions extends Component
             'totalPayout' => $totalPayout,
             'totalIncomeTransaction' => $totalIncomeTransaction,
             'totalPayoutTransaction' => $totalPayoutTransaction,
-            'adminBalance' => $adminBalance->balance,
+            // 'adminBalance' => $adminBalance->balance,
         ]);
     }
 }

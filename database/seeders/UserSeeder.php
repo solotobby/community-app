@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -16,18 +17,18 @@ class UserSeeder extends Seeder
     {
         $users = [
             ['name' => 'Oluwatobi Solomon', 'email' => 'solotob3@gmail.com'],
-            ['name' => 'Samuel Farohunbi',  'email' => 'samuelfa@gmail.com'],
-            ['name' => 'Victor',            'email' => 'vic@gmail.com'],
+            ['name' => 'Samuel Farohunbi', 'email' => 'samuelfa@gmail.com'],
+            ['name' => 'Victor', 'email' => 'vic@gmail.com'],
         ];
 
         $adminRole = Role::where('name', 'admin')->first();
-        $password  = bcrypt(env('ADMIN_PASSWORD'));
+        $password = bcrypt(env('ADMIN_PASSWORD'));
 
         foreach ($users as $u) {
             $regUser = User::firstOrCreate(
                 ['email' => $u['email']],
                 [
-                    'name'  => $u['name'],
+                    'name' => $u['name'],
                     'password' => $password
                 ]
             );
@@ -37,10 +38,21 @@ class UserSeeder extends Seeder
         $superUser = User::firstOrCreate(
             ['email' => 'super@gmail.com'],
             [
-                'name'  => 'Super Admin',
+                'name' => 'Super Admin',
                 'password' => $password
             ]
         );
+
+        $wallet = Wallet::firstOrCreate(
+            ['user_id' => 0],
+            [
+                'balance' => 0,
+                'user_role' => 'collection'
+            ]
+        );
+
+        $wallet->update(['user_role' => 'collection']);
+
 
         $superRole = Role::where('name', 'super_admin')->first();
         $superUser->assignRole($superRole->id);
