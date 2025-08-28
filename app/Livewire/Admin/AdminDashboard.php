@@ -65,12 +65,14 @@ class AdminDashboard extends Component
 
         // Wallet Stats
         $wallet = Wallet::query();
+        $adminBalance = Wallet::where('user_role', 'collection')->sum('balance');
+
         $this->walletStats = [
-            'total_wallets' => $wallet->count(),
-            'total_balance' => $wallet->sum('balance'),
-            'total_withdrawable_balance' => $wallet->sum('withdrawable_balance'),
-            'total_processing_balance' => $wallet->sum('processing_balance'),
-            'admin_balance' => $wallet->where('user_role', 'collection')->where('user_id', 0)->sum('balance'),
+            'total_wallets' => $wallet->where('user_role', 'user')->count(),
+            'total_balance' => $wallet->where('user_role', 'user')->sum('balance'),
+            'total_withdrawable_balance' => $wallet->where('user_role', 'user')->sum('withdrawable_balance'),
+            'total_processing_balance' => $wallet->where('user_role', 'user')->sum('processing_balance'),
+            'admin_balance' => $adminBalance
         ];
 
         // Level Stats - Show current distribution but new level assignments in period
