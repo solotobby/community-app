@@ -23,10 +23,7 @@ class AdminController extends Controller
                 'status'             => 'success',
             ]);
 
-            $wallet = Wallet::firstOrCreate(
-                ['user_id' => 0],
-                ['balance' => 0]
-            );
+            $wallet = Wallet::where('user_role', 'collection')->first();
 
             $wallet->increment('balance', $amount);
 
