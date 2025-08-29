@@ -1,5 +1,6 @@
 <div class="row mx-0 min-vh-100">
     <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
+
             style="background-image: url('assets/media/photos/famlic_login.png'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
         <div class="p-4">
             {{-- <p class="text-white-75 fw-medium">
