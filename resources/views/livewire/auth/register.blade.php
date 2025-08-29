@@ -1,17 +1,17 @@
 <div class="row mx-0 min-vh-100">
-     <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
-             style="background-image: url('assets/media/photos/Famlic_banner.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white; height: 100vh; width: 58.3333%;">
-            <div class="p-4">
-                {{-- <p class="text-white-75 fw-medium">
-                    Copyright &copy; <span data-toggle="year-copy"></span>
-                </p> --}}
+    <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
+        style="background-image: url('assets/media/photos/Famlic_banner.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white; height: 100vh; width: 58.3333%;">
+        <div class="p-4">
+            {{-- <p class="text-white-75 fw-medium">
+                Copyright &copy; <span data-toggle="year-copy"></span>
+            </p> --}}
 
-                {{-- <p class="fs-4 fw-semibold text-black">
-                    Raise Funds and Support from Family & Friends
-                </p> --}}
+            {{-- <p class="fs-4 fw-semibold text-black">
+                Raise Funds and Support from Family & Friends
+            </p> --}}
 
-            </div>
         </div>
+    </div>
 
     <div class="hero-static col-md-6 col-xl-5 d-flex align-items-center ms-auto min-height: 100vh; overflow-y: auto;">
         <div class="content content-full">
@@ -181,6 +181,8 @@
                                 You also consent to the collection and use of your information as outlined in our Privacy
                                 Policy.
                                 Please read these documents carefully before registering.
+                            </p>
+                            <p>Any Account created that did not raise money will be deleted permanently after 30 days.
                             </p>
                             <p>
                                 This agreement may be updated from time to time. It is your responsibility to stay informed

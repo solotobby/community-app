@@ -61,10 +61,9 @@
 
                 <!-- Clear Filters -->
                 <div class="col-md-2">
-                    <button wire:click="$set('search', ''); $set('filterByLevel', ''); $set('filterByStatus', '');"
-                        class="btn btn-outline-secondary w-100">
-                        <i class="fa fa-times me-1"></i> Clear
-                    </button>
+                    <button class="btn btn-outline-secondary w-100" wire:click="resetFilters" title="Reset Filters">
+                            <i class="fas fa-redo"></i>
+                        </button>
                 </div>
             </div>
 

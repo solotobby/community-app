@@ -20,7 +20,15 @@
     <meta property="og:image" content="{{ asset('assets__/media/favicons/Favicon-famlic.ico') }}">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets__/media/favicons/Favicon-famlic.ico') }}">
+    {{--
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets__/media/favicons/Favicon-famlic.ico') }}"> --}}
+
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicons/Favicon-famlic.ico">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
+    <!-- END Icons -->
 
     <title>Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa</title>
 
@@ -71,6 +79,11 @@
                         Us</a></li>
                 <li><a href="{{ route('contactUs') }}"
                         class="{{ request()->routeIs('contactUs') ? 'active' : '' }}">Contact</a></li>
+
+                <!-- Mobile CTA Button (only visible in mobile dropdown) -->
+                <li class="mobile-only">
+                    <a href="{{ route('login') }}" class="cta-btn mobile-cta">Raise Money</a>
+                </li>
             </ul>
 
             <!-- CTA Button -->

@@ -25,16 +25,17 @@ class ListLevel extends Component
     {
         $level = Level::findOrFail($id);
 
-        $this->edit = [
-            'id' => $level->id,
-            'name' => $level->name,
-            'registration_amount' => $level->registration_amount,
-            'entry_gift' => $level->registration_amount == 0 ? 0 : ($level->entry_gift / $level->registration_amount) * 100,
-            'referral_bonus' => $level->registration_amount == 0 ? 0 : ($level->referral_bonus / $level->registration_amount) * 100,
-            'currency' => $level->currency,
-        ];
+        $this->fill([
+            'edit' => [
+                'id' => $level->id,
+                'name' => $level->name,
+                'registration_amount' => $level->registration_amount,
+                'entry_gift' => $level->registration_amount == 0 ? 0 : ($level->entry_gift / $level->registration_amount) * 100,
+                'referral_bonus' => $level->registration_amount == 0 ? 0 : ($level->referral_bonus / $level->registration_amount) * 100,
+                'currency' => $level->currency,
+            ]
+        ]);
 
-        // Dispatch event to show modal
         $this->dispatch('show-edit-modal');
     }
 

@@ -14,7 +14,7 @@
                                 crowdfunding platform</p>
                             <div class="hero-buttons">
                                 <a href="{{ route('login') }}" class="cta-btn">Raise Money</a>
-                                <a href="{{ route('register') }}" class="btn-secondary">Support a Family</a>
+                                <a href="{{ route('register') }}" class="btn-secondary">Sign Up</a>
                             </div>
 
                         </div>
