@@ -1,6 +1,6 @@
 <div class="row mx-0 min-vh-100">
     <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
-        style="background-image: url('{{ asset('assets/media/photos/Famlic_banner.jpg') }}'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white; height: 100vh; width: 58.333333%;">
+        style="background-image: url('assets/media/photos/famlic_login.png'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
         <div class="p-4">
             {{-- <p class="text-white-75 fw-medium">
                 Copyright &copy; <span data-toggle="year-copy"></span>
