@@ -32,6 +32,15 @@ class ListUsers extends Component
         'page' => ['except' => 1],
     ];
 
+    public function resetFilters()
+    {
+        $this->resetPage();
+        $this->reset([
+            'search',
+            'filterByStatus',
+            'filterByLevel'
+        ]);
+    }
     public function updatingSearch()
     {
         $this->resetPage();

@@ -112,10 +112,10 @@
 
                                 <!-- Deadline -->
                                 <div class="col-md-6 mb-3">
-                                    <label for="deadline" class="form-text"><strong> Deadline (Max of 60 days) *</strong></label>
+                                    <label for="deadline" class="form-text"><strong> Deadline (Max of 60 days)
+                                            *</strong></label>
                                     <input type="date" class="form-control @error('deadline') is-invalid @enderror"
-                                        id="deadline" wire:model="deadline"
-                                        min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                                        id="deadline" wire:model="deadline" min="{{ date('Y-m-d', strtotime('+1 day')) }}"
                                         max="{{ date('Y-m-d', strtotime('+60 days')) }}">
                                     @error('deadline')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -184,27 +184,24 @@
                     @endif
 
                     <!-- Navigation Buttons -->
-                    <div class="d-flex justify-content-between mt-4">
-                        <div>
-                            @if ($currentStep > 1)
-                                <button type="button" class="btn btn-outline-secondary" wire:click="previousStep">
-                                    <i class="fas fa-arrow-left me-1"></i> Previous
-                                </button>
-                            @endif
-                        </div>
+                    <div class="d-flex justify-content-start gap-2 mt-4">
+                        @if ($currentStep > 1)
+                            <button type="button" class="btn btn-outline-secondary" wire:click="previousStep">
+                                <i class="fas fa-arrow-left me-1"></i> Previous
+                            </button>
+                        @endif
 
-                        <div>
-                            @if ($currentStep < $totalSteps)
-                                <button type="submit" class="btn btn-primary">
-                                    Next <i class="fas fa-arrow-right ms-1"></i>
-                                </button>
-                            @else
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-gift me-1"></i> Create Gift Request
-                                </button>
-                            @endif
-                        </div>
+                        @if ($currentStep < $totalSteps)
+                            <button type="submit" class="btn btn-primary">
+                                Next <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        @else
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-gift me-1"></i> Create Gift Request
+                            </button>
+                        @endif
                     </div>
+
                 </form>
             </div>
         </div>
