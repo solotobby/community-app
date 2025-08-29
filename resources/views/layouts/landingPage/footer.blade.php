@@ -31,13 +31,13 @@
                 <h3>Connect</h3>
                 <p>Email: <a href="mailto:support@famlic.ng">support@famlic.com</a></p>
                 {{-- <p>Phone: +234 (0) 800 FAMLIC</p> --}}
-                <p>Developed by Freebyz Technology Ltd</p>
+                <p>Developed by Freebyz Technologies Ltd</p>
             </div>
         </div>
 
         <!-- Bottom Footer -->
         <div class="footer-bottom">
-            <p>&copy; 2025 Famlic by Freebyz Technology Ltd. All rights reserved.</p>
+            <p>&copy; 2025 Famlic by Freebyz Technologies Ltd. All rights reserved.</p>
         </div>
     </div>
 </footer>

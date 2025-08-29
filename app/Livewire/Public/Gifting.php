@@ -49,7 +49,7 @@ class Gifting extends Component
             ->whereNotNull('virtual_account_details')
             ->where('created_at', '>=', now()->subMinutes(30))
             ->latest()
-            ->first(    );
+            ->first();
 
         if ($pendingContribution && $pendingContribution->virtual_account_details) {
             // Check if virtual account is still valid (not expired)
@@ -196,7 +196,8 @@ class Gifting extends Component
 
             $payload = [
                 'customer' => $customerCode,
-                'preferred_bank' => app()->environment('production') ? 'wema-bank' : 'test-bank',
+                'preferred_bank' =>  'wema-bank',
+                // 'preferred_bank' => app()->environment('production') ? 'wema-bank' : 'test-bank',
                 'country' => 'NG',
                 'type' => 'nuban',
                 'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
@@ -250,6 +251,7 @@ class Gifting extends Component
             $create = Http::withToken(config('services.paystack.secret_key'))
                 ->post('https://api.paystack.co/customer', [
                     'email' => $contribution->contributor_email,
+                    // 'phone' => '+2347030284735',
                     'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
                     'last_name' => Str::after($contribution->contributor_name, ' ') ?? 'Donor',
                 ]);

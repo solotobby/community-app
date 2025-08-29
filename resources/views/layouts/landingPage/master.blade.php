@@ -78,16 +78,16 @@
                 <li><a href="{{ route('aboutUs') }}" class="{{ request()->routeIs('aboutUs') ? 'active' : '' }}">About
                         Us</a></li>
                 <li><a href="{{ route('contactUs') }}"
-                        class="{{ request()->routeIs('contactUs') ? 'active' : '' }}">Contact</a></li>
+                        class="{{ request()->routeIs('contactUs') ? 'active' : '' }}">Contact Us</a></li>
 
                 <!-- Mobile CTA Button (only visible in mobile dropdown) -->
                 <li class="mobile-only">
-                    <a href="{{ route('login') }}" class="cta-btn mobile-cta">Raise Money</a>
+                    <a href="{{ route('login') }}" class="cta-btn mobile-cta">Sign In</a>
                 </li>
             </ul>
 
             <!-- CTA Button -->
-            <a href="{{ route('login') }}" class="cta-btn desktop-tablet-only">Raise Money</a>
+            <a href="{{ route('login') }}" class="cta-btn desktop-tablet-only">Sign In</a>
 
             <!-- Mobile Menu Button -->
             <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
