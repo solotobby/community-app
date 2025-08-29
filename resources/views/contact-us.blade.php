@@ -50,7 +50,7 @@
                             <h3>Get in Touch</h3>
                             <div class="contact-item">
                                 <strong>Email:</strong><br>
-                                support@famlic.ng<br>
+                                support@famlic.com<br>
                                 {{-- info@famlic.ng --}}
                             </div>
                             {{-- <div class="contact-item">

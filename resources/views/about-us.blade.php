@@ -26,10 +26,10 @@
                             <h2>Our Story</h2>
                             <p>Famlic is a family-centered digital platform developed to help Nigerian families raise
                                 support for essential needs such as food, household items, medical emergencies and
-                                gadgets. Famlic is a digital family sharing initiative of Freebyz Technology Ltd, a duly
+                                gadgets. Famlic is a digital family sharing initiative of Freebyz Technologies Ltd, a duly
                                 registered startup with successful track records in Edutech, Adtech and Jobtech
                                 ecosystem since 2021. We have upheld our core values of integrity and promised value
-                                delivery in our products like eportal, Freebyz Remote Jobs, etc.
+                                delivery in our products like e-portal, Freebyz Remote Jobs, Payhankey, etc.
                             </p>
                             <p>We recognized that many Nigerian families face challenges in accessing financial support
                                 for basic necessities. Traditional methods of seeking help were often complicated,
@@ -75,7 +75,7 @@
                             the unique challenges and cultural context of our community. Our platform is built with
                             transparency, security, and ease-of-use at its core, ensuring that both campaign creators
                             and donors feel confident and secure in their interactions.</p>
-                        <p>Developed by Freebyz Technology Ltd, Famlic combines technical expertise with deep
+                        <p>Developed by Freebyz Technologies Ltd, Famlic combines technical expertise with deep
                             understanding
                             of community needs, creating a solution that truly serves Nigerian families.</p>
                     </div>
