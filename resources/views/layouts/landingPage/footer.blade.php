@@ -4,7 +4,8 @@
             <!-- About Section -->
             <div class="footer-section">
                 <h3>Famlic</h3>
-                <p>A trusted crowdfunding platform, built for easy online fundraising and support when families and students need help.</p>
+                <p>A trusted crowdfunding platform, built for easy online fundraising and support when families and
+                    students need help.</p>
             </div>
 
             <!-- Quick Links -->
@@ -19,7 +20,7 @@
             <!-- Support -->
             <div class="footer-section">
                 <h3>Support</h3>
-                <p><a href="#">Help Center</a></p>
+                <p><a href="https://famlic.tawk.help/" target="_blank" rel="noopener noreferrer">Help Center</a></p>
                 <p><a href="{{ route('login') }}">Raise Funds</a></p>
                 <p><a href="{{ route('terms') }}">How it Works</a></p>
                 <p><a href="{{ route('terms') }}">Safety Policy</a></p>
