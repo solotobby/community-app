@@ -112,7 +112,7 @@
                             <p>Families Supported</p>
                         </div>
                         <div class="stat-card animate">
-                            <h3>₦500M+</h3>
+                            <h3>₦10M+</h3>
                             <p>Funds Raised</p>
                         </div>
                         <div class="stat-card animate">
@@ -354,7 +354,7 @@
                             <div class="testimonial-slide">
                                 <div class="testimonial-card">
                                     <div class="testimonial-image">
-                                            <img src="{{asset('assets__/img/famlic/male avater.png')}}" alt="thumb-1">
+                                        <img src="{{asset('assets__/img/famlic/male avater.png')}}" alt="thumb-1">
                                     </div>
                                     <div class="testimonial-text">
                                         "When my wife was pregnant, we needed funds for hospital bills. Famlic helped us
@@ -367,7 +367,7 @@
                             <div class="testimonial-slide">
                                 <div class="testimonial-card">
                                     <div class="testimonial-image">
-                                            <img src="{{asset('assets__/img/famlic/male avater.png')}}">
+                                        <img src="{{asset('assets__/img/famlic/male avater.png')}}">
                                     </div>
                                     <div class="testimonial-text">
                                         "My laptop broke during my final year project. Thanks to Famlic, I raised enough

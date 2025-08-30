@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Public;
 
+use App\Http\Controllers\PaystackController;
 use App\Models\Contribution;
 use App\Models\GiftRequest;
 use Illuminate\Support\Facades\Http;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Exception;
+use Throwable;
 
 #[Layout('components.layouts.public')]
 class Gifting extends Component
@@ -29,7 +31,6 @@ class Gifting extends Component
     public function mount($slug)
     {
         $this->gift = GiftRequest::where('slug', $slug)
-            // ->where('is_public', true)
             ->first();
 
         if (!$this->gift) {
@@ -52,7 +53,6 @@ class Gifting extends Component
             ->first();
 
         if ($pendingContribution && $pendingContribution->virtual_account_details) {
-            // Check if virtual account is still valid (not expired)
             $accountDetails = $pendingContribution->virtual_account_details;
             $expiresAt = isset($accountDetails['expires_at'])
                 ? \Carbon\Carbon::parse($accountDetails['expires_at'])
@@ -107,7 +107,6 @@ class Gifting extends Component
 
         $this->validate();
 
-        // Create contribution
         $contribution = Contribution::create([
             'gift_request_id' => $this->gift->id,
             'contributor_name' => $this->contributor_name,
@@ -156,28 +155,24 @@ class Gifting extends Component
     private function initializePaystackPayment($contribution)
     {
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
-                'Content-Type' => 'application/json',
-            ])->post('https://api.paystack.co/transaction/initialize', [
-                'email' => $contribution->contributor_email,
-                'amount' => $contribution->amount * 100,
-                'reference' => $contribution->payment_reference,
-                'callback_url' => route('payment.gifting.callback'),
-                'metadata' => [
+            $paystackController = app(PaystackController::class);
+            $authorizationUrl = $paystackController->initializeFunding(
+                $contribution->contributor_email,
+                $contribution->amount,
+                $contribution->payment_reference,
+                route('payment.gifting.callback'),
+                [
                     'gift_request_id' => $contribution->gift_request_id,
                     'transaction_id' => $contribution->id,
-                    'type' => 'gifting'
+                    'type' => 'gifting',
                 ]
-            ]);
+            );
 
-            if ($response->successful()) {
-                $data = $response->json();
-                return $data['data']['authorization_url'] ?? null;
+            if ($authorizationUrl) {
+                return $authorizationUrl;
+            } else {
+                return back()->with('error', 'Unable to initialize payment. Please try again.');
             }
-
-            Log::error('Paystack initialization failed', ['response' => $response->body()]);
-            return null;
         } catch (Exception $e) {
             Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
@@ -187,17 +182,19 @@ class Gifting extends Component
     private function generateVirtualAccount($contribution): ?array
     {
         try {
-            $customerCode = $this->getOrCreatePaystackCustomer($contribution);
+            $paystackController = app(PaystackController::class);
+            $customerCode  = $paystackController->getOrCreatePaystackCustomer($contribution);
 
             if (!$customerCode) {
-                Log::error('Unable to create/fetch Paystack customer for ' . $contribution->contributor_email);
+                Log::error(
+                    'Unable to create/fetch Paystack customer for ' . $contribution->contributor_email
+                );
                 return null;
             }
 
             $payload = [
                 'customer' => $customerCode,
-                'preferred_bank' =>  'wema-bank',
-                // 'preferred_bank' => app()->environment('production') ? 'wema-bank' : 'test-bank',
+                'preferred_bank' => app()->environment('local') ? 'test-bank' : 'wema-bank',
                 'country' => 'NG',
                 'type' => 'nuban',
                 'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
@@ -205,20 +202,7 @@ class Gifting extends Component
                 'account_name' => $contribution->contributor_name,
             ];
 
-            $response = Http::withToken(config('services.paystack.secret_key'))
-                ->post('https://api.paystack.co/dedicated_account', $payload);
-
-            Log::info('Virtual account generation response', ['response' => $response->json()]);
-
-            if (!$response->successful()) {
-                Log::error('Paystack dedicated_account error', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                ]);
-                return null;
-            }
-
-            $data = $response->json()['data'];
+            $data = $paystackController->createDedicatedAccount($payload);
 
             return [
                 'account_number' => $data['account_number'],
@@ -228,42 +212,8 @@ class Gifting extends Component
                 'created_at' => now(),
                 'expires_at' => now()->addMinutes(30),
             ];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error('Virtual account generation failed', ['error' => $e->getMessage()]);
-            return null;
-        }
-    }
-
-    private function getOrCreatePaystackCustomer($contribution): ?string
-    {
-        try {
-            // 1. Check if customer exists
-            $lookup = Http::withToken(config('services.paystack.secret_key'))
-                ->get('https://api.paystack.co/customer', [
-                    'email' => $contribution->contributor_email,
-                ]);
-
-            if ($lookup->successful() && !empty($lookup->json()['data']) && count($lookup->json()['data']) > 0) {
-                return $lookup->json()['data'][0]['customer_code'];
-            }
-
-            // 2. Create new customer
-            $create = Http::withToken(config('services.paystack.secret_key'))
-                ->post('https://api.paystack.co/customer', [
-                    'email' => $contribution->contributor_email,
-                    // 'phone' => '+2347030284735',
-                    'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
-                    'last_name' => Str::after($contribution->contributor_name, ' ') ?? 'Donor',
-                ]);
-
-            if ($create->successful()) {
-                return $create->json()['data']['customer_code'];
-            }
-
-            Log::error('Failed to create Paystack customer', ['response' => $create->body()]);
-            return null;
-        } catch (\Throwable $e) {
-            Log::error('Error getting/creating Paystack customer', ['error' => $e->getMessage()]);
             return null;
         }
     }
@@ -289,34 +239,6 @@ class Gifting extends Component
             $this->resetForm();
         } else {
             session()->flash('error', 'Payment not yet confirmed. Please wait a few minutes and try again, or contact support if you have already made the transfer.');
-        }
-    }
-
-    private function checkPaymentStatus($contribution)
-    {
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
-            ])->get("https://api.paystack.co/transaction/verify/{$contribution->payment_reference}");
-
-            if ($response->successful()) {
-                $data = $response->json()['data'];
-
-                if ($data['status'] === 'success' && $data['amount'] == ($contribution->amount * 100)) {
-                    $contribution->update([
-                        'status' => 'completed',
-                        'payment_verified_at' => now(),
-                        'payment_data' => $data,  // Store full payment response
-                    ]);
-
-                    return true;
-                }
-            }
-
-            return false;
-        } catch (Exception $e) {
-            Log::error('Payment verification failed: ' . $e->getMessage());
-            return false;
         }
     }
 
