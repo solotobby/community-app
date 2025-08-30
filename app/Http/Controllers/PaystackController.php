@@ -7,6 +7,7 @@ use App\Models\Level;
 use App\Models\Reward;
 use App\Models\Transaction;
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -22,10 +23,6 @@ class PaystackController extends Controller
             $response = Http::withToken(config('services.paystack.secret_key'))
                 ->get('https://api.paystack.co/bank');
 
-            // Log::info('Paystack bankList Response', [
-            //     'status' => $response->status(),
-            //     'body'   => $response->json(),
-            // ]);
             return $response->successful()
                 ? $response->json('data')
                 : null;
@@ -63,6 +60,86 @@ class PaystackController extends Controller
         } catch (Exception $e) {
             Log::error('Paystack initialization failed: ' . $e->getMessage());
             return null;
+        }
+    }
+
+    public function createDedicatedAccount($payload): ?array
+    {
+        $response = Http::withToken(config('services.paystack.secret_key'))
+            ->post('https://api.paystack.co/dedicated_account', $payload);
+
+        Log::info('Virtual account generation response', ['response' => $response->json()]);
+
+        if (!$response->successful()) {
+            Log::error('Paystack dedicated_account error', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+            return null;
+        }
+
+        return $response->json('data');
+    }
+
+
+    public function getOrCreatePaystackCustomer($contribution): ?string
+    {
+        try {
+            $create = Http::withToken(config('services.paystack.secret_key'))
+                ->post('https://api.paystack.co/customer', [
+                    'email' => $contribution->contributor_email,
+                    'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
+                    'last_name' => Str::after($contribution->contributor_name, ' ') ?? 'Donor',
+                    'phone' => '+2347030284735',
+                ]);
+
+            if ($create->successful()) {
+                return $create->json()['data']['customer_code'];
+            }
+
+            Log::error('Failed to create Paystack customer', ['response' => $create->body()]);
+            return null;
+        } catch (\Throwable $e) {
+            Log::error('Error getting/creating Paystack customer', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    public function checkPaymentStatus($contribution)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.paystack.secret_key'),
+            ])->get("https://api.paystack.co/transaction/verify/{$contribution->payment_reference}");
+
+            Log::info('Paystack verification response', ['response' => $response->body()]);
+
+            if ($response->successful()) {
+                $data = $response->json()['data'];
+                $paidAmount = $data['amount'] / 100; // convert from kobo to naira
+
+                if ($data['status'] === 'success') {
+                    $updateData = [
+                        'status' => 'completed',
+                        'payment_verified_at' => now(),
+                        'payment_data' => $data,
+                    ];
+
+                    // check if the paid amount matches contribution amount
+                    if ($paidAmount != $contribution->amount) {
+                        $updateData['amount'] = $paidAmount;
+                    }
+
+                    $contribution->update($updateData);
+
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (\Throwable $e) {
+            Log::error('Payment verification failed', ['error' => $e->getMessage()]);
+            return false;
         }
     }
 
@@ -254,8 +331,6 @@ class PaystackController extends Controller
             'message' => $response->json('message') ?? 'Account resolution failed',
         ];
     }
-
-
     public function createRecipient($name, $account_number, $bank_code, $currency)
     {
         $payload = [
@@ -297,6 +372,8 @@ class PaystackController extends Controller
                 'reason' => $reason ?? 'Payout',
                 'reference' => $txn,
             ]);
+
+        Log::info('Payment Log', ['response' => $response]);
 
         if ($response->successful()) {
             return [

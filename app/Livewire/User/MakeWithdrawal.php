@@ -7,6 +7,7 @@ use App\Http\Controllers\PaystackController;
 use App\Models\BankInfo;
 use App\Models\Transaction;
 use App\Models\Wallet;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -226,117 +227,122 @@ class MakeWithdrawal extends Component
         $this->pin = '';
         $this->amount = '';
     }
+
     public function confirmWithdrawal(): void
     {
         $this->validate([
             'pin' => 'required|digits:4',
         ]);
 
-        // Verify PIN
         if (!Hash::check($this->pin, $this->user->transaction_pin)) {
             $this->addError('pin', 'Invalid transaction PIN.');
             return;
         }
 
         try {
-            DB::transaction(function () {
-                $wallet = $this->user->wallet;
+            DB::beginTransaction();
 
-                // Deduct amount from wallet
-                $wallet->decrement('balance', $this->amount);
-                $wallet->decrement('withdrawable_balance', $this->amount);
+            $wallet = $this->user->wallet;
 
-                $transaction =  Transaction::create([
-                    'reference' => 'WD_' . Str::upper(Str::random(15)),
-                    'user_id' => Auth::id(),
-                    'transaction_type' => 'wallet_withdrawal',
-                    'transaction_reason' => 'Wallet Withdrawal',
-                    'amount' => $this->amount,
-                    'status' => 'pending',
-                    'level_id' => $this->user->level,
-                ]);
+            // Deduct funds
+            $wallet->decrement('balance', $this->amount);
+            $wallet->decrement('withdrawable_balance', $this->amount);
 
-                if ($this->processPayment($transaction)) {
+            $transaction = Transaction::create([
+                'reference'          => 'WD_' . Str::upper(Str::random(15)),
+                'user_id'            => Auth::id(),
+                'transaction_type'   => 'wallet_withdrawal',
+                'transaction_reason' => 'Wallet Withdrawal',
+                'amount'             => $this->amount,
+                'status'             => 'pending',
+                'level_id'           => $this->user->level,
+            ]);
 
-                    $this->resetClaimProcess();
-                    session()->flash('success', 'Payment has been initiated to your account.');
-                } else {
+            DB::commit();
 
-                    $wallet->decrement('balance', $this->amount);
-                    $wallet->decrement('withdrawable_balance', $this->amount);
-                    $this->resetClaimProcess();
-                    session()->flash('error', 'Error processing payment to your account.');
-                }
+            $process = $this->processPayment($transaction);
 
+            if ($process) {
+                $this->closeConfirmModal();
+                $this->reset(['amount', 'pin']);
+                $this->resetClaimProcess();
                 $this->balance = $wallet->fresh()->withdrawable_balance;
-            });
+                session()->flash('success', 'Payment has been initiated to your account.');
+            } else {
+                // Refund user
+                $wallet->increment('balance', $this->amount);
+                $wallet->increment('withdrawable_balance', $this->amount);
 
-            $this->closeConfirmModal();
-            $this->reset(['amount', 'pin']);
-            $this->resetClaimProcess();
+                $transaction->update(['status' => 'failed']);
 
-            session()->flash('success', 'Withdrawal request submitted successfully!');
+                $this->closeConfirmModal();
+                $this->reset(['amount', 'pin']);
+                $this->resetClaimProcess();
+                session()->flash('error', 'Error processing payment to your account.');
+            }
         } catch (Throwable $e) {
-
+            DB::rollBack();
             Log::error('Withdrawal error: ' . $e->getMessage());
             $this->resetClaimProcess();
             session()->flash('error', 'An error occurred while processing your withdrawal.');
-
         }
     }
-    private function processPayment($transaction): bool
+
+
+    private function processPayment(Transaction $transaction): bool
     {
-        DB::beginTransaction();
         try {
             $feePercentage = 5;
             $feeAmount = ($feePercentage / 100) * $transaction->amount;
-            $amount = $transaction->amount - $feeAmount;
-
+            $netAmount = $transaction->amount - $feeAmount;
 
             $paystack = new PaystackController();
 
-            $response = $paystack->createRecipient(
-                $this->user->bankInfo->account_name,
-                $this->user->bankInfo->account_number,
-                $this->user->bankInfo->bank_code,
-                'NGN'
-            );
+            // Ensure recipient exists
+            if (empty($this->user->recipient_code)) {
+                $response = $paystack->createRecipient(
+                    $this->user->bankInfo->account_name,
+                    $this->user->bankInfo->account_number,
+                    $this->user->bankInfo->bank_code,
+                    'NGN'
+                );
 
-            if ($response && isset($response['recipient_code'])) {
+                if (! $response || ! isset($response['recipient_code'])) {
+                    throw new Exception('Unable to create Paystack recipient');
+                }
+
                 $this->user->update(['recipient_code' => $response['recipient_code']]);
+                $this->user->refresh();
             }
-            $this->user->refresh();
 
-            // Initialize transfer
+            // Call Paystack (no DB transaction here)
             $transferResult = $paystack->initializeTransfer(
-                $amount,
+                $netAmount,
                 $this->user->recipient_code,
                 'Wallet Withdrawal',
                 $transaction->reference
             );
 
             if ($transferResult['status']) {
-                Transaction::where(
-                    'reference',
-                    $transaction->reference
-                )->update([
-                    'status' => 'success',
-                    'amount' => $amount
+                $transaction->update([
+                    'status'     => 'success',
                 ]);
 
+                // Credit admin wallet fee
                 app(AdminController::class)->fundAdminWallet(
                     $feeAmount,
                     'Wallet Withdrawal from: ' . $this->user->name
                 );
 
-                DB::commit();
                 return true;
-            } else {
-                throw new \Exception($transferResult['message'] ?? 'Transfer failed');
             }
-        } catch (\Exception $e) {
-            DB::rollback();
-            Transaction::where('reference', $transaction->reference ?? '')->update(['status' => 'failed']);
+
+            throw new \Exception($transferResult['message'] ?? 'Transfer failed');
+        } catch (Throwable $e) {
+            Log::error('Payment processing failed: ' . $e->getMessage());
+
+            // Mark transaction as failed
+            $transaction->update(['status' => 'failed']);
 
             return false;
         }
