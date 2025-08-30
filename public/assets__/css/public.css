@@ -52,6 +52,23 @@ nav {
     }
 }
 
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+
+    .mobile-cta {
+        margin-top: 1rem;
+        text-align: center;
+        display: block;
+        width: 100%;
+        color: white !important;
+    }
+}
 
 .logo .green {
     color: #2F6932;

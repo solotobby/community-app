@@ -14,12 +14,12 @@
                                 crowdfunding platform</p>
                             <div class="hero-buttons">
                                 <a href="{{ route('login') }}" class="cta-btn">Raise Money</a>
-                                <a href="{{ route('register') }}" class="btn-secondary">Support a Family</a>
+                                <a href="{{ route('register') }}" class="btn-secondary">Sign Up</a>
                             </div>
 
                         </div>
                         <div class="hero-image">
-                            <img src="{{asset('assets__/img/famlic/Famlic_banner.jpg')}}" alt="thumb-1">
+                            <img src="{{asset('assets__/img/famlic/famlic_login.png')}}" alt="thumb-1">
                         </div>
                     </div>
                 </div>

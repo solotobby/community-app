@@ -32,13 +32,40 @@ class ListTransactions extends Component
     ];
 
     // Reset page when any filter changes
-    public function updatingSearch() { $this->resetPage(); }
-    public function updatedSearch() { $this->resetPage(); }
-    public function updatingPerPage() { $this->resetPage(); }
-    public function updatingFilterByType() { $this->resetPage(); }
-    public function updatingFilterByStatus() { $this->resetPage(); }
-    public function updatingDateFrom() { $this->resetPage(); }
-    public function updatingDateTo() { $this->resetPage(); }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'filterByType', 'filterByStatus', 'dateFrom', 'dateTo']);
+        $this->resetPage();
+    }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+    public function updatingFilterByType()
+    {
+        $this->resetPage();
+    }
+    public function updatingFilterByStatus()
+    {
+        $this->resetPage();
+    }
+    public function updatingDateFrom()
+    {
+        $this->resetPage();
+    }
+    public function updatingDateTo()
+    {
+        $this->resetPage();
+    }
 
     public function downloadCsv()
     {
@@ -50,11 +77,19 @@ class ListTransactions extends Component
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
 
-        $callback = function() use ($transactions) {
+        $callback = function () use ($transactions) {
             $file = fopen('php://output', 'w');
 
             fputcsv($file, [
-                'ID', 'User Name', 'Email', 'Level', 'Type', 'Reason', 'Amount', 'Status', 'Date'
+                'ID',
+                'User Name',
+                'Email',
+                'Level',
+                'Type',
+                'Reason',
+                'Amount',
+                'Status',
+                'Date'
             ]);
 
             foreach ($transactions as $transaction) {
@@ -77,16 +112,17 @@ class ListTransactions extends Component
         return Response::stream($callback, 200, $headers);
     }
 
+
     private function getFilteredTransactionsQuery()
     {
         return Transaction::with(['user.level'])
             ->when($this->search, function ($q) {
                 $q->whereHas('user', fn($u) =>
-                    $u->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('email', 'like', "%{$this->search}%"))
-                  ->orWhere('transaction_type', 'like', "%{$this->search}%")
-                  ->orWhere('transaction_reason', 'like', "%{$this->search}%")
-                  ->orWhere('status', 'like', "%{$this->search}%");
+                $u->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('email', 'like', "%{$this->search}%"))
+                    ->orWhere('transaction_type', 'like', "%{$this->search}%")
+                    ->orWhere('transaction_reason', 'like', "%{$this->search}%")
+                    ->orWhere('status', 'like', "%{$this->search}%");
             })
             ->when($this->filterByType, function ($q) {
                 $q->where('transaction_type', $this->filterByType);
@@ -128,8 +164,10 @@ class ListTransactions extends Component
 
         $adminBalance = Wallet::firstOrCreate(
             ['user_id' => 0],
-            ['balance' => 0,
-             'user_role' => 'admin']
+            [
+                'balance' => 0,
+                'user_role' => 'admin'
+            ]
         );
 
         return view('livewire.admin.transaction.list-transactions', [

@@ -273,6 +273,8 @@ class MakeWithdrawal extends Component
 
             $this->closeConfirmModal();
             $this->reset(['amount', 'pin']);
+            $this->resetClaimProcess();
+
             session()->flash('success', 'Withdrawal request submitted successfully!');
         } catch (Throwable $e) {
 

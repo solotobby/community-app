@@ -4,9 +4,9 @@
     </flux:text>
 
     @if (session('status') == 'verification-link-sent')
-        <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-        </flux:text>
+    <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
+        {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+    </flux:text>
     @endif
 
     <div class="flex flex-col items-center justify-between space-y-3">
@@ -21,7 +21,8 @@
 </div> --}}
 
 
-<div class="bg-image" style="background-image: url('{{ asset('assets/media/photos/photo34@2x.jpg') }}');">
+<div class="bg-image"
+    style="background-image: url('assets/media/photos/famlic_login.png'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
     <div class="row mx-0 bg-pulse-op">
         <div class="hero-static col-md-6 col-xl-8 d-none d-md-flex align-items-md-end">
             <div class="p-4">
@@ -47,7 +48,8 @@
                     </div>
                     <h1 class="h3 fw-bold mb-2">Authenticate your account</h1>
                     <h2 class="fs-5 lh-base fw-normal text-muted mb-0">
-                        Please confirm your account by entering the authorization code sent to your mobile number *******3235.
+                        Please confirm your account by entering the authorization code sent to your mobile number
+                        *******3235.
                     </h2>
                 </div>
 
@@ -64,8 +66,7 @@
                             @if ($i == 4)
                                 <span class="d-flex align-items-center">-</span>
                             @endif
-                            <input type="text" maxlength="1" style="width: 38px;"
-                                wire:model="num{{ $i }}"
+                            <input type="text" maxlength="1" style="width: 38px;" wire:model="num{{ $i }}"
                                 class="form-control form-control-lg text-center px-0">
                         @endfor
                     </div>

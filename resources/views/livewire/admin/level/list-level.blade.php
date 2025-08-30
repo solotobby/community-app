@@ -65,45 +65,53 @@
     </div>
 
     <!-- Edit Level Modal -->
-    <div wire:ignore.self class="modal fade" id="editLevelModal" tabindex="-1" aria-labelledby="editLevelModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="editLevelModal" tabindex="-1" aria-labelledby="editLevelModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <form wire:submit.prevent="updateLevel" class="modal-content theme-sensitive border-0 shadow-lg">
-                <div class="modal-header bg-gradient-success text-white text-center border-0 position-relative overflow-hidden">
+                <div
+                    class="modal-header bg-gradient-success text-white text-center border-0 position-relative overflow-hidden">
                     <h5 class="modal-title" id="editLevelModalLabel">Edit Level</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body" wire:key="edit-form-{{ $edit['id'] ?? 'new' }}">
                     <div class="mb-3">
                         <label class="form-label">Name</label>
-                        <input wire:model="edit.name" type="text" class="form-control">
+                        <input wire:model.live="edit.name" type="text" class="form-control"
+                            value="{{ $edit['name'] ?? '' }}">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Registration Amount</label>
-                        <input wire:model="edit.registration_amount" type="number" class="form-control">
+                        <input wire:model.live="edit.registration_amount" type="number" class="form-control"
+                            value="{{ $edit['registration_amount'] ?? '' }}">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Entry Gift Percentage</label>
-                        <input wire:model="edit.entry_gift" type="number" max="100" class="form-control"
-                            placeholder="0-100%">
+                        <input wire:model.live="edit.entry_gift" type="number" max="100" class="form-control"
+                            placeholder="0-100%" value="{{ $edit['entry_gift'] ?? '' }}">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Referral Bonus Percentage</label>
-                        <input wire:model="edit.referral_bonus" type="number" max="100" class="form-control"
-                            placeholder="0-100%">
+                        <input wire:model.live="edit.referral_bonus" type="number" max="100" class="form-control"
+                            placeholder="0-100%" value="{{ $edit['referral_bonus'] ?? '' }}">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Currency</label>
-                        <select wire:model="edit.currency" class="form-control">
+                        <select wire:model.live="edit.currency" class="form-control">
                             <option value="">-- Select Currency --</option>
-                            <option value="NGN">Naira (NGN)</option>
-                            <option value="USD">US Dollar (USD)</option>
-                            <option value="EUR">Euro (EUR)</option>
-                            <option value="GBP">British Pound (GBP)</option>
+                            <option value="NGN" {{ ($edit['currency'] ?? '') == 'NGN' ? 'selected' : '' }}>Naira (NGN)
+                            </option>
+                            <option value="USD" {{ ($edit['currency'] ?? '') == 'USD' ? 'selected' : '' }}>US Dollar (USD)
+                            </option>
+                            <option value="EUR" {{ ($edit['currency'] ?? '') == 'EUR' ? 'selected' : '' }}>Euro (EUR)
+                            </option>
+                            <option value="GBP" {{ ($edit['currency'] ?? '') == 'GBP' ? 'selected' : '' }}>British Pound
+                                (GBP)</option>
                         </select>
                     </div>
                 </div>
@@ -136,9 +144,9 @@
         });
 
         // Handle manual modal close
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const modalEl = document.getElementById('editLevelModal');
-            modalEl.addEventListener('hidden.bs.modal', function() {
+            modalEl.addEventListener('hidden.bs.modal', function () {
                 @this.call('resetEditData');
             });
         });

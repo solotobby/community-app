@@ -212,9 +212,11 @@
                                 <div class="mt-auto">
                                     <div class="row row-cols-2 g-2">
                                         <div class="col">
-                                            <a href="{{ $gift->getPublicUrl() }}" class="btn btn-primary btn-sm w-100">
+                                            <a href="{{ $gift->getPublicUrl() }}" class="btn btn-primary btn-sm w-100"
+                                                target="_blank" rel="noopener noreferrer">
                                                 <i class="fas fa-eye me-1"></i> Preview
                                             </a>
+
                                         </div>
                                         {{-- <div class="col">
                                             <button class="btn btn-secondary btn-sm w-100"
