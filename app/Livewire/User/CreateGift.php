@@ -72,7 +72,7 @@ class CreateGift extends Component
         } elseif ($this->currentStep == 2) {
             $this->validate([
                 'target_amount' => 'required|numeric|min:1',
-                'deadline' => 'nullable|date|after:today',
+                'deadline' => 'required|date|after:today',
                 'gift_image' => 'nullable|image|max:2048',
             ]);
         }

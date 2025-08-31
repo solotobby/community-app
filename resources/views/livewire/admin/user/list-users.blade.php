@@ -115,10 +115,7 @@
                                         class="btn btn-sm btn-primary" onclick="event.stopPropagation()">
                                         View
                                     </a>
-                                    <a wire:click="confirmBlockModal({{ $user->id }})"
-                                        class="btn btn-sm {{ $user->status ? 'btn-outline-danger' : 'btn-outline-success' }}">
-                                        {{ $user->status ? 'Block' : 'Unblock' }}
-                                        <a>
+
                                 </td>
                             </tr>
                         @empty
@@ -145,37 +142,5 @@
             </table>
         </div>
 
-        <!-- Block User Modal -->
-        @if($showBlockModal)
-            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content shadow theme-sensitive">
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                <i class="fa fa-exclamation-triangle text-danger me-2"></i>
-                                {{ $isBlocking ? 'Confirm Block' : 'Confirm Unblock' }}
-                            </h5>
-                            <button type="button" class="btn-close" wire:click="closeBlockModal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>
-                                Are you sure you want to {{ $isBlocking ? 'block' : 'unblock' }} this user?
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" wire:click="closeBlockModal">Cancel</button>
-                            <button type="button" class="btn {{ $isBlocking ? 'btn-danger' : 'btn-success' }}"
-                                wire:click="toggleBlock" wire:loading.attr="disabled">
-                                <span wire:loading.remove>
-                                    {{ $isBlocking ? 'Block User' : 'Unblock User' }}
-                                </span>
-                                <span wire:loading>{{ $isBlocking ? 'Blocking...' : 'Unblocking...' }}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-backdrop fade show"></div>
-        @endif
 
     </div>

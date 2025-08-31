@@ -1,281 +1,341 @@
 <div class="content">
-<div class="container-fluid">
-    {{-- Header Section --}}
-    <div class="row mb-4">
-        <div class="col-12">
-            <div>
-            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
-                          <i class="fas fa-arrow-left me-1"></i>Back to Users
-                      </a>
+     <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        @if (session()->has('message'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-success">
+                {{ session('message') }}
             </div>
-            <br>
-            <div class="card shadow-sm border-0 rounded-3">
-    <div class="card-body">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-3">
-            <!-- User Info -->
-            <div class="d-flex align-items-center">
-                <div class="avatar-container me-3">
-                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-5"
-                         style="width: 50px; height: 50px;">
-                        {{ strtoupper(substr($user->name, 0, 2)) }}
-                    </div>
-                </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
+    <div class="container-fluid">
+        {{-- Header Section --}}
+        <div class="row mb-4">
+            <div class="col-12">
                 <div>
-                    <h5 class="mb-1">{{ $user->name }}</h5>
-                    <p class="text-muted mb-1">{{ $user->email }}</p>
-                    <small class="text-muted">
-                        <i class="fas fa-star text-warning me-1"></i>
-                        Level: {{ $user->levelInfo->name ?? 'Not assigned' }}
-                    </small>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Users
+                    </a>
                 </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="d-flex flex-wrap gap-2">
-                <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
-                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
-                    <i class="fas fa-ticket-alt me-1"></i> Raffle Draw
-                </a>
-
-                <a href="{{ route('admin.users.referral', $user) }}"
-                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
-                    <i class="fas fa-user-friends me-1"></i> Referrals
-                </a>
-
-                <a href="{{ route('admin.users.wallet', $user) }}"
-                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
-                    <i class="fas fa-wallet me-1"></i> Wallet
-                </a>
-
-                <a href="{{ route('admin.users.crowdfunding', $user) }}"
-                   class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
-                    <i class="fas fa-gift me-1"></i> Crowdfunding
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-        </div>
-    </div>
-
-    <div class="row">
-        {{-- Personal Information --}}
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-grey border-bottom-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-user text-primary me-2"></i>
-                        Personal Information
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label class="form-label text-muted">Full Name</label>
-                            <div class="fw-medium text-light">{{ $user->name }}</div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label text-muted">Email Address</label>
-                            <div class="fw-medium text-light">{{ $user->email }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-muted">Referral Code</label>
+                <br>
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-3">
+                            <!-- User Info -->
                             <div class="d-flex align-items-center">
-                                <code
-                                    class="bg-light px-2 py-1 rounded me-2">{{ $user->referral_code ?? 'N/A' }}</code>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-muted">Referred By</label>
-                            <div class="fw-medium text-light">{{ $user->referred_by ?? 'Direct signup' }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-muted">Roles</label>
-                            <div>
-                                @forelse($user->getRoleNames() as $role)
-                                    <span class="badge bg-primary me-1">{{ $role }}</span>
-                                @empty
-                                    <span class="text-muted">No roles assigned</span>
-                                @endforelse
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-muted">Email Verified</label>
-                            <div>
-                                @if ($user->email_verified_at)
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-check me-1"></i>Verified
-                                    </span>
-                                    <small
-                                        class="text-muted d-block">{{ $user->email_verified_at->format('d M, Y') }}</small>
-                                @else
-                                    <span class="badge bg-warning">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>Not Verified
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Contact Information --}}
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-grey border-bottom-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-address-book text-primary me-2"></i>
-                        Contact Information
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label text-muted">Phone Number</label>
-                            <div class="d-flex align-items-center">
-                                <div class="fw-medium font-monospace text-light">{{ $user->phone ?? 'Not provided' }}
+                                <div class="avatar-container me-3">
+                                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-5"
+                                        style="width: 50px; height: 50px;">
+                                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                                    </div>
                                 </div>
-                                @if ($user->phone && !$user->phone_verified)
-                                    <span class="badge bg-warning text-dark ms-2">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>
-                                        Unverified
-                                    </span>
-                                @elseif($user->phone && $user->phone_verified)
-                                    <span class="badge bg-success ms-2">
-                                        <i class="fas fa-check me-1"></i>
-                                        Verified
-                                    </span>
-                                @endif
+                                <div>
+                                    <h5 class="mb-1">{{ $user->name }}</h5>
+                                    <p class="text-muted mb-1">{{ $user->email }}</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-star text-warning me-1"></i>
+                                        Level: {{ $user->levelInfo->name ?? 'Not assigned' }}
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="{{ route('admin.users.raffle', ['id' => $user->id]) }}"
+                                    class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                                    <i class="fas fa-ticket-alt me-1"></i> Raffle Draw
+                                </a>
+
+                                <a href="{{ route('admin.users.referral', $user) }}"
+                                    class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                                    <i class="fas fa-user-friends me-1"></i> Referrals
+                                </a>
+
+                                <a href="{{ route('admin.users.wallet', $user) }}"
+                                    class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                                    <i class="fas fa-wallet me-1"></i> Wallet
+                                </a>
+
+                                <a href="{{ route('admin.users.crowdfunding', $user) }}"
+                                    class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation()">
+                                    <i class="fas fa-gift me-1"></i> Crowdfunding
+                                </a>
+                                <a wire:click="confirmBlockModal({{ $user->id }})"
+                                    class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-user me-1"></i>
+                                    {{ $user->status ? 'Block' : 'Unblock' }}
+                                </a>
+
                             </div>
                         </div>
-                        <div class="col-12">
-                                <label class="form-label text-muted">Date of Birth</label>
-                                <div class="fw-medium text-light">{{ $user->dob ?? 'Not provided' }}</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            {{-- Personal Information --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-grey border-bottom-0">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user text-primary me-2"></i>
+                            Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label text-muted">Full Name</label>
+                                <div class="fw-bold text-muted">{{ $user->name }}</div>
                             </div>
-                        <div class="col-12">
-                            <label class="form-label text-muted">Address</label>
-                            <div class="fw-medium text-light">{{ $user->address ?? 'Not provided' }}</div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-muted">Landmark</label>
-                            <div class="fw-medium text-light">{{ $user->landmark ? null : 'Not provided' }}</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label text-muted">LGA</label>
-                            <div class="fw-medium text-light">{{ $user->lga ?? 'Not provided' }}</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label text-muted">State</label>
-                            <div class="fw-medium text-light">{{ $user->state ?? 'Not provided' }}</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label text-muted">Country</label>
-                            <div class="fw-medium text-light">{{ $user->country ?? 'Not provided' }}</div>
+                            <div class="col-md-12">
+                                <label class="form-label text-muted">Email Address</label>
+                                <div class="fw-bold text-muted">{{ $user->email }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">Referral Code</label>
+                                <div class="d-flex align-items-center">
+                                    <code
+                                        class="bg-light px-2 py-1 rounded me-2">{{ $user->referral_code ?? 'N/A' }}</code>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">Referred By</label>
+                                <div class="fw-bold text-muted">{{ $user->referred_by ?? 'Direct signup' }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">Roles</label>
+                                <div>
+                                    @forelse($user->getRoleNames() as $role)
+                                        <span class="badge bg-primary me-1">{{ $role }}</span>
+                                    @empty
+                                        <span class="text-muted">No roles assigned</span>
+                                    @endforelse
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">Email Verified</label>
+                                <div>
+                                    @if ($user->email_verified_at)
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>Verified
+                                        </span>
+                                        <small
+                                            class="text-muted d-block">{{ $user->email_verified_at->format('d M, Y') }}</small>
+                                    @else
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>Not Verified
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                             <div class="col-md-12">
+                                <label class="form-label text-muted">How do you hear about Us:</label>
+                                <div class="fw-bold text-muted">{{ $user->hear_us ?? 'N/A'}}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Security Settings --}}
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-grey border-bottom-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-shield-alt text-primary me-2"></i>
-                        Security Settings
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-3">
-                        <div>
-                            <div class="fw-medium">Transaction PIN</div>
-                            <small class="text-muted">
-                                @if ($user->transaction_pin)
-                                    <i class="fas fa-check-circle text-success me-1"></i>
-                                    PIN is configured and secure
-                                @else
-                                    <i class="fas fa-exclamation-triangle text-warning me-1"></i>
-                                    No PIN set - transactions may be restricted
-                                @endif
-                            </small>
-                        </div>
-                        <span class="badge bg-{{ $user->transaction_pin ? 'success' : 'warning' }}">
-                            {{ $user->transaction_pin ? 'Configured' : 'Not Set' }}
-                        </span>
+            {{-- Contact Information --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-grey border-bottom-0">
+                        <h5 class="mb-0">
+                            <i class="fas fa-address-book text-primary me-2"></i>
+                            Contact Information
+                        </h5>
                     </div>
-                    {{-- <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label text-muted">Created At</label>
-                            <div class="fw-medium">{{ $user->created_at->format('d M, Y h:i A') }}</div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-muted">Updated At</label>
-                            <div class="fw-medium">{{ $user->updated_at->format('d M, Y h:i A') }}</div>
-                        </div>
-                    </div> --}}
-                </div>
-            </div>
-        </div>
-
-        {{-- Bank Information --}}
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-grey border-bottom-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-university text-primary me-2"></i>
-                        Bank Information
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @if ($user->bankInfo && $user->bankInfo->bank_name && $user->bankInfo->account_number && $user->bankInfo->account_name)
+                    <div class="card-body">
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label text-muted">Bank Name</label>
-                                <div class="fw-medium  text-light ">{{ $user->bankInfo->bank_name }}</div>
+                                <label class="form-label text-muted">Phone Number</label>
+                                <div class="d-flex align-items-center">
+                                    <div class="fw-bold font-monospace text-muted">
+                                        {{ $user->phone ?? 'Not provided' }}
+                                    </div>
+                                    @if ($user->phone && !$user->phone_verified)
+                                        <span class="badge bg-warning text-dark ms-2">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            Unverified
+                                        </span>
+                                    @elseif($user->phone && $user->phone_verified)
+                                        <span class="badge bg-success ms-2">
+                                            <i class="fas fa-check me-1"></i>
+                                            Verified
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label text-muted">Account Number</label>
-                                <div class="fw-medium  text-light font-monospace">
-                                    {{ $user->bankInfo->account_number }}</div>
+                                <label class="form-label text-muted">Date of Birth</label>
+                                <div class="fw-bold text-muted">{{ $user->dob ?? 'Not provided' }}</div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label text-muted">Account Name</label>
-                                <div class="fw-medium text-light ">{{ $user->bankInfo->account_name }}</div>
+                                <label class="form-label text-muted">Address</label>
+                                <div class="fw-bold text-muted">{{ $user->address ?? 'Not provided' }}</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-muted">Landmark</label>
+                                <div class="fw-bold text-muted">{{ $user->landmark ? null : 'Not provided' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted">LGA</label>
+                                <div class="fw-bold text-muted">{{ $user->lga ?? 'Not provided' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted">State</label>
+                                <div class="fw-bold text-muted">{{ $user->state ?? 'Not provided' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted">Country</label>
+                                <div class="fw-bold text-muted">{{ $user->country ?? 'Not provided' }}</div>
                             </div>
                         </div>
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-university text-muted fa-3x mb-3"></i>
-                            <p class="text-muted mb-0">No bank details added yet</p>
-                            <small class="text-muted">User hasn't provided bank details</small>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Security Settings --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-grey border-bottom-0">
+                        <h5 class="mb-0">
+                            <i class="fas fa-shield-alt text-primary me-2"></i>
+                            Security Settings
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-3">
+                            <div>
+                                <div class="fw-medium">Transaction PIN</div>
+                                <small class="text-muted">
+                                    @if ($user->transaction_pin)
+                                        <i class="fas fa-check-circle text-success me-1"></i>
+                                        PIN is configured and secure
+                                    @else
+                                        <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                                        No PIN set - transactions may be restricted
+                                    @endif
+                                </small>
+                            </div>
+                            <span class="badge bg-{{ $user->transaction_pin ? 'success' : 'warning' }}">
+                                {{ $user->transaction_pin ? 'Configured' : 'Not Set' }}
+                            </span>
                         </div>
-                    @endif
+                        {{-- <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">Created At</label>
+                                <div class="fw-medium">{{ $user->created_at->format('d M, Y h:i A') }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted">Updated At</label>
+                                <div class="fw-medium">{{ $user->updated_at->format('d M, Y h:i A') }}</div>
+                            </div>
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
+
+            {{-- Bank Information --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-grey border-bottom-0">
+                        <h5 class="mb-0">
+                            <i class="fas fa-university text-primary me-2"></i>
+                            Bank Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if ($user->bankInfo && $user->bankInfo->bank_name && $user->bankInfo->account_number && $user->bankInfo->account_name)
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label text-muted">Bank Name</label>
+                                    <div class="fw-bold  text-muted ">{{ $user->bankInfo->bank_name }}</div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted">Account Number</label>
+                                    <div class="fw-bold  text-muted font-monospace">
+                                        {{ $user->bankInfo->account_number }}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted">Account Name</label>
+                                    <div class="fw-bold text-muted ">{{ $user->bankInfo->account_name }}</div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="text-center py-4">
+                                <i class="fas fa-university text-muted fa-3x mb-3"></i>
+                                <p class="text-muted mb-0">No bank details added yet</p>
+                                <small class="text-muted">User hasn't provided bank details</small>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
+
+          <!-- Block User Modal -->
+        @if($showBlockModal)
+            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow theme-sensitive">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fa fa-exclamation-triangle text-danger me-2"></i>
+                                {{ $isBlocking ? 'Confirm Block' : 'Confirm Unblock' }}
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="closeBlockModal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Are you sure you want to {{ $isBlocking ? 'block' : 'unblock' }} this user?
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" wire:click="closeBlockModal">Cancel</button>
+                            <button type="button" class="btn {{ $isBlocking ? 'btn-danger' : 'btn-success' }}"
+                                wire:click="toggleBlock" wire:loading.attr="disabled">
+                                <span wire:loading.remove>
+                                    {{ $isBlocking ? 'Block User' : 'Unblock User' }}
+                                </span>
+                                <span wire:loading>{{ $isBlocking ? 'Blocking...' : 'Unblocking...' }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop fade show"></div>
+        @endif
+
+        <style>
+            .avatar-container {
+                width: 80px;
+                height: 80px;
+            }
+
+            .avatar {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+            .card-header.bg-light {
+                background-color: #f8f9fa !important;
+            }
+        </style>
     </div>
-
-
-    <style>
-        .avatar-container {
-            width: 80px;
-            height: 80px;
-        }
-
-        .avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .card-header.bg-light {
-            background-color: #f8f9fa !important;
-        }
-    </style>
-</div>
 </div>
