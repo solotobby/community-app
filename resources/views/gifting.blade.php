@@ -1,4 +1,6 @@
 <div class="container py-4">
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+
     @if (session()->has('message'))
         <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
             class="alert alert-success">
@@ -12,7 +14,7 @@
             {{ session('error') }}
         </div>
     @endif
-
+    </div>
     @if (!$gift || !$gift->is_public)
         <!-- Gift Not Found/Cancelled Section -->
         <div class="row justify-content-center">
@@ -246,16 +248,22 @@
                                             </label>
                                         </div>
                                         <div class="col-6">
-                                            <input class="form-check-input d-none" type="radio" name="payment_method"
-                                                id="payment_transfer" value="bank_transfer" wire:model.live="payment_method">
-                                            <label class="form-check-label w-100" for="payment_transfer">
-                                                <div class="text-center p-3 border rounded-3 h-100 payment-method-option">
+                                            <input class="form-check-input d-none" type="radio"
+                                                name="payment_method"
+                                                id="payment_transfer"
+                                                value="bank_transfer"
+                                                disabled>
+                                            <label class="form-check-label w-100 disabled" for="payment_transfer"
+                                                onclick="showUnavailableNote(event)">
+                                                <div class="text-center p-3 border rounded-3 h-100 payment-method-option bg-light">
                                                     <i class="fas fa-university fa-2x mb-2 text-success"></i>
                                                     <div class="fw-bold small">Bank Transfer</div>
                                                     <small class="text-muted">Secure</small>
                                                 </div>
                                             </label>
+                                            <small id="note-bank-transfer" class="text-danger d-none">⚠ This option is temporarily not available</small>
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -289,15 +297,15 @@
                                                 <small class="text-muted">(Min: ₦{{
                                                     number_format($gift->settings['min_contribution'], 0) }})</small>
                                                 @endif --}}
-                                                @php
+                                                {{-- @php
                                                     $remainingAmount = $gift->target_amount - $gift->current_amount;
-                                                @endphp
+                                                @endphp --}}
                                                 {{-- @if ($remainingAmount > 0)
                                                 <small class="text-info">(Max: ₦{{ number_format($remainingAmount, 0) }}
                                                     remaining)</small>
                                                 @endif --}}
                                             </label>
-                                            <div class="input-group">
+                                            {{-- <div class="input-group">
                                                 <span class="input-group-text">₦</span>
                                                 <input type="number" class="form-control @error('amount') is-invalid @enderror"
                                                     id="amount" wire:model="amount"
@@ -305,12 +313,24 @@
                                                     max="{{ $remainingAmount > 0 ? $remainingAmount : $gift->target_amount }}"
                                                     step="0.01" required
                                                     oninput="validateContributionAmount(this, {{ $remainingAmount }})">
+                                            </div> --}}
+                                            <div class="input-group">
+                                                <span class="input-group-text">₦</span>
+                                                <input
+                                                    type="number"
+                                                    class="form-control @error('amount') is-invalid @enderror"
+                                                    id="amount"
+                                                    wire:model="amount"
+                                                    step="0.01"
+                                                    required
+                                                >
                                             </div>
-                                            @if ($remainingAmount <= 0)
+
+                                            {{-- @if ($remainingAmount <= 0)
                                                 <div class="text-success mt-1">
                                                     <small><i class="fa fa-check-circle"></i> Target amount reached!</small>
                                                 </div>
-                                            @endif
+                                            @endif --}}
                                             @error('amount')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -334,15 +354,15 @@
                                             @endauth
 
                                             <button type="submit" class="btn btn-success btn-lg w-100"
-                                                wire:loading.attr="disabled" @if (isset($isMine) && $isMine) disabled @endif
-                                                @if (!$gift->canReceiveContributions()) disabled @endif
+                                                {{-- wire:loading.attr="disabled" @if (isset($isMine) && $isMine) disabled @endif --}}
+                                                @if (!$gift->canReceiveContributions()) @endif
                                                 >
                                                 <span wire:loading.remove>
                                                     <i class="fas fa-heart me-2"></i>
                                                     @if ($payment_method === 'bank_transfer')
                                                         Generate Transfer Details
                                                     @else
-                                                        Continue to Make Payment
+                                                        Make a contribution
                                                     @endif
                                                 </span>
 
@@ -353,11 +373,11 @@
                                             </button>
 
                                             {{-- Show message if the user owns the gift --}}
-                                            @if (isset($isMine) && $isMine)
+                                            {{-- @if (isset($isMine) && $isMine)
                                                 <small class="text-danger d-block text-center mt-2">
                                                     You cannot contribute to your own gift.
                                                 </small>
-                                            @endif
+                                            @endif --}}
                                         </div>
 
 
@@ -378,6 +398,15 @@
 
                         {{-- JavaScript for countdown and copy functionality --}}
                         <script>
+
+                            function showUnavailableNote(e) {
+                                e.preventDefault();
+                                document.getElementById('note-bank-transfer').classList.remove('d-none');
+                                setTimeout(() => {
+                                    document.getElementById('note-bank-transfer').classList.add('d-none');
+                                }, 3000);
+                            }
+
                             function validateContributionAmount(input, remainingAmount) {
                                 const value = parseFloat(input.value);
 
@@ -589,23 +618,6 @@
             z-index: 1020;
         }
     </style>
-
-
-    {{-- <!-- JavaScript for sharing functionality -->
-    <script>
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('openWindow', (url) => {
-                window.open(url, '_blank', 'width=600,height=400');
-            });
-
-            Livewire.on('copyToClipboard', (text) => {
-                navigator.clipboard.writeText(text).then(() => {
-                    // Optional: Show toast notification
-                });
-            });
-        });
-    </script> --}}
-
 
 
 </div>
