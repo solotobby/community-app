@@ -1,17 +1,19 @@
 <div class="content">
-    @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
-            class="alert alert-success">
-            {{ session('message') }}
-        </div>
-    @endif
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        @if (session()->has('message'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
 
-    @if (session()->has('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
-            class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+        @if (session()->has('error'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
 
     <!-- Stats Cards -->
     <div class="container-fluid p-0 m-0 mb-4">

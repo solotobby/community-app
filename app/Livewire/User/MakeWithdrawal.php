@@ -266,6 +266,8 @@ class MakeWithdrawal extends Component
                 $this->closeConfirmModal();
                 $this->reset(['amount', 'pin']);
                 $this->resetClaimProcess();
+                $this->resetValidation();
+
                 $this->balance = $wallet->fresh()->withdrawable_balance;
                 session()->flash('success', 'Payment has been initiated to your account.');
             } else {
@@ -278,12 +280,16 @@ class MakeWithdrawal extends Component
                 $this->closeConfirmModal();
                 $this->reset(['amount', 'pin']);
                 $this->resetClaimProcess();
+                $this->resetValidation();
+
                 session()->flash('error', 'Error processing payment to your account.');
             }
         } catch (Throwable $e) {
             DB::rollBack();
             Log::error('Withdrawal error: ' . $e->getMessage());
             $this->resetClaimProcess();
+            $this->resetValidation();
+
             session()->flash('error', 'An error occurred while processing your withdrawal.');
         }
     }

@@ -28,6 +28,7 @@
 
     <!-- Codebase framework -->
     <link rel="stylesheet" id="css-main" href="{{ asset('assets/css/codebase.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets__/css/public.css') }}?v={{ time() }}">
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <link rel="stylesheet" id="css-theme" href="{{ asset('assets/css/themes/earth.min.css') }}">
@@ -93,6 +94,8 @@
     </nav>
 
     {{ $slot }}
+
+    @include('layouts.landingPage.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>

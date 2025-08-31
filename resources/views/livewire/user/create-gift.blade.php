@@ -1,14 +1,20 @@
 <div class="content">
-    @if (session()->has('message'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
-            class="alert alert-success">
-            {{ session('message') }}
-            @if (session()->has('gift_url'))
-                <br><strong>Share your gift:</strong> <a href="{{ session('gift_url') }}"
-                    target="_blank">{{ session('gift_url') }}</a>
-            @endif
-        </div>
-    @endif
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        @if (session()->has('message'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
 
     <div class="container-fluid p-0 m-0">
         <div class="card border-0">
@@ -110,18 +116,25 @@
                                     @endif
                                 </div>
 
-                                <!-- Deadline -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="deadline" class="form-text"><strong> Deadline (Max of 60 days)
-                                            *</strong></label>
-                                    <input type="date" class="form-control @error('deadline') is-invalid @enderror"
-                                        id="deadline" wire:model="deadline" min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                                        max="{{ date('Y-m-d', strtotime('+60 days')) }}">
-                                    @error('deadline')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                             <!-- Deadline -->
+                            <div class="col-md-6 mb-3">
+                                <label for="deadline" class="form-text">
+                                    <strong> Deadline (Max of 60 days) *</strong>
+                                </label>
+                                <input
+                                    type="date"
+                                    class="form-control @error('deadline') is-invalid @enderror"
+                                    id="deadline"
+                                    wire:model.live="deadline"
+                                    min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                                    max="{{ date('Y-m-d', strtotime('+60 days')) }}"
+                                    value="{{ old('deadline', date('Y-m-d', strtotime('+59 days'))) }}"
+                                    required>
+                                @error('deadline')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
+
 
                             <!-- Gift Image Upload -->
                             <div class="mb-3">
