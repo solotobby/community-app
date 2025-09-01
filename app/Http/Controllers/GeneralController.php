@@ -23,6 +23,10 @@ class GeneralController extends Controller
         return view('terms');
     }
 
+     public function works()
+    {
+        return view('how-it-works');
+    }
     public function contactUs()
     {
         return view('contact-us');

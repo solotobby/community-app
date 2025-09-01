@@ -150,8 +150,7 @@
             <div class="row">
                 @foreach ($gifts as $gift)
                     <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100 border-0 shadow-sm" style="cursor:pointer;"
-                            onclick="window.location='{{ route('user.gift.detail', $gift->id) }}'">
+                        <div class="card h-100 border-0 shadow-sm">
                             @if ($gift->gift_image)
                                 <img src="{{ Storage::url($gift->gift_image) }}" class="card-img-top"
                                     style="height: 200px; object-fit: cover;">
@@ -214,31 +213,18 @@
                                 <div class="mt-auto">
                                     <div class="row row-cols-2 g-2">
                                         <div class="col">
-                                            <a href="{{ $gift->getPublicUrl() }}" class="btn btn-primary btn-sm w-100"
-                                                target="_blank" rel="noopener noreferrer">
+                                            <a href="{{ route('gift.public', $gift->slug) }}"
+                                                class="btn btn-outline-primary btn-sm w-100" target="_blank"
+                                                rel="noopener noreferrer">
                                                 <i class="fas fa-eye me-1"></i> Preview
                                             </a>
-
                                         </div>
-                                        {{-- <div class="col">
-                                            <button class="btn btn-secondary btn-sm w-100"
-                                                wire:click="toggleStatus({{ $gift->id }})" title="Toggle Status">
-                                                <i class="fas fa-{{ $gift->is_public === true ? 'pause' : 'play' }}"></i>
-                                                {{ $gift->is_public === true ? 'Pause' : 'Resume' }}
-                                            </button>
-                                        </div> --}}
                                         <div class="col">
-                                            <button class="btn btn-primary btn-sm w-100"
-                                                onclick="window.location='{{ route('user.gift.detail', $gift->id) }}'">
-                                                <i class="fas fa-edit me-1"></i> Gift Details
-                                            </button>
+                                            <a href="{{ route('user.gift.detail', $gift->id) }}"
+                                                class="btn btn-primary btn-sm w-100">
+                                                <i class="fas fa-edit me-1"></i> Edit
+                                            </a>
                                         </div>
-                                        {{-- <div class="col">
-                                            <button class="btn btn-info btn-sm w-100"
-                                                onclick="copyToClipboard('{{ $gift->getPublicUrl() }}')" title="Copy Link">
-                                                <i class="fas fa-share me-1"></i> Share
-                                            </button>
-                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

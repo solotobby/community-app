@@ -233,7 +233,7 @@
 
                             <div class="card-body p-4">
                                 {{-- Payment Method Selection --}}
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label fw-bold mb-3">Choose Payment Method</label>
                                     <div class="row g-2">
                                         <div class="col-6">
@@ -265,7 +265,7 @@
                                         </div>
 
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 {{-- Contribution Form --}}
                                 <form wire:submit.prevent="contribute">
@@ -362,7 +362,7 @@
                                                     @if ($payment_method === 'bank_transfer')
                                                         Generate Transfer Details
                                                     @else
-                                                        Make a contribution
+                                                        Click to Pay
                                                     @endif
                                                 </span>
 
