@@ -41,7 +41,7 @@
                     <div class="d-flex flex-column gap-2">
                         <!-- Current Level -->
                         <div class="d-flex align-items-center">
-                            <small class="text-muted me-2">Current Level:</small>
+                            <small class="text-muted me-2">Level:</small>
                             <span class="badge bg-secondary">
                                 <i class="fas fa-star me-1"></i>
                                 {{ $userLevel->name ?? 'No Level' }}
