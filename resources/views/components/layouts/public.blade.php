@@ -4,25 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa' }}</title>
-    <meta name="description" content="Gift Request - Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
-    <meta name="author" content="FamlicApp">
-    <meta name="robots" content="FamlicApp">
+    <title>
+        {{ $title ?? 'Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family' }}
+    </title>
+    <meta name="description" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta name="author" content="Famlic">
+    <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title" content="Gift Request - Famlic:>
-    <meta property="og:site_name" content="FamlicApp">
-    <meta property="og:description" content="Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+    <meta property="og:title" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta property="og:site_name" content="Famlic">
+    <meta property="og:description"
+        content="Famlic is Nigeria's trusted crowdfunding platform where you can raise money online for medical bills, school fees, business capital, and community projects. Track donations in real time, share your link easily, and withdraw funds securely. Start your crowdfunding journey today with Famlic.com.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="">
+    <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="">
     <!-- Icons -->
     <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
     <link rel="icon" type="image/x-icon" href="assets/media/favicons/Favicon-famlic.ico">
-    <link rel="icon" type="image/png" sizes="192x192"
-        href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
     <!-- END Icons -->
     <!-- Stylesheets -->
 
