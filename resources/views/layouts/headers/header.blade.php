@@ -16,7 +16,7 @@
         <!-- END Open Search Section -->
 
         <!-- Color Themes -->
-        <div class="dropdown d-inline-block">
+        {{-- <div class="dropdown d-inline-block">
             <button type="button" class="btn btn-sm btn-alt-secondary" id="page-header-themes-dropdown"
                 data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-fw fa-brush"></i>
@@ -98,7 +98,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> --}}
         <!-- END Color Themes -->
     </div>
     <!-- END Left Section -->

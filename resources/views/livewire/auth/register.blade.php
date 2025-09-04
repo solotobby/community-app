@@ -1,6 +1,6 @@
 <div class="row mx-0 min-vh-100">
     <div class="hero-static col-md-6 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-fixed"
-            style="background-image: url('assets/media/photos/famlic_login.png'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
+        style="background-image: url('assets/media/photos/famlic_login.png'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
         <div class="p-4">
             {{-- <p class="text-white-75 fw-medium">
                 Copyright &copy; <span data-toggle="year-copy"></span>
@@ -42,10 +42,12 @@
                 </div>
 
                 <div class="form-floating mb-4">
-                    <select id="levelSelect" wire:model="level" class="form-control">
+                    <select id="levelSelect" class="form-control">
                         <option value="">-- Select any Level of your Choice --</option>
                         @foreach ($levels as $lvl)
-                            <option value="{{ $lvl->id }}">{{ $lvl->name }}</option>
+                            <option value="{{ $lvl->id }}" data-amount="{{ $lvl->amount ?? 0 }}">
+                                {{ $lvl->name }}
+                            </option>
                         @endforeach
                     </select>
                     <label>Select Level</label>
@@ -54,6 +56,22 @@
                 <div id="amountToPay" class="mb-3 text-center" style="display:none;">
                     <div class="alert alert-info py-2">
                         <strong>Access Fee:</strong> ₦<span id="amountValue"></span>
+                    </div>
+
+                    <!-- Faint Note -->
+                    {{-- <div class="alert alert-info order mt-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-gift text-primary me-2"></i>
+                            <small class="text-muted">
+                                🎉 Crowdfunding is 100% free!
+                            </small>
+                        </div>
+                    </div> --}}
+                </div>
+
+                <div id="crowdfundingComplete" class="mb-3 text-center" style="display:none;">
+                    <div class="alert alert-success py-2">
+                        🎉 Crowdfunding is 100% free!
                     </div>
                 </div>
 
@@ -200,32 +218,44 @@
         </div>
     @endif
     <script>
-        window.levels = @json($levels->map(fn($lvl) => ['id' => $lvl->id, 'amount' => $lvl->registration_amount]));
+        document.addEventListener("DOMContentLoaded", function () {
+            const levels = @json($levels->map(fn($lvl) => [
+                'id' => $lvl->id,
+                'amount' => $lvl->registration_amount
+            ]));
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const levels = window.levels || [];
-            const select = document.getElementById('levelSelect');
-            const amountDiv = document.getElementById('amountToPay');
-            const amountSpan = document.getElementById('amountValue');
+            const levelSelect = document.getElementById("levelSelect");
+            const amountToPay = document.getElementById("amountToPay");
+            const amountValue = document.getElementById("amountValue");
+            const crowdfundingComplete = document.getElementById("crowdfundingComplete");
 
-            select.addEventListener('change', () => {
-                const selectedId = select.value;
+            levelSelect.addEventListener("change", function () {
+                const selectedId = levelSelect.value;
                 if (!selectedId) {
-                    amountDiv.style.display = 'none';
-                    amountSpan.textContent = '';
+                    amountToPay.style.display = "none";
+                    crowdfundingComplete.style.display = "none";
+                    amountValue.textContent = "";
                     return;
                 }
 
                 const level = levels.find(lvl => lvl.id == selectedId);
-                if (level && level.amount) {
-                    amountSpan.textContent = Number(level.amount).toLocaleString(undefined, {
+
+                if (level) {
+                    amountToPay.style.display = "block";
+                    amountValue.textContent = Number(level.amount).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     });
-                    amountDiv.style.display = 'block';
+
+                    if (parseFloat(level.amount) === 0) {
+                        crowdfundingComplete.style.display = "block";
+                    } else {
+                        crowdfundingComplete.style.display = "none";
+                    }
                 } else {
-                    amountDiv.style.display = 'none';
-                    amountSpan.textContent = '';
+                    amountToPay.style.display = "none";
+                    crowdfundingComplete.style.display = "none";
+                    amountValue.textContent = "";
                 }
             });
         });
