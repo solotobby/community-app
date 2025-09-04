@@ -111,24 +111,25 @@
 
                         <div class="mt-auto">
                             <div class="row g-2">
-                                <div class="col-md-3 col-6">
-                                    <button class="btn btn-primary w-100" wire:click="openEditModal"
+                                <div class="col-12 col-md-3">
+                                    <button class="btn btn-primary w-100 mb-2 mb-md-0" wire:click="openEditModal"
                                         @disabled($isDisabled)>
                                         <i class="fa-solid fa-pen-to-square me-1"></i> Edit
                                     </button>
                                 </div>
-                                <div class="col-md-3 col-6">
-                                    <button class="btn btn-{{ $gift->is_public ? 'warning' : 'success' }} w-100"
+                                <div class="col-12 col-md-3">
+                                    <button
+                                        class="btn btn-{{ $gift->is_public ? 'warning' : 'success' }} w-100 mb-2 mb-md-0"
                                         wire:click="toggleStatus" @disabled($isDisabled)>
                                         <i class="fa-solid fa-{{ $gift->is_public ? 'pause' : 'play' }} me-1"></i>
                                         {{ $gift->is_public ? 'Pause' : 'Resume' }}
                                     </button>
                                 </div>
-                                <div class="col-md-3 mb-6">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary btn-lg w-100 dropdown-toggle" type="button"
+                                <div class="col-12 col-md-3">
+                                    <div class="dropdown w-100 mb-2 mb-md-0">
+                                        <button class="btn btn-primary w-100 dropdown-toggle" type="button"
                                             data-bs-toggle="dropdown" @disabled($isDisabled)>
-                                            <i class="fa-solid fa-share me-2"></i>Share
+                                            <i class="fa-solid fa-share me-2"></i> Share
                                         </button>
                                         <ul class="dropdown-menu w-100">
                                             <li><a class="dropdown-item" href="#" wire:click="shareGift('facebook')"><i
@@ -147,14 +148,15 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-6">
-                                    <button class="btn btn-danger w-100" wire:click="openEndModal"
+                                <div class="col-12 col-md-3">
+                                    <button class="btn btn-danger w-100 mb-2 mb-md-0" wire:click="openEndModal"
                                         @disabled($isDisabled)>
                                         <i class="fa-solid fa-stop me-2"></i> End
                                     </button>
                                 </div>
                             </div>
                         </div>
+
 
                     </div>
                 </div>
@@ -263,8 +265,28 @@
                                                         {{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_name }}
                                                     </div>
 
-                                                    <small
-                                                        class="text-muted">{{ $contribution->is_anonymous ? 'Anonymous' : $contribution->contributor_email }}</small>
+                                                    @if ($contribution->is_anonymous)
+                                                        <small class="text-muted">Anonymous</small>
+                                                    @else
+                                                        @php
+                                                            // Mask email (keep first 2 chars + domain, replace middle with ***)
+                                                            $email = $contribution->contributor_email;
+                                                            $phone = $contribution->contributor_phone;
+                                                            $maskedEmail = preg_replace(
+                                                                '/(^.{5})(.*)(@.*)$/',
+                                                                '$1***$3',
+                                                                $email
+                                                            );
+                                                            $maskedPhone = preg_replace('/(\d{5})\d+(\d{3})/', '$1***$2', $phone);
+                                                        @endphp
+                                                        <small class="text-muted">
+                                                            {{ $maskedEmail }}
+                                                            @if(!empty($maskedPhone))
+                                                                | {{ $maskedPhone }}
+                                                            @endif
+                                                        </small>
+
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>
@@ -274,6 +296,7 @@
                                         <td>{{ $contribution->created_at->format('M d, Y') }}</td>
                                         <td>{{ $contribution->message ?: '-' }}</td>
                                     </tr>
+
                                 @endforeach
                             </tbody>
                         </table>
@@ -284,113 +307,114 @@
     @endif
 
     <!-- Edit Modal -->
-   @if ($showEditModal)
-    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
-         <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content theme-sensitive border-0 shadow-lg">
-        <div class="modal-header bg-gradient-success text-white text-center border-0 position-relative overflow-hidden">
-                    <h5 class="modal-title">Edit Gift</h5>
-                    <button type="button" class="btn-close" wire:click="closeEditModal"></button>
-                </div>
-                <form wire:submit.prevent="updateGift">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><strong>Title *</strong></label>
-                                <input type="text" class="form-control" wire:model="title" disabled>
+    @if ($showEditModal)
+        <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content theme-sensitive border-0 shadow-lg">
+                    <div
+                        class="modal-header bg-gradient-success text-white text-center border-0 position-relative overflow-hidden">
+                        <h5 class="modal-title">Edit Gift</h5>
+                        <button type="button" class="btn-close" wire:click="closeEditModal"></button>
+                    </div>
+                    <form wire:submit.prevent="updateGift">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"><strong>Title *</strong></label>
+                                    <input type="text" class="form-control" wire:model="title" disabled>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"><strong>Reason *</strong></label>
+                                    <select class="form-select" wire:model="reason" disabled>
+                                        <option value="">Select Reason</option>
+                                        <option value="Birthday">Birthday</option>
+                                        <option value="Anniversary">Anniversary</option>
+                                        <option value="Health">Health Recovery</option>
+                                        <option value="Achievement">Achievement</option>
+                                        <option value="Appreciation">Appreciation</option>
+                                        <option value="Wedding">Wedding</option>
+                                        <option value="New Baby">New Baby</option>
+                                        <option value="Condolence">Condolence</option>
+                                        <option value="Retirement">Retirement</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><strong>Reason *</strong></label>
-                                <select class="form-select" wire:model="reason" disabled>
-                                    <option value="">Select Reason</option>
-                                    <option value="Birthday">Birthday</option>
-                                    <option value="Anniversary">Anniversary</option>
-                                    <option value="Health">Health Recovery</option>
-                                    <option value="Achievement">Achievement</option>
-                                    <option value="Appreciation">Appreciation</option>
-                                    <option value="Wedding">Wedding</option>
-                                    <option value="New Baby">New Baby</option>
-                                    <option value="Condolence">Condolence</option>
-                                    <option value="Retirement">Retirement</option>
-                                    <option value="Others">Others</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label"><strong>Description *</strong></label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" wire:model="description" rows="4"></textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><strong>Target Amount (₦) *</strong></label>
-                                <input type="number" class="form-control" wire:model="target_amount" disabled>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label"><strong>Deadline</strong></label>
-                                <input type="date" class="form-control @error('deadline') is-invalid @enderror"
-                                    wire:model="deadline" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
-                                @error('deadline')
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Description *</strong></label>
+                                <textarea class="form-control @error('description') is-invalid @enderror"
+                                    wire:model="description" rows="4"></textarea>
+                                @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"><strong>Target Amount (₦) *</strong></label>
+                                    <input type="number" class="form-control" wire:model="target_amount" disabled>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label"><strong>Deadline</strong></label>
+                                    <input type="date" class="form-control @error('deadline') is-invalid @enderror"
+                                        wire:model="deadline" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                                    @error('deadline')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"><strong>Image</strong></label>
+                                @if ($current_image && !$remove_image)
+                                    <div class="mb-2">
+                                        <img src="{{ Storage::url($current_image) }}" class="img-thumbnail"
+                                            style="max-height: 100px;">
+                                        <button type="button" class="btn btn-sm btn-danger ms-2"
+                                            wire:click="$set('remove_image', true)">
+                                            Remove Image
+                                        </button>
+                                    </div>
+                                @endif
+
+                                @if ($remove_image)
+                                    <div class="alert alert-warning">
+                                        Image will be removed when you save.
+                                        <button type="button" class="btn btn-sm btn-link"
+                                            wire:click="$set('remove_image', false)">
+                                            Keep Image
+                                        </button>
+                                    </div>
+                                @endif
+
+                                <input type="file" class="form-control @error('gift_image') is-invalid @enderror"
+                                    wire:model="gift_image" accept="image/*">
+                                @error('gift_image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+
+                                @if ($gift_image)
+                                    <div class="mt-2">
+                                        <img src="{{ $gift_image->temporaryUrl() }}" class="img-thumbnail"
+                                            style="max-height: 100px;">
+                                    </div>
+                                @endif
+                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label"><strong>Image</strong></label>
-                            @if ($current_image && !$remove_image)
-                                <div class="mb-2">
-                                    <img src="{{ Storage::url($current_image) }}" class="img-thumbnail"
-                                        style="max-height: 100px;">
-                                    <button type="button" class="btn btn-sm btn-danger ms-2"
-                                        wire:click="$set('remove_image', true)">
-                                        Remove Image
-                                    </button>
-                                </div>
-                            @endif
-
-                            @if ($remove_image)
-                                <div class="alert alert-warning">
-                                    Image will be removed when you save.
-                                    <button type="button" class="btn btn-sm btn-link"
-                                        wire:click="$set('remove_image', false)">
-                                        Keep Image
-                                    </button>
-                                </div>
-                            @endif
-
-                            <input type="file" class="form-control @error('gift_image') is-invalid @enderror"
-                                wire:model="gift_image" accept="image/*">
-                            @error('gift_image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-
-                            @if ($gift_image)
-                                <div class="mt-2">
-                                    <img src="{{ $gift_image->temporaryUrl() }}" class="img-thumbnail"
-                                        style="max-height: 100px;">
-                                </div>
-                            @endif
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" wire:click="closeEditModal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Update Gift
+                            </button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            wire:click="closeEditModal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Update Gift
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-@endif
+    @endif
     <!-- End Confirmation Modal -->
     @if ($showEndModal)
         <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">

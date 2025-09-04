@@ -290,6 +290,16 @@
                                             @enderror
                                         </div>
 
+                                         <div class="col-12">
+                                            <label for="contributor_phone" class="form-label">Phone Number *</label>
+                                            <input type="number"
+                                                class="form-control @error('contributor_phone') is-invalid @enderror"
+                                                id="contributor_phone" wire:model="contributor_phone" required>
+                                            @error('contributor_phone')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
                                         <div class="col-12">
                                             <label for="amount" class="form-label">
                                                 Contribution Amount (₦) *
