@@ -16,6 +16,7 @@ class Contribution extends Model
         'gift_request_id',
         'contributor_name',
         'contributor_email',
+        'contributor_phone',
         'amount',
         'currency',
         'message',

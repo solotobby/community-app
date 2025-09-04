@@ -21,6 +21,7 @@ class Gifting extends Component
     public $resetForm = false;
     public $contributor_name = '';
     public $contributor_email = '';
+    public $contributor_phone = '';
     public $amount = '';
     public $message = '';
     public $is_anonymous = false;
@@ -74,7 +75,8 @@ class Gifting extends Component
     {
         $rules = [
             'contributor_name' => 'required|string|max:255',
-            'contributor_email' => 'nullable|email|max:255',
+            'contributor_email' => 'required|email|max:255',
+            'contributor_phone' => 'nullable|numeric',
             'amount' => 'required|numeric|min:1',
             'message' => 'nullable|string|max:500',
             'is_anonymous' => 'boolean',
@@ -111,6 +113,7 @@ class Gifting extends Component
             'gift_request_id' => $this->gift->id,
             'contributor_name' => $this->contributor_name,
             'contributor_email' => $this->contributor_email,
+            'contributor_phone' => $this->contributor_phone,
             'amount' => $this->amount,
             'message' => $this->message,
             'is_anonymous' => $this->is_anonymous,
@@ -199,6 +202,7 @@ class Gifting extends Component
                 'type' => 'nuban',
                 'first_name' => Str::before($contribution->contributor_name, ' ') ?? 'Famlic',
                 'last_name' => Str::after($contribution->contributor_name, ' ') ?? 'Donor',
+                'phone_number' => $contribution->contributor_phone ?? '07030284735',
                 'account_name' => $contribution->contributor_name,
             ];
 
@@ -246,6 +250,7 @@ class Gifting extends Component
     {
         $this->contributor_name = '';
         $this->contributor_email = '';
+        $this->contributor_phone = '';
         $this->amount = '';
         $this->message = '';
         $this->is_anonymous = false;
