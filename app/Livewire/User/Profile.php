@@ -455,15 +455,31 @@ class Profile extends Component
             $newPhone = '234' . ltrim($this->phone, '0');
 
             // Send OTP via Termii
-            $response = Http::post('https://api.ng.termii.com/api/sms/send', [
+            $response = Http::post('https://api.termii.com/api/sms/otp/send', [
                 'api_key' => config('services.termii.api_key'),
+                'message_type' => 'NUMERIC',
                 'to' => $newPhone,
                 'from' => config('services.termii.sender_id'),
-                'sms' => "Your verification code is: {$code}",
-                'channel' => 'generic',
+                'channel' => 'dnd',
                 'type' => 'plain',
-                'pin_type' => 'NUMERIC',
+                'pin_attempts' => 10,
+                'pin_time_to_live' => 5,
+                "pin_placeholder" => "{$code}",
+                "message_text" => "Your verification code is: {$code}",
+                "pin_type" => "NUMERIC"
+
+
             ]);
+
+            // $response = Http::post('https://api.ng.termii.com/api/sms/otp/send', [
+            //     'api_key' => config('services.termii.api_key'),
+            //     'to' => $newPhone,
+            //     'from' => config('services.termii.sender_id'),
+            //     'sms' => "Your verification code is: {$code}",
+            //     'channel' => 'generic',
+            //     'type' => 'plain',
+            //     'pin_type' => 'NUMERIC',
+            // ]);
 
             if ($response->successful()) {
                 $this->verification_code_sent = true;

@@ -14,19 +14,19 @@
     -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>Dashbaord - Famlic | Support for every Family</title>
+    <title>Dashboard - Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family</title>
 
     <meta name="description"
-        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
     <meta property="og:title"
-        content="Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa">
+        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta property="og:site_name" content="Famlic">
     <meta property="og:description"
-        content="Support loved ones with food, gadgets, and essentials. Famlic makes crowdfunding for family support easy, fast, and secure across Nigeria.">
+        content="Famlic is Nigeria's trusted crowdfunding platform where you can raise money online for medical bills, school fees, business capital, and community projects. Track donations in real time, share your link easily, and withdraw funds securely. Start your crowdfunding journey today with Famlic.com.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://famlic.com">
     <meta property="og:image" content="">
