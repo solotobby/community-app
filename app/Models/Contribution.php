@@ -27,6 +27,7 @@ class Contribution extends Model
         'payment_method',
         'payment_verified_at',
         'virtual_account_details',
+        'sms_sent_at'
 
     ];
 

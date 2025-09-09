@@ -518,7 +518,6 @@ class Profile extends Component
         session()->flash('success', 'Phone number verified successfully.');
     }
 
-
     public function render()
     {
         return view('livewire.user.profile');

@@ -23,7 +23,8 @@
                     <i class="fas fa-arrow-left me-1"></i> Back to Gifts
                 </a>
             </div>
-            <div>
+            <div class="d-flex align-items-center gap-2">
+
                 <span class="badge fs-6 {{ $gift->status === 'active'
     ? 'bg-success'
     : ($gift->status === 'completed'
@@ -156,8 +157,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -236,9 +235,16 @@
     <!-- Recent Contributions -->
     @if ($contributions->count() > 0)
         <div class="container-fluid p-0 m-0 mb-4">
-            <div class="card border-0">
-                <div class="card-header">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Recent Contributions</h5>
+
+                    <button class="btn btn-success btn-sm" wire:click="openSmsModal">
+                        <i class="fas fa-sms me-1"></i> Send Thank You Message
+                        {{-- <span class="badge bg-light text-success ms-1">
+                            {{ $eligibleContributors->count() }}
+                        </span> --}}
+                    </button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -301,6 +307,157 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- SMS Appreciation Modal -->
+    @if ($showSmsModal)
+        <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content theme-sensitive border-0 shadow-lg">
+                    <div class="modal-header bg-gradient-success text-white border-0">
+                        <h5 class="modal-title">
+                            <i class="fas fa-sms me-2"></i>Send SMS Appreciation
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" wire:click="closeSmsModal"></button>
+                    </div>
+                    <form wire:submit.prevent="sendSmsAppreciation">
+                        <div class="modal-body">
+                            <div class="row">
+                                <!-- Left Side - Recipients -->
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">
+                                        <i class="fas fa-users me-2"></i>Recipients
+                                        <span class="badge bg-primary">{{ $eligibleContributors->count() }} eligible</span>
+                                    </h6>
+
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Only contributors with ₦10,000+ donations are eligible.
+                                    </div>
+
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" wire:model.live="sendToAll"
+                                            wire:click="toggleSelectAll" id="sendToAll">
+                                        <label class="form-check-label fw-bold" for="sendToAll">
+                                            Send to all eligible contributors
+                                        </label>
+                                    </div>
+
+                                    <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                                        @forelse($eligibleContributors as $contributor)
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="{{ $contributor->id }}"
+                                                    wire:model.live="selectedContributors"
+                                                    id="contributor_{{ $contributor->id }}">
+                                                <label class="form-check-label" for="contributor_{{ $contributor->id }}">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <strong>{{ $contributor->is_anonymous ? 'Anonymous' : $contributor->contributor_name }}</strong>
+                                                            <br>
+                                                            <small class="text-muted">
+                                                                ₦{{ number_format($contributor->amount, 2) }}
+                                                                @if($contributor->sms_sent_at)
+                                                                    <span class="badge bg-success ms-1">SMS Sent</span>
+                                                                @endif
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        @empty
+                                            <div class="text-center text-muted py-4">
+                                                <i class="fas fa-inbox fa-3x mb-3"></i>
+                                                <p>No eligible contributors found.</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+
+                                    @if(!$sendToAll && count($selectedContributors) > 0)
+                                        <div class="mt-2">
+                                            <small class="text-success">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                {{ count($selectedContributors) }} recipient(s) selected
+                                            </small>
+                                        </div>
+                                    @endif
+
+                                    @error('selectedContributors')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Right Side - Message -->
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">
+                                        <i class="fas fa-comment-dots me-2"></i>Message Template
+                                    </h6>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Choose Template</label>
+                                        <select class="form-select" wire:model.live="messageTemplate">
+                                            @foreach($this->getMessageTemplates() as $index => $template)
+                                                <option value="{{ $index }}">Template {{ $index + 1 }}</option>
+                                            @endforeach
+                                            {{-- <option value="custom">Custom Message</option> --}}
+                                        </select>
+                                    </div>
+
+                                    @if($messageTemplate === 'custom')
+                                        <div class="mb-3">
+                                            <label class="form-label">Custom Message</label>
+                                            <textarea class="form-control" wire:model.live="customMessage" rows="4"
+                                                maxlength="160" placeholder="Write your custom message..."></textarea>
+                                            <small class="text-muted">
+                                                Use {name} and {amount} as placeholders
+                                            </small>
+                                        </div>
+                                    @endif
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Message Preview</label>
+                                        <div class="border rounded p-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <small class="text-muted">Preview:</small>
+                                                <small class="text-muted">
+                                                    {{ strlen($smsMessage) }}/160 characters
+                                                </small>
+                                            </div>
+                                            <div class="fw-bold">
+                                                {{ str_replace(['{name}', '{amount}'], ['John Doe', '15,000'], $smsMessage) }}
+                                            </div>
+                                        </div>
+                                        @error('smsMessage')
+                                            <div class="text-danger mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>SMS Charges Apply:</strong> Standard SMS rates will be charged for each
+                                        message sent.
+                                    </div> --}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" wire:click="closeSmsModal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success" @if($eligibleContributors->count() === 0 || (!$sendToAll && count($selectedContributors) === 0) || empty($smsMessage)) disabled @endif>
+                                <i class="fas fa-paper-plane me-1"></i>
+                                Send SMS
+                                @if($sendToAll)
+                                    ({{ $eligibleContributors->count() }} recipients)
+                                @elseif(count($selectedContributors) > 0)
+                                    ({{ count($selectedContributors) }} recipients)
+                                @endif
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -415,6 +572,7 @@
             </div>
         </div>
     @endif
+
     <!-- End Confirmation Modal -->
     @if ($showEndModal)
         <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
@@ -458,6 +616,10 @@
                     alert('Failed to copy to clipboard');
                 });
             });
+
+            Livewire.on('openWindow', (url) => {
+                window.open(url, '_blank', 'width=600,height=400');
+            });
         });
     </script>
 
@@ -477,6 +639,10 @@
 
         .progress-bar {
             border-radius: 10px;
+        }
+
+        .table-success {
+            --bs-table-accent-bg: rgba(25, 135, 84, 0.05);
         }
     </style>
 </div>
