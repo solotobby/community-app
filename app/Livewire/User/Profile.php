@@ -4,6 +4,7 @@ namespace App\Livewire\User;
 
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaystackController;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -451,39 +452,26 @@ class Profile extends Component
                 ]
             );
 
+            $newPhone = Str::startsWith($this->phone, '+')
+                ? $this->phone
+                : '+234' . ltrim($this->phone, '0');
 
-            $newPhone = '234' . ltrim($this->phone, '0');
-
-            // Send OTP via Termii
-            $response = Http::post('https://api.termii.com/api/sms/otp/send', [
+            $payload = [
                 'api_key' => config('services.termii.api_key'),
                 'message_type' => 'NUMERIC',
                 'to' => $newPhone,
                 'from' => config('services.termii.sender_id'),
-                'channel' => 'dnd',
+                'channel' => 'generic',
                 'type' => 'plain',
-                'pin_attempts' => 10,
-                'pin_time_to_live' => 5,
-                "pin_placeholder" => "{$code}",
-                "message_text" => "Your verification code is: {$code}",
-                "pin_type" => "NUMERIC"
+                "sms" => "Your phone number verification code is: {$code} - Famlic"
+            ];
 
-
-            ]);
-
-            // $response = Http::post('https://api.ng.termii.com/api/sms/otp/send', [
-            //     'api_key' => config('services.termii.api_key'),
-            //     'to' => $newPhone,
-            //     'from' => config('services.termii.sender_id'),
-            //     'sms' => "Your verification code is: {$code}",
-            //     'channel' => 'generic',
-            //     'type' => 'plain',
-            //     'pin_type' => 'NUMERIC',
-            // ]);
+            // Send OTP via Termii
+            $response = Http::post('https://v3.api.termii.com/api/sms/send', $payload);
 
             if ($response->successful()) {
                 $this->verification_code_sent = true;
-                log::info('success', ['response' => $response->body()]);
+                log::info('success', ['response' => $response->body(), 'payload' => $payload]);
                 session()->flash('success', 'Verification code sent to your phone.');
             } else {
                 $this->verification_code_sent = false;
@@ -529,7 +517,6 @@ class Profile extends Component
 
         session()->flash('success', 'Phone number verified successfully.');
     }
-
 
     public function render()
     {

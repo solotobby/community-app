@@ -30,7 +30,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/media/favicons/Favicon-famlic.png') }}">
     <!-- END Icons -->
 
-    <title>Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa</title>
+    <title>Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('assets__/css/public.css') }}?v={{ time() }}">
