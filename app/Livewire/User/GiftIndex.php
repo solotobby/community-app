@@ -5,6 +5,11 @@ namespace App\Livewire\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\GiftRequest;
+use App\Models\PhoneOtp;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Throwable;
 use Illuminate\Support\Facades\Auth;
 
 class GiftIndex extends Component
@@ -18,6 +23,20 @@ class GiftIndex extends Component
     public $sortBy = 'created_at';
     public $sortDirection = 'desc';
     public $showMyGifts = false;
+
+    public $showContactModal = false;
+    public $showPhoneVerificationModal = false;
+    public $verification_code_sent = false;
+    public $verification_code = '';
+
+    // Contact form fields
+    public $phone = '';
+    public $dob = '';
+    public $address = '';
+    public $landmark = '';
+    public $lga = '';
+    public $state = '';
+    public $country = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -99,6 +118,169 @@ class GiftIndex extends Component
         session()->flash('message', "Gift Status Updated successfully.");
         $this->loadGift();
     }
+
+    public function createGift()
+    {
+        $user = auth()->user();
+
+        // Check if contact info is complete
+        if ($this->isContactInfoIncomplete($user)) {
+            $this->loadUserContactInfo();
+            $this->showContactModal = true;
+            return;
+        }
+
+        // Check phone verification
+        if (!$user->phone_verified) {
+            $this->phone = $user->phone;
+            $this->showPhoneVerificationModal = true;
+            return;
+        }
+
+        // Proceed to create gift
+        return redirect()->route('user.gift.create-gift');
+    }
+
+    private function isContactInfoIncomplete($user)
+    {
+        return empty($user->phone) ||
+            empty($user->address) ||
+            empty($user->lga) ||
+            empty($user->state) ||
+            empty($user->country) ||
+            empty($user->dob);
+    }
+
+    private function loadUserContactInfo()
+    {
+        $user = auth()->user();
+        $this->phone = $user->phone ?? '';
+        $this->dob = $user->dob ?? '';
+        $this->address = $user->address ?? '';
+        $this->landmark = $user->landmark ?? '';
+        $this->lga = $user->lga ?? '';
+        $this->state = $user->state ?? '';
+        $this->country = $user->country ?? '';
+        $this->resetValidation();
+    }
+
+    public function closeContactModal()
+    {
+        $this->showContactModal = false;
+        $this->resetValidation();
+    }
+
+    public function saveContactInfo()
+    {
+        $validated = $this->validate([
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'landmark' => 'nullable|string|max:255',
+            'lga' => 'required|string|max:255',
+            'dob' => 'required|date|before:today',
+            'state' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+        ]);
+
+        $user = auth()->user();
+        $phoneChanged = $user->phone !== $this->phone;
+
+        // Update user info
+        $user->update($validated + [
+            'phone_verified' => $phoneChanged ? false : $user->phone_verified,
+            'phone_verified_at' => $phoneChanged ? null : $user->phone_verified_at,
+        ]);
+
+        $this->closeContactModal();
+
+        // Handle phone verification
+        if ($phoneChanged || !$user->phone_verified) {
+            $this->showPhoneVerificationModal = true;
+            session()->flash('success', 'Contact info saved. Please verify your phone number.');
+        } else {
+            session()->flash('success', 'Contact information updated successfully.');
+            return redirect()->route('user.gift.create-gift');
+        }
+    }
+
+    public function closePhoneVerificationModal()
+    {
+        $this->showPhoneVerificationModal = false;
+        $this->verification_code_sent = false;
+        $this->verification_code = '';
+        $this->resetValidation();
+    }
+
+    public function sendVerificationCode()
+    {
+        try {
+            $code = rand(100000, 999999);
+            $formattedPhone = $this->formatPhone($this->phone);
+
+            PhoneOtp::updateOrCreate(
+                ['phone' => $this->phone],
+                ['code' => $code, 'expires_at' => now()->addMinutes(10)]
+            );
+
+            $response = Http::post('https://v3.api.termii.com/api/sms/send', [
+                'api_key' => config('services.termii.api_key'),
+                'message_type' => 'NUMERIC',
+                'to' => $formattedPhone,
+                'from' => config('services.termii.sender_id'),
+                'channel' => 'generic',
+                'type' => 'plain',
+                'sms' => "Your verification code is: {$code} - Famlic"
+            ]);
+
+            if ($response->successful()) {
+                $this->verification_code_sent = true;
+                session()->flash('success', 'Verification code sent successfully.');
+            } else {
+                Log::error('SMS send failed', ['response' => $response->body()]);
+                session()->flash('error', 'Failed to send verification code.');
+            }
+        } catch (Throwable $e) {
+            Log::error('OTP error', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Something went wrong. Please try again.');
+        }
+    }
+
+    private function formatPhone($phone)
+    {
+        return Str::startsWith($phone, '+') ? $phone : '+234' . ltrim($phone, '0');
+    }
+
+    public function resendVerificationCode()
+    {
+        $this->sendVerificationCode();
+    }
+
+    public function verifyPhoneNumber()
+    {
+        $this->validate(['verification_code' => 'required|digits:6']);
+
+        $otp = PhoneOtp::where('phone', $this->phone)
+            ->where('code', $this->verification_code)
+            ->where('expires_at', '>=', now())
+            ->first();
+
+        if (!$otp) {
+            session()->flash('error', 'Invalid or expired verification code.');
+            return;
+        }
+
+        auth()->user()->update([
+            'phone_verified' => true,
+            'phone_verified_at' => now(),
+        ]);
+
+        $otp->delete();
+        $this->closePhoneVerificationModal();
+
+        session()->flash('success', 'Phone verified! You can now create your gift.');
+        return redirect()->route('user.gift.create-gift');
+    }
+
 
     public function render()
     {
