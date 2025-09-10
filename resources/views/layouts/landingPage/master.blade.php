@@ -4,14 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description"
-        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta name="description" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title"
-        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta property="og:title" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta property="og:site_name" content="Famlic">
     <meta property="og:description"
         content="Famlic is Nigeria's trusted crowdfunding platform where you can raise money online for medical bills, school fees, business capital, and community projects. Track donations in real time, share your link easily, and withdraw funds securely. Start your crowdfunding journey today with Famlic.com.">
@@ -34,7 +32,8 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('assets__/css/public.css') }}?v={{ time() }}">
-
+    <link rel="canonical" href="@yield('canonical', url()->current())" />
+    
     <style>
         /* .page { display: none; }
         .page.active { display: block; } */

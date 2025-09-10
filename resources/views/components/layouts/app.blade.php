@@ -16,14 +16,12 @@
 
     <title>Dashboard - Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family</title>
 
-    <meta name="description"
-        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta name="description" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title"
-        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta property="og:title" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta property="og:site_name" content="Famlic">
     <meta property="og:description"
         content="Famlic is Nigeria's trusted crowdfunding platform where you can raise money online for medical bills, school fees, business capital, and community projects. Track donations in real time, share your link easily, and withdraw funds securely. Start your crowdfunding journey today with Famlic.com.">
@@ -48,7 +46,8 @@
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
+    <link rel="canonical" href="@yield('canonical', url()->current())" />
     <!-- END Stylesheets -->
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
