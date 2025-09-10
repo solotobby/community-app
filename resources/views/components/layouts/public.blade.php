@@ -33,6 +33,7 @@
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <link rel="stylesheet" id="css-theme" href="{{ asset('assets/css/themes/earth.min.css') }}">
+    <link rel="canonical" href="@yield('canonical', url()->current())" />
     <!-- END Stylesheets -->
     @livewireStyles
     <style>

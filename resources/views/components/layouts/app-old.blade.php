@@ -57,6 +57,7 @@
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
    <link rel="stylesheet" id="css-theme" href="assets/css/themes/earth.min.css">
     <!-- END Stylesheets -->
+     <link rel="canonical" href="@yield('canonical', url()->current())" />
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
     <script src="{{ asset('assets/js/setTheme.js') }}"></script>
