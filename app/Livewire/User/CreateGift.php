@@ -2,10 +2,13 @@
 
 namespace App\Livewire\User;
 
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\GiftRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CreateGift extends Component
@@ -120,7 +123,6 @@ class CreateGift extends Component
             'min_contribution' => $this->min_contribution ?: null,
         ];
 
-        // Use the final target amount for creation
         $targetAmount = $this->include_fee ? $this->finalTargetAmount : $this->target_amount;
 
         $giftRequest = GiftRequest::create([
@@ -135,11 +137,44 @@ class CreateGift extends Component
             'settings' => $settings,
         ]);
 
-        session()->flash('message', 'Gift request created successfully!');
-        session()->flash('gift_url', $giftRequest->getPublicUrl());
+        try {
+            $user = Auth::user();
+            $formattedPhone = $this->formatPhone($user->phone);
 
+            $url = $giftRequest->getPublicUrl();
+            $expiry = \Carbon\Carbon::parse($giftRequest->deadline)->format('M d, Y');
+
+            $message = "Your gift request '{$giftRequest->title}' has been created!\n\n"
+                . "Share your link: {$url}\n"
+                . "Expires on: {$expiry}\n\n"
+                . "Encourage friends & family to support you";
+
+            $response = Http::post('https://v3.api.termii.com/api/sms/send', [
+                'api_key' => config('services.termii.api_key'),
+                'message_type' => 'NUMERIC',
+                'to' => $formattedPhone,
+                'from' => config('services.termii.sender_id'),
+                'channel' => 'generic',
+                'type' => 'plain',
+                'sms' => $message
+            ]);
+
+            if (!$response->successful()) {
+                Log::error('GiftRequest SMS failed', ['response' => $response->body()]);
+            }
+        } catch (\Throwable $e) {
+            Log::error('GiftRequest SMS error', ['error' => $e->getMessage()]);
+        }
+
+        session()->flash('message', 'Gift request created successfully!');
         return redirect()->route('user.gift.index');
     }
+
+    private function formatPhone($phone)
+    {
+        return Str::startsWith($phone, '+') ? $phone : '+234' . ltrim($phone, '0');
+    }
+
 
     public function render()
     {

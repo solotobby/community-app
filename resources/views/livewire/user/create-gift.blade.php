@@ -63,6 +63,8 @@
                                     <option value="New Baby">New Baby</option>
                                     <option value="Condolence">Condolence</option>
                                     <option value="Retirement">Retirement</option>
+                                    <option value="business_support">Business Support</option>
+                                    <option value="school_fees">School Fees</option>
                                     <option value="Others">Others</option>
                                 </select>
                                 @error('reason')

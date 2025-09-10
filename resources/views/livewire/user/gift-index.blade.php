@@ -98,9 +98,9 @@
                         </h5>
                     </div>
                     <div class="col-md-6 text-end">
-                        <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success btn-sm">
+                        <button wire:click="createGift" class="btn btn-success btn-sm">
                             <i class="fas fa-plus me-1"></i>Raise Money
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -259,9 +259,9 @@
                     </p>
 
                     @if (!$showMyGifts)
-                        <a href="{{ route('user.gift.create-gift') }}" class="btn btn-success">
+                        <button wire:click="createGift" class="btn btn-success">
                             <i class="fas fa-plus me-2"></i>Raise Money
-                        </a>
+                        </button>
                     @else
                         <button class="btn btn-outline-secondary" wire:click="resetFilters">
                             <i class="fas fa-redo me-2"></i>Clear Filters
@@ -272,6 +272,181 @@
             </div>
         @endif
     </div>
+
+    {{-- Contact Information Modal --}}
+    @if ($showContactModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
+                    <form wire:submit.prevent="saveContactInfo">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-address-book text-primary me-2"></i>
+                                Complete Your Profile
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="closeContactModal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted mb-4">Please complete your contact information to start raising money.</p>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control @error('phone') is-invalid @enderror"
+                                        wire:model.defer="phone" placeholder="e.g., +234 801 234 5678">
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('dob') is-invalid @enderror"
+                                        wire:model.defer="dob">
+                                    @error('dob')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Address <span class="text-danger">*</span></label>
+                                <textarea class="form-control @error('address') is-invalid @enderror"
+                                    wire:model.defer="address" rows="2" placeholder="Enter your full address"></textarea>
+                                @error('address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Landmark (Optional)</label>
+                                    <input type="text" class="form-control @error('landmark') is-invalid @enderror"
+                                        wire:model.defer="landmark" placeholder="e.g., Near City Mall">
+                                    @error('landmark')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Local Government Area <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('lga') is-invalid @enderror"
+                                        wire:model.defer="lga" placeholder="e.g., Ikeja">
+                                    @error('lga')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">State <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('state') is-invalid @enderror"
+                                        wire:model.defer="state" placeholder="e.g., Lagos">
+                                    @error('state')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Country <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('country') is-invalid @enderror"
+                                        wire:model.defer="country" placeholder="e.g., Nigeria">
+                                    @error('country')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" wire:click="closeContactModal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="saveContactInfo">Save & Continue</span>
+                                <span wire:loading wire:target="saveContactInfo">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Phone Verification Modal --}}
+    @if ($showPhoneVerificationModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-mobile-alt text-primary me-2"></i>
+                            Verify Your Phone
+                        </h5>
+                        <button type="button" class="btn-close" wire:click="closePhoneVerificationModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if (!$verification_code_sent)
+                            <div class="text-center mb-4">
+                                <i class="fas fa-sms fa-3x text-primary mb-3"></i>
+                                <p class="mb-2">We'll send a verification code to:</p>
+                                <strong class="text-success">{{ $phone }}</strong>
+                                <p class="text-muted small mt-2">This helps us keep your account secure.</p>
+                            </div>
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-lg" wire:click="sendVerificationCode"
+                                    wire:loading.attr="disabled">
+                                    <span wire:loading.remove wire:target="sendVerificationCode">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Code
+                                    </span>
+                                    <span wire:loading wire:target="sendVerificationCode">
+                                        <span class="spinner-border spinner-border-sm me-2"></span>Sending...
+                                    </span>
+                                </button>
+                            </div>
+                        @else
+                            <form wire:submit.prevent="verifyPhoneNumber">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-key fa-3x text-success mb-3"></i>
+                                    <p class="mb-2">Enter the 6-digit code sent to:</p>
+                                    <strong class="text-success">{{ $phone }}</strong>
+                                </div>
+
+                                <div class="mb-4">
+                                    <input type="text"
+                                        class="form-control form-control-lg text-center @error('verification_code') is-invalid @enderror"
+                                        wire:model.defer="verification_code" placeholder="000000" maxlength="6"
+                                        style="letter-spacing: 0.5em; font-size: 1.5rem;">
+                                    @error('verification_code')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg" wire:loading.attr="disabled">
+                                        <span wire:loading.remove wire:target="verifyPhoneNumber">
+                                            <i class="fas fa-check me-2"></i>Verify & Continue
+                                        </span>
+                                        <span wire:loading wire:target="verifyPhoneNumber">
+                                            <span class="spinner-border spinner-border-sm me-2"></span>Verifying...
+                                        </span>
+                                    </button>
+
+                                    <button type="button" class="btn btn-outline-secondary" wire:click="resendVerificationCode"
+                                        wire:loading.attr="disabled">
+                                        <span wire:loading.remove wire:target="resendVerificationCode">
+                                            <i class="fas fa-redo me-2"></i>Resend Code
+                                        </span>
+                                        <span wire:loading wire:target="resendVerificationCode">
+                                            <span class="spinner-border spinner-border-sm me-2"></span>Resending...
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <script>
         function copyToClipboard(text) {
@@ -294,6 +469,9 @@
         .progress-bar {
             border-radius: 10px;
         }
-    </style>
 
+        .modal-backdrop {
+            backdrop-filter: blur(2px);
+        }
+    </style>
 </div>
