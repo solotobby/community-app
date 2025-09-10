@@ -275,9 +275,9 @@
 
     {{-- Contact Information Modal --}}
     @if ($showContactModal)
-        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+                <div class="modal-content shadow theme-sensitive">
                     <form wire:submit.prevent="saveContactInfo">
                         <div class="modal-header">
                             <h5 class="modal-title">
@@ -373,9 +373,9 @@
 
     {{-- Phone Verification Modal --}}
     @if ($showPhoneVerificationModal)
-        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+                <div class="modal-content shadow theme-sensitive">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             <i class="fas fa-mobile-alt text-primary me-2"></i>
