@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="{{asset('assets__/css/slick.css')}}">
     <link rel="stylesheet" href="{{asset('assets__/css/spacing.css')}}">
     <link rel="stylesheet" href="{{asset('assets__/css/main.css')}}">
+     <link rel="canonical" href="@yield('canonical', url()->current())" />
     <title>Famlic | Family Support & Crowdfunding for Food, Gadgets & Needs in Nigeria and Africa </title>
 </head>
 
