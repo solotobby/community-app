@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="form-floating mb-4">
-                    <select id="levelSelect" class="form-control">
+                    <select wire:model.defer="level" id="levelSelect" class="form-control">
                         <option value="">-- Select any Level of your Choice --</option>
                         @foreach ($levels as $lvl)
                             <option value="{{ $lvl->id }}" data-amount="{{ $lvl->amount ?? 0 }}">

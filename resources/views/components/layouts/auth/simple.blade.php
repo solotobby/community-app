@@ -1,31 +1,3 @@
-{{--
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
-
-<head>
-    @include('partials.head')
-</head>
-
-<body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
-    <div class="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-        <div class="flex w-full max-w-sm flex-col gap-2">
-            <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-                <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
-                    <x-app-logo-icon class="size-9 fill-current text-black dark:text-white" />
-                </span>
-                <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
-            </a>
-            <div class="flex flex-col gap-6">
-                {{ $slot }}
-            </div>
-        </div>
-    </div>
-    @fluxScripts
-</body>
-
-</html> --}}
-
-
 <!doctype html>
 <html lang="en" class="remember-theme">
 
@@ -44,14 +16,12 @@
 
     <title>Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family</title>
 
-    <meta name="description"
-        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta name="description" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta name="author" content="Famlic">
     <meta name="robots" content="Famlic">
 
     <!-- Open Graph Meta -->
-    <meta property="og:title"
-        content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
+    <meta property="og:title" content="Famlic | Crowdfunding in Nigeria – Raise Money Online from Friends & Family">
     <meta property="og:site_name" content="Famlic">
     <meta property="og:description"
         content="Famlic is Nigeria's trusted crowdfunding platform where you can raise money online for medical bills, school fees, business capital, and community projects. Track donations in real time, share your link easily, and withdraw funds securely. Start your crowdfunding journey today with Famlic.com.">
@@ -73,8 +43,8 @@
 
     <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
     <link rel="stylesheet" id="css-theme" href="assets/css/themes/earth.min.css">
-    
-     <link rel="canonical" href="@yield('canonical', url()->current())" />
+
+    <link rel="canonical" href="@yield('canonical', url()->current())" />
     <!-- END Stylesheets -->
 
     <!-- Load and set color theme + dark mode preference (blocking script to prevent flashing) -->
@@ -429,26 +399,12 @@
 
         <!-- Main Container -->
         <main id="main-container">
-            <!-- Page Content -->
-            <!-- END Header -->
-
-            <!-- Sign In Form -->
-            <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js -->
-            <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-
 
             {{ $slot }}
 
             <!-- END Sign In Form -->
+        </main>
     </div>
-    </div>
-    </div>
-    </div>
-    <!-- END Page Content -->
-    </main>
-    <!-- END Main Container -->
-    </div>
-    <!-- END Page Container -->
 
     <!--
         Codebase JS
