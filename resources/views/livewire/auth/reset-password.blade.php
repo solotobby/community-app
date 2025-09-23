@@ -1,11 +1,12 @@
 <div class="row mx-0 min-vh-100">
-<div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end bg-image"
-            style="background-image: url('assets/media/photos/famlic_login.png'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: white;">
-        <div class="p-4">
-            {{-- <p class="text-white-75 fw-medium">
-                Copyright &copy; <span data-toggle="year-copy"></span>
-            </p> --}}
-        </div>
+    <div class="hero-static col-md-4 col-xl-7 d-none d-md-flex align-items-md-end bg-image position-relative"
+        style="background-image: url('{{ asset('assets/media/photos/famlic_login.png') }}');
+               background-size: contain;
+               background-position: center;
+               background-repeat: no-repeat;
+               background-color: white;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary-subtle" style="opacity: 0.05;"></div>
+        <div class="p-4 position-relative"></div>
     </div>
 
     <!-- Right Content -->
@@ -31,14 +32,19 @@
             <!-- Reset Password Form -->
             <form wire:submit.prevent="resetPassword" class="px-4">
                 <!-- Hidden token -->
-                <input type="hidden" wire:model="token" value="{{ $token }}">
+                <input type="hidden" wire:model="token">
 
                 <!-- Email -->
                 <div class="form-floating mb-4">
                     <input type="email"
-                        class="form-control @error('email') is-invalid @enderror"
-                        id="reset-email" placeholder=" "
-                        wire:model.defer="email" required autocomplete="email" readonly>
+                           class="form-control @error('email') is-invalid @enderror"
+                           id="reset-email"
+                           wire:model="email"
+                           readonly
+                           required
+                           autocomplete="email"
+                           name="email"
+                           placeholder=" ">
                     <label for="reset-email">Email Address</label>
                     @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -47,15 +53,19 @@
 
                 <!-- New Password -->
                 <div x-data="{ showPassword: false }" class="form-floating mb-4 position-relative">
-                    <input :type="showPassword ? 'text' : 'password'"
-                        class="form-control @error('password') is-invalid @enderror"
-                        id="reset-password" placeholder=" "
-                        wire:model.defer="password" required
-                        autocomplete="new-password" minlength="8">
+                    <input name="password"
+                           :type="showPassword ? 'text' : 'password'"
+                           class="form-control @error('password') is-invalid @enderror"
+                           id="reset-password"
+                           wire:model.defer="password"
+                           required
+                           minlength="8"
+                           autocomplete="new-password"
+                           placeholder=" ">
                     <label for="reset-password">New Password</label>
                     <span @click="showPassword = !showPassword"
-                        class="position-absolute top-50 end-0 translate-middle-y me-3"
-                        style="cursor: pointer; z-index: 10;">
+                          class="position-absolute top-50 end-0 translate-middle-y me-3"
+                          style="cursor: pointer; z-index: 10;">
                         <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
                     </span>
                     @error('password')
@@ -65,15 +75,19 @@
 
                 <!-- Confirm Password -->
                 <div x-data="{ showConfirmation: false }" class="form-floating mb-4 position-relative">
-                    <input :type="showConfirmation ? 'text' : 'password'"
-                        class="form-control @error('password_confirmation') is-invalid @enderror"
-                        id="reset-password-confirmation" placeholder=" "
-                        wire:model.defer="password_confirmation" required
-                        autocomplete="new-password" minlength="8">
+                    <input name="password_confirmation"
+                           :type="showConfirmation ? 'text' : 'password'"
+                           class="form-control @error('password_confirmation') is-invalid @enderror"
+                           id="reset-password-confirmation"
+                           wire:model.defer="password_confirmation"
+                           required
+                           minlength="8"
+                           autocomplete="new-password"
+                           placeholder=" ">
                     <label for="reset-password-confirmation">Confirm Password</label>
                     <span @click="showConfirmation = !showConfirmation"
-                        class="position-absolute top-50 end-0 translate-middle-y me-3"
-                        style="cursor: pointer; z-index: 10;">
+                          class="position-absolute top-50 end-0 translate-middle-y me-3"
+                          style="cursor: pointer; z-index: 10;">
                         <i :class="showConfirmation ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
                     </span>
                     @error('password_confirmation')
@@ -83,13 +97,15 @@
 
                 <!-- Submit -->
                 <div class="mb-4">
-                    <button type="submit" class="btn btn-lg btn-alt-primary fw-semibold" wire:loading.attr="disabled">
+                    <button type="submit"
+                            class="btn btn-lg btn-alt-primary fw-semibold"
+                            wire:loading.attr="disabled">
                         <span wire:loading.remove>Reset Password</span>
                         <span wire:loading>Processing...</span>
                     </button>
                     <div class="mt-4">
                         <a class="fs-sm fw-medium link-fx text-muted me-2 mb-1 d-inline-block"
-                            href="{{ route('login') }}">
+                           href="{{ route('login') }}">
                             <i class="fa fa-arrow-left opacity-50 me-1"></i> Back to Sign In
                         </a>
                     </div>
