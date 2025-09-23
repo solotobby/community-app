@@ -5,7 +5,7 @@
         <div class="container">
             <br>
             <br>
-            <h1 class="mb-4 text-center text-success">Terms of Use for Famlic.com</h1>
+            <h1 class="mb-4 text-center text-success"> Terms of Use for Famlic.com </h1>
 
             <p>These terms govern your access to and use of Famlic.com. By creating an account, you agree to comply with the
                 following terms and conditions:</p>
