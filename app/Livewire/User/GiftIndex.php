@@ -270,7 +270,7 @@ class GiftIndex extends Component
                 ['code' => $code, 'expires_at' => now()->addMinutes(10)]
             );
 
-            Mail::raw("Your verification code is: {$code}", function ($message) use ($user) {
+            Mail::send('emails.email-verification', ['code' => $code], function ($message) use ($user) {
                 $message->to($user->email)
                     ->subject('Email Verification Code - Famlic');
             });
