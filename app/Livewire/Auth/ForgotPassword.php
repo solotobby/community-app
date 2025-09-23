@@ -25,8 +25,8 @@ class ForgotPassword extends Component
         //     $resetUrl = route('password.reset', ['token' => '123456']) . '?email=' . urlencode($this->email);
         //     session()->flash('status', "Reset link (dev): {$resetUrl}");
         // } else {
-            Password::sendResetLink($this->only('email'));
-            session()->flash('status', __('A reset link will be sent if the account exists.'));
+        Password::sendResetLink($this->only('email'));
+        session()->flash('status', __('Email sent to the user successfully.'));
         // }
     }
 
