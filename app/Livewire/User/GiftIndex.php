@@ -6,8 +6,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\GiftRequest;
 use App\Models\PhoneOtp;
+use App\Models\EmailOtp;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Throwable;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +27,14 @@ class GiftIndex extends Component
     public $showMyGifts = false;
 
     public $showContactModal = false;
-    public $showPhoneVerificationModal = false;
-    public $verification_code_sent = false;
-    public $verification_code = '';
+    public $showVerificationModal = false;
+    public $currentVerificationStep = 'choose'; // choose, phone, email
+
+    // Verification codes
+    public $phone_code_sent = false;
+    public $email_code_sent = false;
+    public $phone_verification_code = '';
+    public $email_verification_code = '';
 
     // Contact form fields
     public $phone = '';
@@ -72,51 +79,10 @@ class GiftIndex extends Component
         $this->resetPage();
     }
 
-
     public function resetFilters()
     {
         $this->reset(['search', 'statusFilter', 'sortBy', 'sortDirection', 'showMyGifts']);
         $this->resetPage();
-    }
-
-    public function deleteGift($giftId)
-    {
-        $gift = GiftRequest::findOrFail($giftId);
-
-        if ($gift->user_id !== Auth::id()) {
-            session()->flash('error', 'You can only delete your own gifts.');
-            return;
-        }
-
-        if ($gift->completedContributions()->count() > 0) {
-            session()->flash('error', 'Cannot delete gift with existing contributions.');
-            return;
-        }
-
-        $gift->delete();
-        session()->flash('message', 'Gift deleted successfully.');
-    }
-    private function expirePastGifts(): void
-    {
-        GiftRequest::where('user_id', Auth::id())
-            ->where('status', 'active')
-            ->where('deadline', '<', now())
-            ->update([
-                'status'    => 'expired',
-                'is_public' => false,
-            ]);
-    }
-
-
-    public function toggleStatus($giftId)
-    {
-        $gift = GiftRequest::findOrFail($giftId);
-
-        $newStatus = $this->gift->is_public === true ? false : true;
-        $this->gift->update(['is_public' => $newStatus]);
-
-        session()->flash('message', "Gift Status Updated successfully.");
-        $this->loadGift();
     }
 
     public function createGift()
@@ -130,14 +96,13 @@ class GiftIndex extends Component
             return;
         }
 
-        // Check phone verification
-        if (!$user->phone_verified) {
+        // Check verification status
+        if (!$user->phone_verified || !$user->email_verified) {
             $this->phone = $user->phone;
-            $this->showPhoneVerificationModal = true;
+            $this->showVerificationModal = true;
             return;
         }
 
-        // Proceed to create gift
         return redirect()->route('user.gift.create-gift');
     }
 
@@ -193,25 +158,48 @@ class GiftIndex extends Component
 
         $this->closeContactModal();
 
-        // Handle phone verification
-        if ($phoneChanged || !$user->phone_verified) {
-            $this->showPhoneVerificationModal = true;
-            session()->flash('success', 'Contact info saved. Please verify your phone number.');
+        // Handle verification
+        if ($phoneChanged || !$user->phone_verified || !$user->email_verified) {
+            $this->showVerificationModal = true;
+            session()->flash('success', 'Contact info saved. Please complete verification.');
         } else {
             session()->flash('success', 'Contact information updated successfully.');
             return redirect()->route('user.gift.create-gift');
         }
     }
 
-    public function closePhoneVerificationModal()
+    // Verification Modal Methods
+    public function closeVerificationModal()
     {
-        $this->showPhoneVerificationModal = false;
-        $this->verification_code_sent = false;
-        $this->verification_code = '';
+        $this->showVerificationModal = false;
+        $this->currentVerificationStep = 'choose';
+        $this->phone_code_sent = false;
+        $this->email_code_sent = false;
+        $this->phone_verification_code = '';
+        $this->email_verification_code = '';
         $this->resetValidation();
     }
 
-    public function sendVerificationCode()
+    public function startPhoneVerification()
+    {
+        $this->currentVerificationStep = 'phone';
+    }
+
+    public function startEmailVerification()
+    {
+        $this->currentVerificationStep = 'email';
+    }
+
+    public function goBackToChoice()
+    {
+        $this->currentVerificationStep = 'choose';
+        $this->phone_code_sent = false;
+        $this->email_code_sent = false;
+        $this->resetValidation();
+    }
+
+    // Phone Verification
+    public function sendPhoneVerificationCode()
     {
         try {
             $code = rand(100000, 999999);
@@ -233,39 +221,29 @@ class GiftIndex extends Component
             ]);
 
             if ($response->successful()) {
-                $this->verification_code_sent = true;
-                session()->flash('success', 'Verification code sent successfully.');
+                $this->phone_code_sent = true;
+                session()->flash('success', 'Phone verification code sent successfully.');
             } else {
                 Log::error('SMS send failed', ['response' => $response->body()]);
-                session()->flash('error', 'Failed to send verification code.');
+                session()->flash('error', 'Failed to send phone verification code.');
             }
         } catch (Throwable $e) {
-            Log::error('OTP error', ['error' => $e->getMessage()]);
+            Log::error('Phone OTP error', ['error' => $e->getMessage()]);
             session()->flash('error', 'Something went wrong. Please try again.');
         }
     }
 
-    private function formatPhone($phone)
-    {
-        return Str::startsWith($phone, '+') ? $phone : '+234' . ltrim($phone, '0');
-    }
-
-    public function resendVerificationCode()
-    {
-        $this->sendVerificationCode();
-    }
-
     public function verifyPhoneNumber()
     {
-        $this->validate(['verification_code' => 'required|digits:6']);
+        $this->validate(['phone_verification_code' => 'required|digits:6']);
 
         $otp = PhoneOtp::where('phone', $this->phone)
-            ->where('code', $this->verification_code)
+            ->where('code', $this->phone_verification_code)
             ->where('expires_at', '>=', now())
             ->first();
 
         if (!$otp) {
-            session()->flash('error', 'Invalid or expired verification code.');
+            session()->flash('error', 'Invalid or expired phone verification code.');
             return;
         }
 
@@ -275,12 +253,90 @@ class GiftIndex extends Component
         ]);
 
         $otp->delete();
-        $this->closePhoneVerificationModal();
+        session()->flash('success', 'Phone verified successfully!');
 
-        session()->flash('success', 'Phone verified! You can now create your gift.');
-        return redirect()->route('user.gift.create-gift');
+        $this->checkVerificationComplete();
     }
 
+    // Email Verification
+    public function sendEmailVerificationCode()
+    {
+        try {
+            $code = rand(100000, 999999);
+            $user = auth()->user();
+
+            EmailOtp::updateOrCreate(
+                ['email' => $user->email],
+                ['code' => $code, 'expires_at' => now()->addMinutes(10)]
+            );
+
+            Mail::send('emails.email-verification', ['code' => $code], function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Email Verification Code - Famlic');
+            });
+
+            $this->email_code_sent = true;
+            session()->flash('success', 'Email verification code sent successfully.');
+        } catch (Throwable $e) {
+            Log::error('Email OTP error', ['error' => $e->getMessage()]);
+            session()->flash('error', 'Failed to send email verification code.');
+        }
+    }
+
+    public function verifyEmailAddress()
+    {
+        $this->validate(['email_verification_code' => 'required|digits:6']);
+
+        $user = auth()->user();
+        $otp = EmailOtp::where('email', $user->email)
+            ->where('code', $this->email_verification_code)
+            ->where('expires_at', '>=', now())
+            ->first();
+
+        if (!$otp) {
+            session()->flash('error', 'Invalid or expired email verification code.');
+            return;
+        }
+
+        $user->update([
+            'email_verified' => true,
+            'email_verified_at' => now(),
+        ]);
+
+        $otp->delete();
+        session()->flash('success', 'Email verified successfully!');
+
+        $this->checkVerificationComplete();
+    }
+
+    private function checkVerificationComplete()
+    {
+        $user = auth()->user()->fresh();
+
+        if ($user->phone_verified && $user->email_verified) {
+            $this->closeVerificationModal();
+            session()->flash('success', 'All verifications complete! You can now create your gift.');
+            return redirect()->route('user.gift.create-gift');
+        } else {
+            $this->currentVerificationStep = 'choose';
+        }
+    }
+
+    private function formatPhone($phone)
+    {
+        return Str::startsWith($phone, '+') ? $phone : '+234' . ltrim($phone, '0');
+    }
+
+    private function expirePastGifts(): void
+    {
+        GiftRequest::where('user_id', Auth::id())
+            ->where('status', 'active')
+            ->where('deadline', '<', now())
+            ->update([
+                'status'    => 'expired',
+                'is_public' => false,
+            ]);
+    }
 
     public function render()
     {
@@ -288,10 +344,7 @@ class GiftIndex extends Component
         $query = GiftRequest::with([
             'user',
             'completedContributions'
-        ])->where(
-            'user_id',
-            Auth::id()
-        );
+        ])->where('user_id', Auth::id());
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -304,40 +357,14 @@ class GiftIndex extends Component
             $query->where('status', $this->statusFilter);
         }
 
-
         $query->orderBy($this->sortBy, $this->sortDirection);
-
         $gifts = $query->paginate(12);
 
-
         $stats = [
-            'total' => GiftRequest::where(
-                'user_id',
-                Auth::id()
-            )->count(),
-
-            'active' => GiftRequest::where(
-                'status',
-                'active'
-            )->where(
-                'user_id',
-                Auth::id()
-            )->count(),
-
-            'completed' => GiftRequest::where(
-                'status',
-                'completed'
-            )->where(
-                'user_id',
-                Auth::id()
-            )->count(),
-
-            'total_raised' => GiftRequest::where(
-                'user_id',
-                Auth::id()
-            )->sum(
-                'current_amount'
-            ),
+            'total' => GiftRequest::where('user_id', Auth::id())->count(),
+            'active' => GiftRequest::where('status', 'active')->where('user_id', Auth::id())->count(),
+            'completed' => GiftRequest::where('status', 'completed')->where('user_id', Auth::id())->count(),
+            'total_raised' => GiftRequest::where('user_id', Auth::id())->sum('current_amount'),
         ];
 
         return view('livewire.user.gift-index', [
