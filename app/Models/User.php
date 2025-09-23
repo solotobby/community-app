@@ -37,6 +37,8 @@ class User extends Authenticatable
         'state',
         'landmark',
         'address',
+        'email_verified_at',
+        'email_verified',
         'phone_verified_at',
         'phone_verified',
         'phone',
@@ -68,6 +70,9 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
+            'email_verified' => 'boolean',
+            'phone_verified' => 'boolean',
             'password' => 'hashed',
             'welcome_modal' => 'boolean',
             'free_user' => 'boolean',
