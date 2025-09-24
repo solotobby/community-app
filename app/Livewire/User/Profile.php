@@ -28,7 +28,7 @@ class Profile extends Component
 
 
     // Contact information
-    public $phone, $dob, $phone_verified, $address, $landmark, $lga, $state, $country;
+    public $phone, $dob, $phone_verified, $email_verified, $address, $landmark, $lga, $state, $country;
 
     // User information
     public $name, $email, $level, $referred_by, $referral_code;
@@ -62,6 +62,7 @@ class Profile extends Component
         $this->email = $user->email;
         $this->phone = $user->phone;
         $this->phone_verified = $user->phone_verified ?? false;
+        $this->email_verified = $user->email_verified ?? false;
         $this->address = $user->address;
         $this->landmark = $user->landmark;
         $this->lga = $user->lga;
