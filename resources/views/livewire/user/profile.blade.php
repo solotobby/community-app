@@ -79,7 +79,24 @@
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label text-muted">Email Address</label>
-                                <div class="fw-bold text-muted">{{ $email }}</div>
+                                <div class="fw-bold text-muted">{{ $email }}
+                                 @if ($email && !$email_verified)
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                            Unverified
+                                        </span>
+                                        <button class="btn btn-link btn-sm p-0 ms-2"
+                                            {{-- wire:click="openEmailVerificationModal"> --}}
+                                            >
+                                            Verify Now
+                                        </button>
+                                    @elseif($email && $email_verified)
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>
+                                            Verified
+                                        </span>
+                                    @endif
+                                    </div>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label text-muted">Referral Code</label>

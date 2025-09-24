@@ -1,7 +1,7 @@
 <div class="content">
 
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-        @if (session()->has('message'))
+        @if (session()->has('message') || session()->has('success'))
             <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
                 class="alert alert-success">
                 {{ session('message') }}
@@ -15,6 +15,315 @@
             </div>
         @endif
     </div>
+
+      {{-- Contact Information Modal --}}
+    @if ($showContactModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
+                    <form wire:submit.prevent="saveContactInfo">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-address-book text-primary me-2"></i>
+                                Complete Your Profile
+                            </h5>
+                            <button type="button" class="btn-close" wire:click="closeContactModal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted mb-4">Please complete your contact information to start raising money.</p>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control @error('phone') is-invalid @enderror"
+                                        wire:model.defer="phone" placeholder="e.g., +234 801 234 5678">
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('dob') is-invalid @enderror"
+                                        wire:model.defer="dob">
+                                    @error('dob')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Address <span class="text-danger">*</span></label>
+                                <textarea class="form-control @error('address') is-invalid @enderror"
+                                    wire:model.defer="address" rows="2" placeholder="Enter your full address"></textarea>
+                                @error('address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Landmark (Optional)</label>
+                                    <input type="text" class="form-control @error('landmark') is-invalid @enderror"
+                                        wire:model.defer="landmark" placeholder="e.g., Near City Mall">
+                                    @error('landmark')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Local Government Area <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('lga') is-invalid @enderror"
+                                        wire:model.defer="lga" placeholder="e.g., Ikeja">
+                                    @error('lga')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">State <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('state') is-invalid @enderror"
+                                        wire:model.defer="state" placeholder="e.g., Lagos">
+                                    @error('state')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Country <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('country') is-invalid @enderror"
+                                        wire:model.defer="country" placeholder="e.g., Nigeria">
+                                    @error('country')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" wire:click="closeContactModal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="saveContactInfo">Save & Continue</span>
+                                <span wire:loading wire:target="saveContactInfo">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>Saving...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Verification Modal --}}
+    @if ($showVerificationModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow theme-sensitive">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-shield-alt text-primary me-2"></i>
+                            Account Verification
+                        </h5>
+                        <button type="button" class="btn-close" wire:click="closeVerificationModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        @php
+                            $user = auth()->user();
+                            $phoneVerified = $user->phone_verified ?? false;
+                            $emailVerified = $user->email_verified ?? false;
+                        @endphp
+
+                        {{-- Verification Choice --}}
+                        @if ($currentVerificationStep === 'choose')
+                            <div class="text-center mb-4">
+                                <i class="fas fa-user-check fa-3x text-primary mb-3"></i>
+                                <h6 class="mb-3">Complete your verification to create gifts</h6>
+                                <p class="text-muted small">We need to verify your contact information for security.</p>
+                            </div>
+
+                            <div class="row g-3">
+                                @if (!$phoneVerified)
+                                    <div class="col-12">
+                                        <div class="card border-warning">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-mobile-alt fa-2x text-warning mb-2"></i>
+                                                <h6 class="card-title">Phone Verification</h6>
+                                                <p class="card-text small text-muted mb-3">{{ $phone }}</p>
+                                                <button class="btn btn-warning btn-sm w-100" wire:click="startPhoneVerification">
+                                                    <i class="fas fa-sms me-2"></i>Verify Phone
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="col-12">
+                                        <div class="card border-success">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-mobile-alt fa-2x text-success mb-2"></i>
+                                                <h6 class="card-title">Phone Verified ✓</h6>
+                                                <p class="card-text small text-muted">{{ $phone }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if (!$emailVerified)
+                                    <div class="col-12">
+                                        <div class="card border-info">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-envelope fa-2x text-info mb-2"></i>
+                                                <h6 class="card-title">Email Verification</h6>
+                                                <p class="card-text small text-muted mb-3">{{ $user->email }}</p>
+                                                <button class="btn btn-primary btn-sm w-100" wire:click="startEmailVerification">
+                                                    <i class="fas fa-paper-plane me-2"></i>Verify Email
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="col-12">
+                                        <div class="card border-success">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-envelope fa-2x text-success mb-2"></i>
+                                                <h6 class="card-title">Email Verified ✓</h6>
+                                                <p class="card-text small text-muted">{{ $user->email }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
+                        {{-- Phone Verification --}}
+                        @if ($currentVerificationStep === 'phone')
+                            @if (!$phone_code_sent)
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-sms fa-3x text-primary mb-3"></i>
+                                    <h6 class="mb-2">Verify Your Phone Number</h6>
+                                    <p class="mb-2">We'll send a verification code to:</p>
+                                    <strong class="text-success">{{ $phone }}</strong>
+                                    <p class="text-muted small mt-2">This helps us keep your account secure.</p>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-lg" wire:click="sendPhoneVerificationCode"
+                                        wire:loading.attr="disabled">
+                                        <span wire:loading.remove wire:target="sendPhoneVerificationCode">
+                                            <i class="fas fa-paper-plane me-2"></i>Send Code
+                                        </span>
+                                        <span wire:loading wire:target="sendPhoneVerificationCode">
+                                            <span class="spinner-border spinner-border-sm me-2"></span>Sending...
+                                        </span>
+                                    </button>
+                                    <button class="btn btn-outline-secondary" wire:click="goBackToChoice">
+                                        <i class="fas fa-arrow-left me-2"></i>Back
+                                    </button>
+                                </div>
+                            @else
+                                <form wire:submit.prevent="verifyPhoneNumber">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-key fa-3x text-success mb-3"></i>
+                                        <h6 class="mb-2">Enter Verification Code</h6>
+                                        <p class="mb-2">Enter the 6-digit code sent to:</p>
+                                        <strong class="text-success">{{ $phone }}</strong>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <input type="text"
+                                            class="form-control form-control-lg text-center @error('phone_verification_code') is-invalid @enderror"
+                                            wire:model.defer="phone_verification_code" placeholder="000000" maxlength="6"
+                                            style="letter-spacing: 0.5em; font-size: 1.5rem;">
+                                        @error('phone_verification_code')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-success btn-lg" wire:loading.attr="disabled">
+                                            <span wire:loading.remove wire:target="verifyPhoneNumber">
+                                                <i class="fas fa-check me-2"></i>Verify Phone
+                                            </span>
+                                            <span wire:loading wire:target="verifyPhoneNumber">
+                                                <span class="spinner-border spinner-border-sm me-2"></span>Verifying...
+                                            </span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" wire:click="sendPhoneVerificationCode">
+                                            <i class="fas fa-redo me-2"></i>Resend Code
+                                        </button>
+                                        <button class="btn btn-outline-secondary" wire:click="goBackToChoice">
+                                            <i class="fas fa-arrow-left me-2"></i>Back
+                                        </button>
+                                    </div>
+                                </form>
+                            @endif
+                        @endif
+
+                        {{-- Email Verification --}}
+                        @if ($currentVerificationStep === 'email')
+                            @if (!$email_code_sent)
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-envelope fa-3x text-info mb-3"></i>
+                                    <h6 class="mb-2">Verify Your Email Address</h6>
+                                    <p class="mb-2">We'll send a verification code to:</p>
+                                    <strong class="text-info">{{ $user->email }}</strong>
+                                    <p class="text-muted small mt-2">Check your inbox and spam folder.</p>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-lg" wire:click="sendEmailVerificationCode"
+                                        wire:loading.attr="disabled">
+                                        <span wire:loading.remove wire:target="sendEmailVerificationCode">
+                                            <i class="fas fa-paper-plane me-2"></i>Send Code
+                                        </span>
+                                        <span wire:loading wire:target="sendEmailVerificationCode">
+                                            <span class="spinner-border spinner-border-sm me-2"></span>Sending...
+                                        </span>
+                                    </button>
+                                    <button class="btn btn-outline-secondary" wire:click="goBackToChoice">
+                                        <i class="fas fa-arrow-left me-2"></i>Back
+                                    </button>
+                                </div>
+                            @else
+                                <form wire:submit.prevent="verifyEmailAddress">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-key fa-3x text-success mb-3"></i>
+                                        <h6 class="mb-2">Enter Verification Code</h6>
+                                        <p class="mb-2">Enter the 6-digit code sent to:</p>
+                                        <strong class="text-info">{{ $user->email }}</strong>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <input type="text"
+                                            class="form-control form-control-lg text-center @error('email_verification_code') is-invalid @enderror"
+                                            wire:model.defer="email_verification_code" placeholder="000000" maxlength="6"
+                                            style="letter-spacing: 0.5em; font-size: 1.5rem;">
+                                        @error('email_verification_code')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-success btn-lg" wire:loading.attr="disabled">
+                                            <span wire:loading.remove wire:target="verifyEmailAddress">
+                                                <i class="fas fa-check me-2"></i>Verify Email
+                                            </span>
+                                            <span wire:loading wire:target="verifyEmailAddress">
+                                                <span class="spinner-border spinner-border-sm me-2"></span>Verifying...
+                                            </span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" wire:click="sendEmailVerificationCode">
+                                            <i class="fas fa-redo me-2"></i>Resend Code
+                                        </button>
+                                        <button class="btn btn-outline-secondary" wire:click="goBackToChoice">
+                                            <i class="fas fa-arrow-left me-2"></i>Back
+                                        </button>
+                                    </div>
+                                </form>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="container-fluid p-0 m-0">
         <div class="card border-0">
