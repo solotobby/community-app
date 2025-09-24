@@ -174,7 +174,7 @@
                                                 <i class="fas fa-envelope fa-2x text-info mb-2"></i>
                                                 <h6 class="card-title">Email Verification</h6>
                                                 <p class="card-text small text-muted mb-3">{{ $user->email }}</p>
-                                                <button class="btn btn-info btn-sm w-100" wire:click="startEmailVerification">
+                                                <button class="btn btn-primary btn-sm w-100" wire:click="startEmailVerification">
                                                     <i class="fas fa-paper-plane me-2"></i>Verify Email
                                                 </button>
                                             </div>
@@ -268,7 +268,7 @@
                                     <p class="text-muted small mt-2">Check your inbox and spam folder.</p>
                                 </div>
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-info btn-lg" wire:click="sendEmailVerificationCode"
+                                    <button class="btn btn-primary btn-lg" wire:click="sendEmailVerificationCode"
                                         wire:loading.attr="disabled">
                                         <span wire:loading.remove wire:target="sendEmailVerificationCode">
                                             <i class="fas fa-paper-plane me-2"></i>Send Code

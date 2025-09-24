@@ -393,7 +393,7 @@
                         <td style="text-align: center; background: white; padding: 0 24px 40px;">
                             <div style="text-align: center;">
                                 @if($emailType === 'welcome')
-                                    <@php
+                                    @php
                                         $link = route('home');
                                        @endphp <a href="{{ $link ?? '#'}}" class="btn btn-primary"
                                         style="color: white;">

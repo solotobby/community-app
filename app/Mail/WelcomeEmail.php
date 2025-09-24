@@ -11,13 +11,16 @@ class WelcomeEmail extends Mailable
     use Queueable, SerializesModels;
 
     public $firstName;
-    public $emailType = 'welcome';
-    public $giftLink = route('user.gift.create-gift');
-    public $home = route('homepage');
+    public $emailType;
+    public $giftLink;
+    public $home;
 
     public function __construct($firstName)
     {
         $this->firstName = $firstName;
+        $this->emailType = 'welcome';
+        $this->giftLink = route('user.gift.create-gift');
+        $this->home     = route('homepage');
     }
 
     public function build()
@@ -28,7 +31,7 @@ class WelcomeEmail extends Mailable
                         'emailType' => $this->emailType,
                         'firstName' => $this->firstName,
                         'giftLink'  => $this->giftLink,
-                        'home'  => $this->home
+                        'home'      => $this->home
                     ]);
     }
 }

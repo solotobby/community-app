@@ -66,8 +66,36 @@ class GiftIndex extends Component
         return redirect()->route('user.gift.create-gift');
     }
 
+    public function shareGift($platform)
+    {
+        if (!$this->gift) {
+            return;
+        }
 
+        $url = urlencode($this->gift->getPublicUrl());
+        $text = urlencode('Help contribute to: ' . $this->gift->title);
 
+        $shareUrls = [
+            'facebook' => "https://www.facebook.com/sharer/sharer.php?u={$url}",
+            'twitter' => "https://twitter.com/intent/tweet?url={$url}&text={$text}",
+            'whatsapp' => "https://wa.me/?text={$text}%20{$url}",
+            'telegram' => "https://t.me/share/url?url={$url}&text={$text}",
+        ];
+
+        if (isset($shareUrls[$platform])) {
+            $this->dispatch('openWindow', $shareUrls[$platform]);
+        }
+    }
+
+     public function copyLink()
+    {
+        if (!$this->gift) {
+            return;
+        }
+
+        $this->dispatch('copyToClipboard', $this->gift->getPublicUrl());
+        session()->flash('message', 'Link copied to clipboard!');
+    }
     private function expirePastGifts(): void
     {
         GiftRequest::where('user_id', Auth::id())

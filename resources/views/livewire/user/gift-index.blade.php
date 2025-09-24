@@ -225,6 +225,36 @@
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </a>
                                         </div>
+
+                                        <div class="col-md-12 mb-2">
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-primary btn-lg w-100 dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-share me-2"></i>Share
+                                                </button>
+                                                <ul class="dropdown-menu w-100">
+                                                    <li><a class="dropdown-item" href="#" onclick="shareGift('facebook')">
+                                                            <i class="fab fa-facebook me-2"></i>Facebook
+                                                        </a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="shareGift('twitter')">
+                                                            <i class="fab fa-twitter me-2"></i>Twitter
+                                                        </a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="shareGift('whatsapp')">
+                                                            <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                                                        </a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="shareGift('telegram')">
+                                                            <i class="fab fa-telegram me-2"></i>Telegram
+                                                        </a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="" onclick="copyLink()">
+                                                            <i class="fas fa-copy me-2"></i>Copy Link
+                                                        </a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -279,7 +309,49 @@
                 alert('Link copied to clipboard!');
             });
         }
+
+        // Safely pass gift details from Blade
+        const gift = {
+            url: @json(isset($gift) ? $gift->getPublicUrl() : ''),
+            title: @json(isset($gift) ? $gift->title : 'Gift Contribution')
+        };
+
+        function shareGift(platform) {
+            if (!gift.url) {
+                alert("No gift link available to share.");
+                return;
+            }
+
+            const url = encodeURIComponent(gift.url);
+            const text = encodeURIComponent("Help contribute to: " + gift.title);
+
+            const shareUrls = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                whatsapp: `https://wa.me/?text=${text}%20${url}`,
+                telegram: `https://t.me/share/url?url=${url}&text=${text}`
+            };
+
+            if (shareUrls[platform]) {
+                window.open(shareUrls[platform], "_blank", "width=600,height=500");
+            }
+        }
+
+        function copyLink() {
+            if (!gift.url) {
+                alert("No gift link available to copy.");
+                return;
+            }
+
+            navigator.clipboard.writeText(gift.url).then(() => {
+                alert("Link copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy: ", err);
+            });
+        }
     </script>
+
+
 
     <style>
         .card:hover {
