@@ -4,6 +4,7 @@
 namespace App\Livewire\Auth;
 
 use App\Http\Controllers\PaystackController;
+use App\Mail\WelcomeEmail;
 use App\Models\Level;
 use App\Models\Transaction;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
@@ -123,6 +125,7 @@ class Register extends Component
             $role = Role::where('name', 'user')->first();
             $user->assignRole($role?->id);
             event(new Registered($user));
+            Mail::to(users: $user->email)->send(new WelcomeEmail($user->name));
         }
         $level = $this->levels->find($validated['level']);
 
@@ -131,6 +134,7 @@ class Register extends Component
                 'free_user' => true,
             ]);
             Auth::login($user);
+
             $this->redirect(route('home'), navigate: true);
             return;
         }

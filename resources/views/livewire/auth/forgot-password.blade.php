@@ -22,11 +22,24 @@
             </div>
 
             <!-- Session Status -->
-            @if (session('status'))
+            {{-- @if (session('status'))
                 <div class="alert alert-success mb-4 mx-4">
                     {{ session('status') }}
                 </div>
-            @endif
+            @endif --}}
+             @if (session()->has('status'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-success mb-4 mx-4">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition
+                class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
             <!-- Reset Form -->
             <form wire:submit.prevent="sendPasswordResetLink" class="px-4">

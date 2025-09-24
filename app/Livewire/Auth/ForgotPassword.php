@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Auth;
 
+use App\Mail\PasswordResetEmail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -17,17 +20,20 @@ class ForgotPassword extends Component
     public function sendPasswordResetLink(): void
     {
         $this->validate([
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email', 'exists:users,email'],
         ]);
 
-        // For development - use default token 123456
-        // if (app()->environment(['local', 'testing'])) {
-        //     $resetUrl = route('password.reset', ['token' => '123456']) . '?email=' . urlencode($this->email);
-        //     session()->flash('status', "Reset link (dev): {$resetUrl}");
-        // } else {
-        Password::sendResetLink($this->only('email'));
-        session()->flash('status', __('Email sent to the user successfully.'));
-        // }
+        // Generate token properly
+        $user = User::where('email', $this->email)->first();
+        $token = Password::createToken($user);
+        $resetUrl = route('password.reset', [
+            'token' => $token,
+            'email' => $this->email
+        ]);
+        // Send only your custom email
+        Mail::to($this->email)->send(new PasswordResetEmail($resetUrl));
+
+        session()->flash('status', 'Password reset link sent!');
     }
 
     public function render()
